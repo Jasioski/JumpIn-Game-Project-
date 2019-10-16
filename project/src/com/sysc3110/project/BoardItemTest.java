@@ -10,13 +10,11 @@ class BoardItemTest {
 	void testConstructor() {
 		int row = 0;
 		int column = 1;
-		String name = "TestItem";
 		
-		BoardItem boardItem = new BoardItem(row, column, name);
+		BoardItem boardItem = new BoardItem(row, column);
 		
 		assertEquals(boardItem.getRow(), row);
 		assertEquals(boardItem.getColumn(), column);
-		assertEquals(boardItem.getName(), name);
 	}
 
 }
