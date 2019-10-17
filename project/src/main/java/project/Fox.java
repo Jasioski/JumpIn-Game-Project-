@@ -5,6 +5,8 @@ public class Fox extends BoardItem {
 	private transient int tailRow;
 	private transient int tailColumn;
 
+	private static final Character TYPE = 'F';
+	
 	private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
 			throws IllegalArgumentException {
 
@@ -23,7 +25,7 @@ public class Fox extends BoardItem {
 	}
 
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
-		super(headRow, headColumn);
+		super(headRow, headColumn, TYPE);
 
 		validateArguments(headRow, headColumn, tailRow, tailColumn);
 

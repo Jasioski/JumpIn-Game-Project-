@@ -15,7 +15,8 @@ public class Main {
 
 		Board board = new Board(5);
 
-		board.toString();
+		logger.debug("printing board");
+		logger.debug(board.toString());
 	}
 
 }

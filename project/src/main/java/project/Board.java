@@ -26,7 +26,7 @@ public class Board {
 		// Initialize Board Items
 		for (int row = 0; row < rows; row ++) {
 			for (int column = 0; column < columns; column++) {
-				items[row][column] = new BoardItem(row, column);
+				items[row][column] = new EmptyBoardItem(row, column);
 			}
 		}
 		
@@ -65,6 +65,7 @@ public class Board {
 			for (int column = 0; column < columns; column++) {
 				BoardItem item = items[row][column];
 				str += item.toString();
+				str += " ";
 			}
 			
 			str += "\n";
