@@ -2,9 +2,9 @@ package project;
 
 public class BoardItem {
 
-	private transient int row;
-	private transient int column;
-	private transient Character type;
+	private int row;
+	private int column;
+	private Character type;
 	
 	public BoardItem(int row, int column, Character type) {
 		this.row = row;

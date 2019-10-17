@@ -2,10 +2,10 @@ package project;
 
 public class Board {
 	
-	private transient BoardItem[][] items;
+	private BoardItem[][] items;
 
-	private transient int rows;
-	private transient int columns;
+	private int rows;
+	private int columns;
 	
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
 		if (rows <= 0 || columns <= 0) { 

@@ -2,8 +2,8 @@ package project;
 
 public class Fox extends BoardItem {
 
-	private transient int tailRow;
-	private transient int tailColumn;
+	private int tailRow;
+	private int tailColumn;
 
 	private static final Character TYPE = 'F';
 	
