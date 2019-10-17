@@ -24,8 +24,21 @@ public class BoardItem {
 		return displayCharacter;
 	}
 	
+
+	// TODO: these should be removed once the attemptMove is implemented
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	// TODO: these should be removed once the attemptMove is implemented
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	
 	@Override
 	public String toString() {
 		return "" + row + "," + column + ":" + getDisplayCharacter();
 	}
+	
+	
 }

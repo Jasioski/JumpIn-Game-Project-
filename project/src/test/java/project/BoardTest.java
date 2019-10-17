@@ -104,4 +104,47 @@ public class BoardTest {
 		});
 	}
 	
+	@Test
+	/**
+	 * Set an item on the board given the row, column and reference to the item
+	 * to be set
+	 * Make sure the item's internal state of the row and column are updated
+	 */
+	void testSetItem() {
+		Board board = new Board(5);
+		
+		int initialRow = 0;
+		int initialColumn = 0;
+		
+		BoardItem item = new BoardItem(0, 0, 'B');
+		
+		int movedRow = 1;
+		int movedColumn = 1;
+		
+		board.setItem(movedRow, movedColumn, item);
+		
+		assertEquals(item, board.getItem(movedRow, movedColumn),
+				"the item at " + movedRow + ":" + movedColumn + 
+				" should be the one we set");
+		
+		assertEquals(movedRow, item.getRow(), "the row should be the "
+				+ "one we moved to");
+		assertEquals(movedColumn, item.getColumn(), "the column should be the "
+				+ "one we moved to");
+	}
+	
+
+	
+//	@Test
+//	/**
+//	 * Should not be able to set an item if the place is non empty
+//	 */
+//	void testItem() {
+//		Board board = new Board(5);
+//		int row = 0;
+//		int column = 0;
+//		
+//		board.setItem(0, 0, new Rabbit(0, 0));
+//	}
+	
 }

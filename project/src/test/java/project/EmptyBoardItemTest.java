@@ -20,6 +20,23 @@ public class EmptyBoardItemTest {
 				"column should be the same");
 		assertEquals(emptyItem.getDisplayCharacter(), type, 
 				"type should be the same");
+		
 	}
+	
+	@Test
+	/**	
+	 * Set the row
+	 */
+	void testSetRow() {
+		int initialRow = 0;
+		int finalRow = 1;
+		
+		EmptyBoardItem item = new EmptyBoardItem(0,0);
+		
+		assertEquals(initialRow, item.getRow(), "row should be the initial");
+		
+		item.setRow(finalRow);
 
+		assertEquals(finalRow, item.getRow(), "row should be the final");
+	}
 }

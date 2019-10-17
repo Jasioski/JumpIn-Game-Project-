@@ -74,4 +74,12 @@ public class Board {
 		return str;
 	}
 
+	public void setItem(int row, int column, BoardItem item) {
+		items[row][column] = item;
+		
+		item.setRow(row);
+		item.setColumn(column);
+		
+	}
+
 }
