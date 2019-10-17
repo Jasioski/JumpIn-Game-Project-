@@ -11,15 +11,18 @@ class FoxTest {
 	void testConstructor() {
 		int headRow = 0;
 		int headColumn = 0;
-
 		int tailRow = 1;
 		int tailColumn = 0;
+		
+		Character expectedDisplayCharacter = 'F';
 
 		Fox fox = new Fox(headRow, headColumn, tailRow, tailColumn);
 
 		assertEquals(fox.getTailRow(), tailRow, "tailRow should be the same");
 		assertEquals(fox.getTailColumn(), tailColumn, "tailColumn should be"
 				+ "the same");
+		assertEquals(fox.getDisplayCharacter(), expectedDisplayCharacter,
+				"the display character should be " + expectedDisplayCharacter);
 	}
 
 	@Test

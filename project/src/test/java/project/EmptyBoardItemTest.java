@@ -18,7 +18,7 @@ public class EmptyBoardItemTest {
 		assertEquals(emptyItem.getRow(), row, "row should be the same");
 		assertEquals(emptyItem.getColumn(), column, 
 				"column should be the same");
-		assertEquals(emptyItem.getType(), type, 
+		assertEquals(emptyItem.getDisplayCharacter(), type, 
 				"type should be the same");
 	}
 

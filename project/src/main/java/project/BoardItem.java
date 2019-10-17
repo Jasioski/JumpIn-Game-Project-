@@ -4,12 +4,12 @@ public class BoardItem {
 
 	private int row;
 	private int column;
-	private Character type;
+	private Character displayCharacter;
 	
-	public BoardItem(int row, int column, Character type) {
+	public BoardItem(int row, int column, Character displayCharacter) {
 		this.row = row;
-		this.column = column;	
-		this.type = type;
+		this.column = column;
+		this.displayCharacter = displayCharacter;
 	}
 	
 	public int getRow() {
@@ -20,11 +20,12 @@ public class BoardItem {
 		return column;
 	}
 	
-	public Character getType() {
-		return type;
+	public Character getDisplayCharacter() {
+		return displayCharacter;
 	}
 	
+	@Override
 	public String toString() {
-		return "" + row + "," + column + ":" + type;
+		return "" + row + "," + column + ":" + getDisplayCharacter();
 	}
 }
