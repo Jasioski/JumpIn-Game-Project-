@@ -1,6 +1,7 @@
 package project;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,15 +14,17 @@ public class BoardTest {
 		
 		Board board = new Board(rows, columns);
 		
-		assertEquals(board.getRows(), rows);
-		assertEquals(board.getColumns(), columns);
+		assertEquals(board.getRows(), rows, "rows should be the same");
+		assertEquals(board.getColumns(), columns, "columns should be the same");
 		
 		// Check that the board is initialized correctly
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
 				BoardItem item = board.getItem(row, column);
-				assertEquals(item.getRow(), row);
-				assertEquals(item.getColumn(), column);
+				assertEquals(item.getRow(), row, "row of the item should"
+						+ "be the same as its row index in the array");
+				assertEquals(item.getColumn(), column, "column of the item should"
+						+ "be the same as its column index in the array");
 			}
 		}
 		
@@ -36,15 +39,18 @@ public class BoardTest {
 		int dimension = 5;
 		Board board = new Board(dimension);
 		
-		assertEquals(board.getRows(), dimension);
-		assertEquals(board.getColumns(), dimension);
+		assertEquals(board.getRows(), dimension, "rows should equal dimension");
+		assertEquals(board.getColumns(), dimension, "columns should equal"
+				+ "dimension");
 		
 		// Check that the board is initialized correctly
 		for (int row = 0; row < dimension; row++) {
 			for (int column = 0; column < dimension; column++) {
 				BoardItem item = board.getItem(row, column);
-				assertEquals(item.getRow(), row);
-				assertEquals(item.getColumn(), column);
+				assertEquals(item.getRow(), row, "row should be the same"
+						+ "as its row index in the array");
+				assertEquals(item.getColumn(), column, "column should be "
+						+ "the same as its column index in the array");
 			}
 		}
 

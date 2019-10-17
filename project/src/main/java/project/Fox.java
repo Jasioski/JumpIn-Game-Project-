@@ -2,8 +2,8 @@ package project;
 
 public class Fox extends BoardItem {
 
-	private int tailRow;
-	private int tailColumn;
+	private transient int tailRow;
+	private transient int tailColumn;
 
 	private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
 			throws IllegalArgumentException {

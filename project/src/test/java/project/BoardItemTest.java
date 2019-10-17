@@ -1,6 +1,7 @@
 package project;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +14,8 @@ public class BoardItemTest {
 		
 		BoardItem boardItem = new BoardItem(row, column);
 		
-		assertEquals(boardItem.getRow(), row);
-		assertEquals(boardItem.getColumn(), column);
+		assertEquals(boardItem.getRow(), row, "row should be the same");
+		assertEquals(boardItem.getColumn(), column, "column should be the same");
 	}
 
 }

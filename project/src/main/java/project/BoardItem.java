@@ -2,8 +2,8 @@ package project;
 
 public class BoardItem {
 
-	private int row;
-	private int column;
+	private transient int row;
+	private transient int column;
 	
 	public BoardItem(int row, int column) {
 		this.row = row;

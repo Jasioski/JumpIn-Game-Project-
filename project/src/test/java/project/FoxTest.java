@@ -1,6 +1,7 @@
 package project;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,8 +17,9 @@ class FoxTest {
 
 		Fox fox = new Fox(headRow, headColumn, tailRow, tailColumn);
 
-		assertEquals(fox.getTailRow(), tailRow);
-		assertEquals(fox.getTailColumn(), tailColumn);
+		assertEquals(fox.getTailRow(), tailRow, "tailRow should be the same");
+		assertEquals(fox.getTailColumn(), tailColumn, "tailColumn should be"
+				+ "the same");
 	}
 
 	@Test

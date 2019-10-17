@@ -10,6 +10,7 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java'
     id 'eclipse'
+   	id 'pmd'
 }
 
 repositories {
@@ -31,4 +32,9 @@ test {
 	testLogging {
 		events "passed", "skipped", "failed"
 	}
+}
+
+pmd {
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+    toolVersion = '6.17.0'
 }
