@@ -1,13 +1,13 @@
-package com.sysc3110.project;
+package project;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class BoardItemTest {
+public class BoardItemTest {
 
 	@Test
-	void testConstructor() {
+	public void testConstructor() {
 		int row = 0;
 		int column = 1;
 		

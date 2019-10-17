@@ -1,4 +1,4 @@
-package com.sysc3110.project;
+package project;
 
 public enum Direction {
 	LEFT, RIGHT, UP, DOWN

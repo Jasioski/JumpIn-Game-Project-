@@ -1,10 +1,10 @@
-package com.sysc3110.project;
+package project;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class BoardTest {
+public class BoardTest {
 
 	@Test
 	void testConstructor() {

@@ -1,10 +1,9 @@
-package com.sysc3110.project;
+package project;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
-class MainTest {
+public class MainTest {
 
 	@Test
 	void testHelloWorldMessage() {

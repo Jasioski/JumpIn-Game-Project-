@@ -1,4 +1,4 @@
-package com.sysc3110.project;
+package project;
 
 public class Board {
 	
