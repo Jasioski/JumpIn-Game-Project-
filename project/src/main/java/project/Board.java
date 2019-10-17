@@ -56,5 +56,21 @@ public class Board {
 		
 		return items[row][column];
 	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		
+		for (int row = 0; row < rows; row ++) {
+			for (int column = 0; column < columns; column++) {
+				BoardItem item = items[row][column];
+				str += item.toString();
+			}
+			
+			str += "\n";
+		}
+		
+		return str;
+	}
 
 }

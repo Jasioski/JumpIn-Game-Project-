@@ -7,16 +7,34 @@
  */
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     id 'java'
     id 'eclipse'
    	id 'pmd'
+   	id 'application'
 }
 
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+}
+version = '0.1'
+
+//create a single Jar with all dependencies
+task uberJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'project.Main'
+    }
+    baseName = project.name + '-uberjar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+application {
+    mainClassName = 'project.Main'
 }
 
 dependencies {
@@ -25,6 +43,14 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    
+    // Apache Log4J
+		compile 'log4j:log4j:1.2.17'
+		compile 'org.slf4j:slf4j-api:1.7.5'
+		compile 'org.slf4j:slf4j-log4j12:1.7.5'
+		compile 'org.apache.logging.log4j:log4j:2.3'
+		compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
 }
 
 test {
