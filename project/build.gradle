@@ -61,6 +61,7 @@ test {
 }
 
 pmd {
+		ruleSets = []
     ruleSetFiles = files("config/pmd/ruleset.xml")
     toolVersion = '6.17.0'
 }
