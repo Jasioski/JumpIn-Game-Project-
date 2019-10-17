@@ -1,17 +1,8 @@
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-.recommenders
+# Ignore Gradle project-specific cache directory
+.gradle
 
-# External tool builders
-.externalToolBuilders/
+# Ignore Gradle build output directory
+build
 
 # Locally stored "Eclipse launch configurations"
 *.launch
@@ -55,6 +46,6 @@ local.properties
 .scala_dependencies
 .worksheet
 
-build/
-.gradle/
+# Eclipse
+.project
 .eclipse-pmd
