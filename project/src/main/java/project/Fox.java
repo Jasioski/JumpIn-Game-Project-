@@ -141,7 +141,6 @@ public class Fox extends BoardItem implements Slidable {
 
 		ValidateMove(newCoordinates, slice);
 		
-		// Move the fox
 		this.setCoordinates(newCoordinates);
 		
 		if (spaces == 1) {
@@ -153,6 +152,10 @@ public class Fox extends BoardItem implements Slidable {
 	
 	// TODO: rename to slideRight
 	private List<Coordinate> moveRight(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+		if (spaces == 0) {
+			return this.getCoordinates();
+		}
+
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
@@ -175,11 +178,39 @@ public class Fox extends BoardItem implements Slidable {
 			return moveRight(spaces - 1, slice);
 		}
 	}
-	
+	private List<Coordinate> slideUp(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	    List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
+	    Coordinate head = this.getHead();
+	    Coordinate tail = this.getTail();
+
+	    // Compute new coordinates
+		Coordinate newHead = new Coordinate(head.row - 1, head.column);
+		Coordinate newTail = new Coordinate(tail.row - 1, tail.column);
+
+		newCoordinates.add(newHead);
+		newCoordinates.add(newTail);
+
+		ValidateMove(newCoordinates, slice);
+
+		this.setCoordinates(newCoordinates);
+
+		if (spaces == 1) {
+			return newCoordinates;
+		} else  {
+			return slideUp(spaces - 1, slice);
+		}
+
+	}
+
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
 			throws SlideFailedException {
-		
+
+		// Move zero spaces
+		if (spaces == 0) {
+			return this.getCoordinates();
+		}
+
 		if (slice.isEmpty()) {
 			throw new IllegalArgumentException("cannot slide through an empty"
 					+ "slice ");
@@ -206,6 +237,7 @@ public class Fox extends BoardItem implements Slidable {
 				newCoordinates = this.moveRight(spaces, slice);
 				break;
 			case UP:
+				newCoordinates = this.slideUp(spaces, slice);
 				break;
 			default:
 				break;
@@ -219,6 +251,7 @@ public class Fox extends BoardItem implements Slidable {
 		
 		return newCoordinates;
 	}
+
 
 
 }
