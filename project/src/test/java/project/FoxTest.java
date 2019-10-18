@@ -104,8 +104,6 @@ class FoxTest {
 	// TODO: Test for failing to trying to move through an obstacle along the path of
 	// sliding
 	
-	// TODO: Test moving by more than one space
-	
 	// TODO: Add test making sure we can't set the fox coordinates to a diagonal
 	// this means we cannot move sideways
 	
@@ -135,8 +133,8 @@ class FoxTest {
 		
 		// Store the results
 		try {
-			List<Coordinate> coordinates = fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideOutOfBoundsException e) {
+			fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideFailedException e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -181,7 +179,7 @@ class FoxTest {
 		// Store the results
 		try {
 			List<Coordinate> coordinates = fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideOutOfBoundsException e) {
+		} catch (SlideFailedException e) {
 			fail("Exception was thrown");
 		}
 		
@@ -266,12 +264,47 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 		
-		assertThrows(SlideOutOfBoundsException.class, () -> {
+		assertThrows(SlideFailedException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);	
 		}, "the fox should not be able to move outside of the slices range");
 		
 		assertEquals(initialCoordinates, fox.getCoordinates(),
 				"the fox coordinates should not have changed");
 
+	}
+	
+	@Test
+	/**
+	 * Make sure you cannot slide through an obstacle
+	 */
+	void testSlideThroughObstacle() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: F F R E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new Rabbit(0, 2));
+		slice.add(new EmptyBoardItem(0, 3));
+		
+		// Move Fox
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 1;
+		
+		// Store the fox coordinates
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+		
+		assertThrows(SlideFailedException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);	
+		}, "the fox should not be able to move outside of the slices range");
+		
+		assertEquals(initialCoordinates, fox.getCoordinates(),
+				"the fox coordinates should not have changed");
 	}
 }

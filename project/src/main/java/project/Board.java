@@ -194,10 +194,8 @@ public class Board {
 			
 			// Change the board representation
 			setItem(newCoordinates, itemAtCoordinate);
-		} catch (SlideOutOfBoundsException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		} catch (BoardItemNotEmptyException e) {
+		} catch (SlideFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
