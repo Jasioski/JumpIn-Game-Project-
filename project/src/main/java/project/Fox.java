@@ -54,6 +54,8 @@ public class Fox extends BoardItem implements Slidable {
 	public void setHeadAndTail(Coordinate head, Coordinate tail) {
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
 		
+		validateArguments(head.row, head.column, tail.row, tail.column);
+		
 		coordinates.add(head);
 		coordinates.add(tail);
 		
