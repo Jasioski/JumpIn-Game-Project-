@@ -12,6 +12,7 @@ plugins {
    	id 'pmd'
    	id 'application'
 		id 'life.expert.archidoc' version '1.0.10'
+		id 'jacoco'
 }
 
 repositories {
