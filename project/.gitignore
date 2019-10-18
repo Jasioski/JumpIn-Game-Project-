@@ -49,3 +49,5 @@ build
 # Eclipse
 .project
 .eclipse-pmd
+.classpath
+.settings/
