@@ -90,13 +90,14 @@ class FoxTest {
 		});
 	}
 	
-	@Test
-	void testSetHead() {
-		Coordinate head = new Coordinate(0, 0);
-		Coordinate tail = new Coordinate(1, 0);
-		
-		Fox fox = new Fox(head, tail);
-	}
+	// TODO: write test
+//	@Test
+//	void testSetHead() {
+//		Coordinate head = new Coordinate(0, 0);
+//		Coordinate tail = new Coordinate(1, 0);
+//		
+//		Fox fox = new Fox(head, tail);
+//	}
 	
 	// TODO: test for trying to set head and tail with coordinates where 
 	// there is already something else at the new coordinates
@@ -178,7 +179,7 @@ class FoxTest {
 		
 		// Store the results
 		try {
-			List<Coordinate> coordinates = fox.slide(moveDirection, moveSpaces, slice);
+			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (SlideFailedException e) {
 			fail("Exception was thrown");
 		}
