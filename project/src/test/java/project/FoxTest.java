@@ -99,12 +99,6 @@ class FoxTest {
 //		Fox fox = new Fox(head, tail);
 //	}
 	
-	// TODO: test for trying to set head and tail with coordinates where 
-	// there is already something else at the new coordinates
-
-	// TODO: Test for failing to trying to move through an obstacle along the path of
-	// sliding
-	
 	// TODO: Add test making sure we can't set the fox coordinates to a diagonal
 	// this means we cannot move sideways
 	
@@ -199,6 +193,96 @@ class FoxTest {
 	
 	@Test
 	/**
+	 * Slide fox left one unit
+	 */
+	void testSlideFoxLeftOne() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 1);
+		Coordinate initialTail = new Coordinate(0, 2);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: E F F E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 3));
+		
+		// Move Fox
+		Direction moveDirection = Direction.LEFT;
+		int moveSpaces = 1;
+		
+		// Store the results
+		try {
+			fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideFailedException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
+		
+		// Expected result
+		// index:  0 1 2 3
+		// Layout: F F E E
+		Coordinate newHead = new Coordinate(0, 0);
+		Coordinate newTail = new Coordinate(0, 1);
+		
+		assertEquals(newHead, fox.getHead(), "the head should be at the "
+				+ "new location");
+		
+		assertEquals(newTail, fox.getTail(),
+				"the tail should be at the new location");
+	}
+	
+	@Test
+	/**
+	 * Slide fox left two units
+	 */
+	void testSlideFoxLeftTwo() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 2);
+		Coordinate initialTail = new Coordinate(0, 3);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: E E F F
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 1));
+		
+		// Move Fox
+		Direction moveDirection = Direction.LEFT;
+		int moveSpaces = 2;
+		
+		// Store the results
+		try {
+			fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideFailedException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
+		
+		// Expected result
+		// index:  0 1 2 3
+		// Layout: F F E E
+		Coordinate newHead = new Coordinate(0, 0);
+		Coordinate newTail = new Coordinate(0, 1);
+		
+		assertEquals(newHead, fox.getHead(), "the head should be at the "
+				+ "new location");
+		
+		assertEquals(newTail, fox.getTail(),
+				"the tail should be at the new location");
+	}
+
+	@Test
+	/**
 	 * Should not be able to slide with an empty slice
 	 */
 	void testSlideEmptySlice() {
@@ -260,6 +344,42 @@ class FoxTest {
 		
 		// Move Fox
 		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 3;
+		
+		// Store the fox coordinates
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+		
+		assertThrows(SlideFailedException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);	
+		}, "the fox should not be able to move outside of the slices range");
+		
+		assertEquals(initialCoordinates, fox.getCoordinates(),
+				"the fox coordinates should not have changed");
+
+	}
+	
+	@Test
+	/**
+	 * Should not be able to move the fox left of the bounds of the slice
+	 */
+	void testMoveLeftThreeOutOfBounds() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 2);
+		Coordinate initialTail = new Coordinate(0, 3);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: E E F F
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 1));
+		
+		// Move Fox
+		Direction moveDirection = Direction.LEFT;
 		int moveSpaces = 3;
 		
 		// Store the fox coordinates
