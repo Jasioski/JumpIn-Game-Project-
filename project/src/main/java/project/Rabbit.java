@@ -11,13 +11,13 @@ public class Rabbit extends BoardItem {
 	}
 
 	public Rabbit(Coordinate coordinate) {
-		super(coordinate, RABBIT_DISPLAY_CHARACTER);
+		super(RABBIT_DISPLAY_CHARACTER);
+		this.setCoordinate(coordinate);
 	}
 
-	@Override
 	public void setCoordinate(Coordinate coordinate) {
-		this.getCoordinates().clear();
-		this.getCoordinates().add(coordinate);
+		this.coordinates.clear();
+		this.coordinates.add(coordinate);
 	}
 
 	@Override

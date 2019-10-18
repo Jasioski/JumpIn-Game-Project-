@@ -1,5 +1,10 @@
 package project;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public class Board {
 	
 	private BoardItem[][] items;
@@ -81,20 +86,117 @@ public class Board {
 
 	public void setItem(int row, int column, BoardItem item) 
 			throws BoardItemNotEmptyException {
-		Coordinate coordinate = new Coordinate(row, column);
+		List<Coordinate> coordinates = new ArrayList<Coordinate>();
+		coordinates.add(new Coordinate(row, column));
 		
-		setItem(coordinate, item);
+		setItem(coordinates, item);
 	}
-
-	public void setItem(Coordinate coordinate, BoardItem item) 
+	
+	/**
+	 * Used to set an item on the board
+	 * 
+	 * It is expected that this method is used for setting up a board.
+	 * It should not be used for player moves as it does not support
+	 * cleaning up the items old position from the board or for placing
+	 * items inside holes 
+	 * 
+	 * This method delegates to item.setCoordinate() to set the coordinates
+	 * of the item as well.
+	 * 
+	 * @param coordinate where to set
+	 * @param item to set
+	 * @throws BoardItemNotEmptyException if the coordinate is not empty
+	 */
+	public void setItem(List<Coordinate> coordinates, BoardItem item) 
 			throws BoardItemNotEmptyException {
-		if (items[coordinate.row][coordinate.column]
-				.getClass() != EmptyBoardItem.class) {
-			throw new BoardItemNotEmptyException("Cannot set an item on the "
-					+ "board if there is already a non empty item in the slot");
+		
+		// Check that the coordinates are not empty
+		if (coordinates.isEmpty()) {
+			throw new IllegalArgumentException("coordinates cannot be empty");
 		}
 		
-		items[coordinate.row][coordinate.column] = item;
-		item.setCoordinate(coordinate);
+		// Check that the coordinates are empty
+		for (Coordinate coordinate: coordinates) {
+			if (items[coordinate.row][coordinate.column].getClass()
+					!= EmptyBoardItem.class) {
+				
+				throw new BoardItemNotEmptyException(
+						"Cannot set an item on the "
+						+ "board if there is already a non empty item in the"
+						+ "slot");
+			}
+		}
+		
+		// Set the coordinates
+		for (Coordinate coordinate: coordinates) {
+			items[coordinate.row][coordinate.column] = item;
+		}
+		
+		item.setCoordinates(coordinates);
+	}
+	
+	public void setEmptyItem(Coordinate coordinate) {
+		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
+	}
+
+	public void move(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
+			throws NonMovableItemException 
+	{
+		BoardItem itemAtCoordinate = getItem(itemCoordinate);
+		
+		// Throw an error if does not implement Movable
+		if (!(itemAtCoordinate instanceof Movable)) {
+			throw new NonMovableItemException("cannot move a not movable item");
+		}
+		
+		// Store initial coordinates
+		List<Coordinate> initialCoordinates = 
+				itemAtCoordinate.getCoordinates()
+				.stream().map(coordinate -> new Coordinate(coordinate))
+				.collect(Collectors.toList());
+		
+		// Get slice
+		List<BoardItem> slice = new ArrayList<>();
+		
+		// TODO: write other directions
+		// TODO: write tests
+		
+		switch (moveDirection) {
+			case DOWN:
+				break;
+			case LEFT:
+				// Get all items on row
+				int row = itemAtCoordinate.getCoordinates().get(0).row;
+				for (int column = 0; column < this.columns; column++) {
+					slice.add(items[row][column]);
+				}
+				break;
+			case RIGHT:
+				break;
+			case UP:
+				break;
+			default:
+				break;
+				
+		}
+		
+		// Move Item
+		Movable movableItem = (Movable) itemAtCoordinate;
+		List<Coordinate> newCoordinates = 
+				movableItem.move(moveDirection, moveSpaces, slice );
+		
+		// Clear old coordinates
+		for (Coordinate initialCoordinate: initialCoordinates) {
+			setEmptyItem(initialCoordinate);
+		}
+		
+		// Set new coordinates
+		try {
+			setItem(newCoordinates, itemAtCoordinate);
+		} catch (BoardItemNotEmptyException e) {
+			// This error should not be thrown as it should have been cleared
+			// earlier
+			e.printStackTrace();
+		}
 	}
 }

@@ -9,6 +9,11 @@ public class Coordinate {
 		this.column = column;
 	}
 	
+	public Coordinate(Coordinate coordinate) {
+		this.row = coordinate.row;
+		this.column = coordinate.column;
+	}
+	
 	@Override 
 	public boolean equals (Object o) {
 		if (this == o) return true;
@@ -22,5 +27,10 @@ public class Coordinate {
 		
 		return (this.row == coordinate.row && 
 				this.column == coordinate.column);
+	}
+	
+	@Override
+	public String toString() {
+		return "" + row + ":" + column;
 	}
 }

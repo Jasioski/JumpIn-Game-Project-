@@ -9,15 +9,14 @@ public class Hole extends BoardItem {
 	private Optional<BoardItem> containingItem;
 	
 	public Hole(Coordinate coordinate) {
-		super(coordinate, HOLE_DISPLAY_CHARACTER);
-		
+		super(HOLE_DISPLAY_CHARACTER);
+		this.setCoordinate(coordinate);
 		this.containingItem = Optional.empty();
 	}
 
-	@Override
 	public void setCoordinate(Coordinate coordinate) {
-		this.getCoordinates().clear();
-		this.getCoordinates().add(coordinate);
+		this.coordinates.clear();
+		this.coordinates.add(coordinate);
 	}
 
 	@Override

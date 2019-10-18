@@ -1,5 +1,6 @@
 package project;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,13 +16,20 @@ public class Main {
 
 		Board board = new Board(5);
 		
+		Coordinate head = new Coordinate(0,0);
+		Coordinate tail = new Coordinate(0,0);
+		
+		Fox fox = new Fox(head, tail);
+		
 		try {
-			board.setItem(0, 0, new Rabbit(0,0));
+			board.setItem(fox.getCoordinates(), fox);
+			
+//			int moveSpaces = 1;
+//			board.move(Direction.RIGHT, head, moveSpaces);
+//			
 		} catch (BoardItemNotEmptyException e) {
-			// TODO Auto-generated catch block
-
 			if (logger.isErrorEnabled()) {
-				logger.error(e.getStackTrace());
+				logger.catching(Level.ERROR, e);
 			}
 		}
 

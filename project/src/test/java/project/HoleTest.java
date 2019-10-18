@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -78,6 +79,22 @@ class HoleTest {
 		
 		assertEquals(coordinate, hole.getCoordinate(),
 				"the coordinate should be the one that was set");
+	}
+	
+	@Test
+	/**
+	 * Get hole coordinate as collection
+	 */
+	void testGetCoordinates() {
+		Coordinate coordinate = new Coordinate(0, 0);
+		Hole hole = new Hole(coordinate);
+		
+		List<Coordinate> coordinates = hole.getCoordinates();
+		
+		assertEquals(coordinate, coordinates.get(0),
+				"the coordinate should be the one that was set");
+		assertEquals(1, coordinates.size(),
+				"there should only be one coordinate");
 	}
 	
 	@Test
