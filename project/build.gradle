@@ -11,6 +11,7 @@ plugins {
     id 'eclipse'
    	id 'pmd'
    	id 'application'
+		id 'life.expert.archidoc' version '1.0.10'
 }
 
 repositories {
@@ -64,4 +65,10 @@ pmd {
 		ruleSets = []
     ruleSetFiles = files("config/pmd/ruleset.xml")
     toolVersion = '6.17.0'
+}
+
+archidoc {
+	file "$buildDir/architecture/classdiagram.dot"
+	packages = ['project']
+	enableAllInfo()
 }
