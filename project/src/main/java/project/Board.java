@@ -139,21 +139,17 @@ public class Board {
 		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
 	}
 
-	public void move(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
+	@SuppressWarnings("PMD.AvoidPrintStackTrace")
+	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
 			throws NonMovableItemException 
 	{
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Movable)) {
+		if (!(itemAtCoordinate instanceof Slidable)) {
 			throw new NonMovableItemException("cannot move a not movable item");
 		}
-		
-		// Store initial coordinates
-		List<Coordinate> initialCoordinates = 
-				itemAtCoordinate.getCoordinates()
-				.stream().map(coordinate -> new Coordinate(coordinate))
-				.collect(Collectors.toList());
+
 		
 		// Get slice
 		List<BoardItem> slice = new ArrayList<>();
@@ -165,13 +161,12 @@ public class Board {
 			case DOWN:
 				break;
 			case LEFT:
+			case RIGHT:
 				// Get all items on row
 				int row = itemAtCoordinate.getCoordinates().get(0).row;
 				for (int column = 0; column < this.columns; column++) {
 					slice.add(items[row][column]);
 				}
-				break;
-			case RIGHT:
 				break;
 			case UP:
 				break;
@@ -180,22 +175,30 @@ public class Board {
 				
 		}
 		
+		// Store initial coordinates
+		List<Coordinate> initialCoordinates = 
+				itemAtCoordinate.getCoordinates()
+				.stream().map(coordinate -> new Coordinate(coordinate))
+				.collect(Collectors.toList());
+		
 		// Move Item
-		Movable movableItem = (Movable) itemAtCoordinate;
-		List<Coordinate> newCoordinates = 
-				movableItem.move(moveDirection, moveSpaces, slice );
-		
-		// Clear old coordinates
-		for (Coordinate initialCoordinate: initialCoordinates) {
-			setEmptyItem(initialCoordinate);
-		}
-		
-		// Set new coordinates
+		Slidable movableItem = (Slidable) itemAtCoordinate;
+		List<Coordinate> newCoordinates;
 		try {
+			newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
+			
+			// Clear old coordinates
+			for (Coordinate initialCoordinate: initialCoordinates) {
+				setEmptyItem(initialCoordinate);
+			}
+			
+			// Change the board representation
 			setItem(newCoordinates, itemAtCoordinate);
+		} catch (SlideOutOfBoundsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		} catch (BoardItemNotEmptyException e) {
-			// This error should not be thrown as it should have been cleared
-			// earlier
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -2,6 +2,7 @@ package project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +134,12 @@ class FoxTest {
 		int moveSpaces = 1;
 		
 		// Store the results
-		List<Coordinate> coordinates = fox.move(moveDirection, moveSpaces, slice);
+		try {
+			List<Coordinate> coordinates = fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
 		
 		// Expected result
 		// index:  0 1 2 3
@@ -146,5 +152,126 @@ class FoxTest {
 		
 		assertEquals(newTail, fox.getTail(),
 				"the tail should be at the new location");
+	}
+	
+	@Test
+	/**
+	 * move fox right 2 units
+	 */
+	void testMoveRightTwo() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: F F E E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 2));
+		slice.add(new EmptyBoardItem(0, 3));
+		
+		// Move Fox
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 2;
+		
+		// Store the results
+		try {
+			List<Coordinate> coordinates = fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideOutOfBoundsException e) {
+			fail("Exception was thrown");
+		}
+		
+		// Expected result
+		// index:  0 1 2 3
+		// Layout: E E F F
+		Coordinate newHead = new Coordinate(0, 2);
+		Coordinate newTail = new Coordinate(0, 3);
+		
+		assertEquals(newHead, fox.getHead(), "the head should be at the "
+				+ "new location");
+
+		assertEquals(newTail, fox.getTail(),
+				"the tail should be at the new location");
+	}
+	
+	@Test
+	/**
+	 * Should not be able to slide with an empty slice
+	 */
+	void testSlideEmptySlice() {
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 3;
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);
+		}, "should throw if the slice is empty");
+	}
+	
+	@Test
+	/**
+	 * Should not be able to slide if the slice does not
+	 * contain the fox
+	 */
+	void testSlideSliceDoesNotContainFox() {
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(new EmptyBoardItem(0, 0));
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 3;
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);
+		}, "should throw if the slice does not contain the fox");
+	}
+	
+	
+	@Test
+	/**
+	 * Should not be able to move fox out of the bounds of the slice
+	 */
+	void testMoveRightThreeOutOfBounds() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: F F E E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 2));
+		slice.add(new EmptyBoardItem(0, 3));
+		
+		// Move Fox
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 3;
+		
+		// Store the fox coordinates
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+		
+		assertThrows(SlideOutOfBoundsException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);	
+		}, "the fox should not be able to move outside of the slices range");
+		
+		assertEquals(initialCoordinates, fox.getCoordinates(),
+				"the fox coordinates should not have changed");
+
 	}
 }

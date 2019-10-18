@@ -178,7 +178,7 @@ public class BoardTest {
 	/**
 	 * Move fox right by 1 space
 	 */
-	void testMoveFox() {
+	void testMoveFoxRightOne() {
 		// Create a board
 		Board board = new Board(5);
 	
@@ -200,7 +200,7 @@ public class BoardTest {
 		Direction moveDirection = Direction.RIGHT;
 		
 		try {
-			board.move(moveDirection, moveSpaces, initialHead);	
+			board.slide(moveDirection, moveSpaces, initialHead);	
 		}
 		catch (NonMovableItemException e) {
 			fail("Exception was thrown");
@@ -220,6 +220,57 @@ public class BoardTest {
 
 		assertEquals(fox.getTail(), new Coordinate(0, 2),
 				"The tail should be where the tail was plus one unit right");
+	}
+	
+	@Test
+	/**
+	 * Move fox right by 2 space
+	 */
+	void testMoveFoxRightTwo() {
+		// Create a board
+		Board board = new Board(5);
+	
+		
+		// Create a fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		Fox fox = new Fox(initialHead, initialTail);
+		
+		// Add to board
+		try {
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
+	
+		// Move across the board one unit right
+		int moveSpaces = 2;
+		Direction moveDirection = Direction.RIGHT;
+		
+		try {
+			board.slide(moveDirection, moveSpaces, initialHead);	
+		}
+		catch (NonMovableItemException e) {
+			fail("Exception was thrown");
+		}
+		
+		assertNotEquals(fox, board.getItem(initialHead),
+				"The initial head coordinate should no longer have the fox");
+		
+		assertTrue(board.getItem(initialHead) instanceof EmptyBoardItem,
+				"The initial head coordinate should be an empty item");
+		
+		assertNotEquals(fox, board.getItem(initialTail),
+				"The initial tail coordinate should no longer have the fox");
+		
+		assertTrue(board.getItem(initialTail) instanceof EmptyBoardItem,
+				"The initial tail coordinate should be an empty item");
+		
+		assertEquals(fox.getHead(), new Coordinate(0, 2),
+				"The head should be where the tail was plus one unit right");
+
+		assertEquals(fox.getTail(), new Coordinate(0, 3),
+				"The tail should be where the tail was plus two units right");
 	}
 	
 	@Test
@@ -246,7 +297,7 @@ public class BoardTest {
 			int moveSpaces = 1;
 			Direction moveDirection = Direction.RIGHT;
 			
-			board.move(moveDirection, moveSpaces, coordinate);	
+			board.slide(moveDirection, moveSpaces, coordinate);	
 		});
 	}
 	

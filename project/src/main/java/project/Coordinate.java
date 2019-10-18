@@ -1,5 +1,7 @@
 package project;
 
+import java.util.Objects;
+
 public class Coordinate {
 	public int row;
 	public int column;
@@ -28,6 +30,11 @@ public class Coordinate {
 		return (this.row == coordinate.row && 
 				this.column == coordinate.column);
 	}
+	
+	@Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
 	
 	@Override
 	public String toString() {
