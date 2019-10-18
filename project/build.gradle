@@ -75,3 +75,8 @@ archidoc {
 	packages = ['project']
 	enableAllInfo()
 }
+
+compileJava   {
+  sourceCompatibility = 11
+  targetCompatibility = 11
+}
