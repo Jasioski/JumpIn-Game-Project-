@@ -14,9 +14,21 @@ public class Main {
 		logger.info("Starting main");
 
 		Board board = new Board(5);
+		
+		try {
+			board.setItem(0, 0, new Rabbit(0,0));
+		} catch (BoardItemNotEmptyException e) {
+			// TODO Auto-generated catch block
 
-		logger.debug("printing board");
-		logger.debug(board.toString());
+			if (logger.isErrorEnabled()) {
+				logger.error(e.getStackTrace());
+			}
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("printing board");
+			logger.debug("\n" + board.toString());
+		}
 	}
 
 }

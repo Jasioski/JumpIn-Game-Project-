@@ -1,44 +1,40 @@
 package project;
 
-public class BoardItem {
+import java.util.ArrayList;
+import java.util.List;
 
-	private int row;
-	private int column;
+public abstract class BoardItem {
+
+	private List<Coordinate> coordinates;
 	private Character displayCharacter;
 	
-	public BoardItem(int row, int column, Character displayCharacter) {
-		this.row = row;
-		this.column = column;
+	public BoardItem(Coordinate coordinate, Character displayCharacter) {
+		this.coordinates = new ArrayList<Coordinate>();
+		
+		this.coordinates.add(coordinate);
+		
 		this.displayCharacter = displayCharacter;
 	}
 	
-	public int getRow() {
-		return row;
+	public List<Coordinate> getCoordinates() {
+		return this.coordinates;
 	}
-
-	public int getColumn() {
-		return column;
+	
+	public BoardItem(int row, int column, Character displayCharacter) {
+		this(new Coordinate(row, column), displayCharacter);
 	}
 	
 	public Character getDisplayCharacter() {
 		return displayCharacter;
 	}
 	
-
-	// TODO: these should be removed once the attemptMove is implemented
-	public void setRow(int row) {
-		this.row = row;
-	}
-	
-	// TODO: these should be removed once the attemptMove is implemented
-	public void setColumn(int column) {
-		this.column = column;
-	}
-	
 	@Override
 	public String toString() {
-		return "" + row + "," + column + ":" + getDisplayCharacter();
+		return "" + getDisplayCharacter();
 	}
+	
+	public abstract void setCoordinate(Coordinate coordinate);
+	public abstract void setCoordinates(List<Coordinate> coordinates);
 	
 	
 }

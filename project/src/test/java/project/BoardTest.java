@@ -2,6 +2,7 @@ package project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,15 +19,17 @@ public class BoardTest {
 		assertEquals(board.getColumns(), columns, "columns should be the same");
 		
 		// Check that the board is initialized correctly
-		for (int row = 0; row < rows; row++) {
-			for (int column = 0; column < columns; column++) {
-				BoardItem item = board.getItem(row, column);
-				assertEquals(item.getRow(), row, "row of the item should"
-						+ "be the same as its row index in the array");
-				assertEquals(item.getColumn(), column, "column of the item should"
-						+ "be the same as its column index in the array");
-			}
-		}
+				for (int row = 0; row < rows; row++) {
+					for (int column = 0; column < columns; column++) {
+						BoardItem item = board.getItem(row, column);
+						
+						Coordinate coordinate = item.getCoordinates().get(0);
+						
+						assertEquals(coordinate, new Coordinate(row, column),
+								"coordinate should equal the row and column it is "
+								+ "stored at");
+					}
+				}
 		
 	}
 	
@@ -42,18 +45,6 @@ public class BoardTest {
 		assertEquals(board.getRows(), dimension, "rows should equal dimension");
 		assertEquals(board.getColumns(), dimension, "columns should equal"
 				+ "dimension");
-		
-		// Check that the board is initialized correctly
-		for (int row = 0; row < dimension; row++) {
-			for (int column = 0; column < dimension; column++) {
-				BoardItem item = board.getItem(row, column);
-				assertEquals(item.getRow(), row, "row should be the same"
-						+ "as its row index in the array");
-				assertEquals(item.getColumn(), column, "column should be "
-						+ "the same as its column index in the array");
-			}
-		}
-
 	}
 
 	@Test
@@ -113,38 +104,49 @@ public class BoardTest {
 	void testSetItem() {
 		Board board = new Board(5);
 		
-		int initialRow = 0;
-		int initialColumn = 0;
+		Coordinate initialCoordinate = new Coordinate(0, 0);
+		Coordinate finalCoordinate = new Coordinate(1, 1);
+
+
+		BoardItem item = new EmptyBoardItem(initialCoordinate);
 		
-		BoardItem item = new BoardItem(0, 0, 'B');
+		try {
+			board.setItem(finalCoordinate, item);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
 		
-		int movedRow = 1;
-		int movedColumn = 1;
+		BoardItem setItem = board.getItem(finalCoordinate);
+		assertEquals(item, setItem, 
+				"The item should be the one we set");
 		
-		board.setItem(movedRow, movedColumn, item);
-		
-		assertEquals(item, board.getItem(movedRow, movedColumn),
-				"the item at " + movedRow + ":" + movedColumn + 
-				" should be the one we set");
-		
-		assertEquals(movedRow, item.getRow(), "the row should be the "
-				+ "one we moved to");
-		assertEquals(movedColumn, item.getColumn(), "the column should be the "
-				+ "one we moved to");
+		assertEquals(finalCoordinate, setItem.getCoordinates().get(0), 
+				"The item should have the new coordinate");
+				
+		assertEquals(1, setItem.getCoordinates().size(), 
+			"The item should only have one coordinate");
 	}
 	
-
 	
-//	@Test
-//	/**
-//	 * Should not be able to set an item if the place is non empty
-//	 */
-//	void testItem() {
-//		Board board = new Board(5);
-//		int row = 0;
-//		int column = 0;
-//		
-//		board.setItem(0, 0, new Rabbit(0, 0));
-//	}
+	@Test
+	/**
+	 * Should not be able to set an item if the coordinate already contains
+	 * an item
+	 */
+	void testItem() {
+		Board board = new Board(5);
+		Coordinate badCoordinate = new Coordinate(0, 0);
+		
+		try {
+			board.setItem(badCoordinate, new Rabbit(badCoordinate));
+		} catch (BoardItemNotEmptyException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
+		
+		assertThrows(BoardItemNotEmptyException.class, () -> {
+			board.setItem(badCoordinate, new Rabbit(badCoordinate));
+		});
+	}
 	
 }

@@ -8,14 +8,16 @@ class RabbitTest {
 
 	@Test
 	void testConstructor() {
-		int row = 0;
-		int column = 1;
+		Coordinate coordinate = new Coordinate(0, 1);
 		Character expectedDisplayCharacter = 'R';
 		
-		Rabbit rabbit = new Rabbit(row, column);
+		Rabbit rabbit = new Rabbit(coordinate);
 		
-		assertEquals(rabbit.getRow(), row, "row should be same");
-		assertEquals(rabbit.getColumn(), column, "column should be same");
+		Coordinate retrievedCoordinate = rabbit.getCoordinate();
+		
+		assertEquals(coordinate, retrievedCoordinate, "the coordinate should"
+				+ "have been set");
+		
 		assertEquals(rabbit.getDisplayCharacter(), expectedDisplayCharacter,
 				"the display character should be " + expectedDisplayCharacter);
 	}

@@ -57,6 +57,11 @@ public class Board {
 		return items[row][column];
 	}
 	
+
+	public BoardItem getItem(Coordinate coordinate) {
+		return getItem(coordinate.row, coordinate.column);
+	}
+	
 	@Override
 	public String toString() {
 		String str = "";
@@ -74,12 +79,22 @@ public class Board {
 		return str;
 	}
 
-	public void setItem(int row, int column, BoardItem item) {
-		items[row][column] = item;
+	public void setItem(int row, int column, BoardItem item) 
+			throws BoardItemNotEmptyException {
+		Coordinate coordinate = new Coordinate(row, column);
 		
-		item.setRow(row);
-		item.setColumn(column);
-		
+		setItem(coordinate, item);
 	}
 
+	public void setItem(Coordinate coordinate, BoardItem item) 
+			throws BoardItemNotEmptyException {
+		if (items[coordinate.row][coordinate.column]
+				.getClass() != EmptyBoardItem.class) {
+			throw new BoardItemNotEmptyException("Cannot set an item on the "
+					+ "board if there is already a non empty item in the slot");
+		}
+		
+		items[coordinate.row][coordinate.column] = item;
+		item.setCoordinate(coordinate);
+	}
 }

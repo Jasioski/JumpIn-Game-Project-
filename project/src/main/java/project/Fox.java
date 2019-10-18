@@ -1,5 +1,7 @@
 package project;
 
+import java.util.List;
+
 public class Fox extends BoardItem {
 
 	private int tailRow;
@@ -39,5 +41,17 @@ public class Fox extends BoardItem {
 
 	public int getTailColumn() {
 		return tailColumn;
+	}
+
+	@Override
+	public void setCoordinate(Coordinate coordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setCoordinates(List<Coordinate> coordinates) {
+		// TODO Auto-generated method stub
+		
 	}
 }
