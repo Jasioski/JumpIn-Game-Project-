@@ -51,3 +51,8 @@ build
 .eclipse-pmd
 .classpath
 .settings/
+
+# Intellij IDEA
+*.iml
+*.ipr
+*.iws
