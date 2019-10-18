@@ -16,14 +16,20 @@ public class Rabbit extends BoardItem {
 
 	@Override
 	public void setCoordinate(Coordinate coordinate) {
-		// TODO Auto-generated method stub
-		
+		this.getCoordinates().clear();
+		this.getCoordinates().add(coordinate);
 	}
 
 	@Override
 	public void setCoordinates(List<Coordinate> coordinates) {
-		// TODO Auto-generated method stub
+		if (coordinates.size() != 1) {
+			if (coordinates.size() != 1) {
+				throw new IllegalArgumentException("can only add a coordinate "
+						+ "of length 1");
+			}
+		}
 		
+		this.setCoordinate(coordinates.get(0));
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class EmptyBoardItem extends BoardItem {
 	@Override
 	public void setCoordinates(List<Coordinate> coordinates) throws
 	IllegalArgumentException {
-	
+		
 	}
 
 
