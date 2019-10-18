@@ -768,7 +768,7 @@ This rule checks for JUnit4, JUnit5 and TestNG Tests, as well as methods startin
         </description>
         <priority>3</priority>
         <properties>
-            <property name="maximumAsserts" type="Integer" min="1" max="1000" description="Maximum number of Asserts in a test method" value="5"/>
+            <property name="maximumAsserts" type="Integer" min="1" max="1000" description="Maximum number of Asserts in a test method" value="10"/>
             <property name="xpath">
                 <value>
 <![CDATA[
