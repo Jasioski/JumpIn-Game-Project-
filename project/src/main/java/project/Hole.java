@@ -43,4 +43,15 @@ public class Hole extends BoardItem {
 		rabbit.setCoordinate(this.getCoordinate());
 	}
 	
+	public BoardItem removeContainingItem() throws HoleIsEmptyException {
+		if (this.containingItem.isEmpty()) {
+			throw new HoleIsEmptyException("there is no item in the hole");
+		}
+		
+		BoardItem item = this.containingItem.get();
+		this.containingItem = Optional.empty();
+				
+		return item;
+	}
+	
 }

@@ -1,7 +1,9 @@
 package project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
 
@@ -61,6 +63,11 @@ class HoleTest {
 				+ "holes coordinates");
 	}
 	
+	//@Test
+	/**
+	 * Should not be able to add item to the hole if there is already one inside
+	 */
+	
 	@Test
 	/**
 	 * Get hole coordinate
@@ -71,5 +78,43 @@ class HoleTest {
 		
 		assertEquals(coordinate, hole.getCoordinate(),
 				"the coordinate should be the one that was set");
+	}
+	
+	@Test
+	/**
+	 * Should not be able to remove the containing item if it is empty
+	 */
+	void testRemoveContainingItemWhenEmpty() {
+		Coordinate holeCoordinate = new Coordinate(0, 0);
+		Hole hole = new Hole(holeCoordinate);
+		
+		assertThrows(HoleIsEmptyException.class, () -> {
+			hole.removeContainingItem();
+		});
+	}
+	
+	@Test
+	/**
+	 * Remove the containing item when it exists
+	 */
+	void testRemoveContainingItem() {
+		Coordinate holeCoordinate = new Coordinate(0, 0);
+		Hole hole = new Hole(holeCoordinate);
+		
+		Rabbit item = new Rabbit(1,1);
+		
+		hole.setContainingItem(item);
+		
+		BoardItem containingItem;
+		
+		try {
+			containingItem = hole.removeContainingItem();
+			assertEquals(containingItem, item, "should get the same item back");
+			assertTrue(hole.getContainingItem().isEmpty(), 
+					"the hole should now be empty");
+		} catch (HoleIsEmptyException e) {
+			fail("Exception was thrown");
+		}
+		
 	}
 }
