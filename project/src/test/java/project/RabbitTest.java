@@ -135,9 +135,111 @@ class RabbitTest {
 		} catch (Exception e) {
 			fail("Exception was thrown");
 		}
-		
-		
+	}
 
-	} 
 
+    @Test
+    /**
+     * Jump right two units over a fox
+     */
+    void testJumpRightTwoOverFox() {
+
+        Rabbit rabbitJumping = new Rabbit(0, 0);
+        Fox foxObstacle = new Fox(0, 1, 0, 2);
+
+        // Setup slice
+        // index:  0  1  2  3
+        // Layout: RJ FO FO E
+        List<BoardItem> slice = new ArrayList<BoardItem>();
+        slice.add(rabbitJumping);
+        slice.add(foxObstacle);
+        slice.add(new EmptyBoardItem(0, 3));
+
+        // Jump Rabbit
+        Direction moveDirection = Direction.RIGHT;
+
+        try {
+            List<Coordinate> newCoordinates = rabbitJumping.jump(moveDirection, slice);
+            // Expected result
+            // index:  0 1  2  3
+            // Layout: E FO FO RJ
+
+            Coordinate newRabbitJumpingCoordinate = new Coordinate(0, 3);
+            assertEquals(newRabbitJumpingCoordinate ,rabbitJumping.getCoordinate(), "the rabbit should be at"
+                    + "the new location" );
+
+            assertEquals(newRabbitJumpingCoordinate, newCoordinates.get(0), "The method should return new coordinate for"
+                    + "the rabbit");
+
+        } catch (Exception e) {
+            fail("Exception was thrown");
+        }
+    }
+
+	@Test
+	/**
+	 * Jump right should not do anything if there is no obstacle
+	 */
+	void testJumpRightOneNoObstacle() {
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: RJ E E E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(rabbitJumping);
+		slice.add(new EmptyBoardItem(0, 1));
+		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 3));
+
+		// Jump Rabbit
+		Direction moveDirection = Direction.RIGHT;
+
+		// Store original coordinates
+		List<Coordinate> originalCoordinates = rabbitJumping.getCoordinates();
+
+		assertThrows(JumpFailedNoObstacleException.class, () -> {
+			rabbitJumping.jump(moveDirection, slice);
+		}, "An error should have been thrown because the rabbit should" +
+				"not be able to jump over an empty item");
+
+		// the rabbit should not have moved
+		assertEquals(originalCoordinates, rabbitJumping.getCoordinates());
+	}
+
+	@Test
+	/**
+	 * Try jumping four units over a fox and a rabbit
+	 * this should cause an error because this will cause
+	 * the rabbit to jump outside of the slice
+	 */
+	void testJumpRightFourOutOfBounds() {
+
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Fox foxObstacle = new Fox(0, 1, 0, 2);
+		Rabbit rabbitObstacle = new Rabbit(0, 3);
+
+		// Setup slice
+		// index:  0  1  2  3
+		// Layout: RJ FO FO RO
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(rabbitJumping);
+		slice.add(foxObstacle);
+		slice.add(rabbitObstacle);
+
+		// Jump Rabbit
+		Direction moveDirection = Direction.RIGHT;
+
+
+		// Store original coordinates
+		List<Coordinate> originalCoordinates = rabbitJumping.getCoordinates();
+
+		assertThrows(JumpFailedOutOfBoundsException.class, () -> {
+			rabbitJumping.jump(moveDirection, slice);
+		}, "An error should have been thrown because the rabbit should" +
+				"not be able to jump outside of the slice");
+
+		// the rabbit should not have moved
+		assertEquals(originalCoordinates, rabbitJumping.getCoordinates());
+	}
 }
