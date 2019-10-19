@@ -1,16 +1,19 @@
 package project;
 
+
 import java.util.ArrayList;	
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Board {
+public class Board{
 	
 	private BoardItem[][] items;
 
 	private int rows;
 	private int columns;
+	protected GameState currentGameState;
+	private int rabbitsContainedInHoles;
 	
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
 		if (rows <= 0 || columns <= 0) { 
@@ -20,7 +23,11 @@ public class Board {
 	}
 	
 	public Board(int rows, int columns) {
+		//setting GameState
+		this.currentGameState = GameState.IN_PROGRESS;
 		
+		//Setting up the number of Rabbits in the hole
+		rabbitsContainedInHoles = 0;
 		validateArguments(rows, columns);
 		
 		this.rows = rows;
@@ -37,8 +44,12 @@ public class Board {
 		
 	}
 
-	public Board(int dimension) {
+	public Board(int dimension) {		
 		this(dimension, dimension);
+		//Setting the gameState
+		this.currentGameState = GameState.IN_PROGRESS;
+		//Setting up the number of Rabbits in the hole
+		rabbitsContainedInHoles = 0;
 	}
 
 	public int getRows() {
@@ -281,9 +292,26 @@ public class Board {
 			rabbit = hole.removeContainingItem();
 		} catch (HoleIsEmptyException e) {
 		    hole.setContainingItem(rabbit);
+		    
+		  //Increase the int value every time a rabbit is placed in the hole
+			rabbitsContainedInHoles++;
+			if(rabbitsContainedInHoles == 3) {
+				//If three holes have been occupied by the rabbits
+				//make call to puzzleSolved function
+				puzzleSolved();
+			}
 		    throw e;
 		}
 
 		this.jump(jumpDirection, rabbit);
+	}
+	
+	public GameState getCurrentGameState() {
+		return currentGameState;
+	}
+	@SuppressWarnings("static-access")
+	public void puzzleSolved() {
+		this.currentGameState = GameState.SOLVED;
+		
 	}
 }
