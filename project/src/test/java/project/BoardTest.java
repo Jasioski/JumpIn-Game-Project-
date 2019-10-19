@@ -181,14 +181,18 @@ public class BoardTest {
 	void testMoveFoxRightOne() {
 		// Create a board
 		Board board = new Board(5);
-	
-		
+
 		// Create a fox
 		Coordinate initialHead = new Coordinate(0, 0);
 		Coordinate initialTail = new Coordinate(0, 1);
 		Fox fox = new Fox(initialHead, initialTail);
 		
 		// Add to board
+		// Initial Layout
+		// F F E E E
+		// E E E E E
+		// E E E E E
+		// E E E E E
 		try {
 			board.setItem(fox.getCoordinates(), fox);
 		} catch (BoardItemNotEmptyException e) {
@@ -196,13 +200,19 @@ public class BoardTest {
 		}
 	
 		// Move across the board one unit right
+		// Expected Layout
+		// E F F E E
+		// E E E E E
+		// E E E E E
+		// E E E E E
+
 		int moveSpaces = 1;
 		Direction moveDirection = Direction.RIGHT;
 		
 		try {
 			board.slide(moveDirection, moveSpaces, initialHead);	
 		}
-		catch (NonMovableItemException e) {
+		catch (Exception e) {
 			fail("Exception was thrown");
 		}
 		
@@ -221,58 +231,274 @@ public class BoardTest {
 		assertEquals(fox.getTail(), new Coordinate(0, 2),
 				"The tail should be where the tail was plus one unit right");
 	}
-	
+
 	@Test
 	/**
-	 * Move fox right by 2 space
+	 * Move fox right by 2 spaces
 	 */
 	void testMoveFoxRightTwo() {
 		// Create a board
 		Board board = new Board(5);
-	
-		
+
+
 		// Create a fox
 		Coordinate initialHead = new Coordinate(0, 0);
 		Coordinate initialTail = new Coordinate(0, 1);
 		Fox fox = new Fox(initialHead, initialTail);
-		
+
 		// Add to board
 		try {
 			board.setItem(fox.getCoordinates(), fox);
 		} catch (BoardItemNotEmptyException e) {
 			fail("Exception was thrown");
 		}
-	
+
 		// Move across the board one unit right
 		int moveSpaces = 2;
 		Direction moveDirection = Direction.RIGHT;
-		
+
 		try {
-			board.slide(moveDirection, moveSpaces, initialHead);	
+			board.slide(moveDirection, moveSpaces, initialHead);
 		}
-		catch (NonMovableItemException e) {
+		catch (Exception e) {
 			fail("Exception was thrown");
 		}
-		
+
 		assertNotEquals(fox, board.getItem(initialHead),
 				"The initial head coordinate should no longer have the fox");
-		
+
 		assertTrue(board.getItem(initialHead) instanceof EmptyBoardItem,
 				"The initial head coordinate should be an empty item");
-		
+
 		assertNotEquals(fox, board.getItem(initialTail),
 				"The initial tail coordinate should no longer have the fox");
-		
+
 		assertTrue(board.getItem(initialTail) instanceof EmptyBoardItem,
 				"The initial tail coordinate should be an empty item");
-		
+
 		assertEquals(fox.getHead(), new Coordinate(0, 2),
 				"The head should be where the tail was plus one unit right");
 
 		assertEquals(fox.getTail(), new Coordinate(0, 3),
 				"The tail should be where the tail was plus two units right");
 	}
-	
+
+	@Test
+	/**
+	 * Move fox right by 4 spaces out of the board
+	 * This should not cause any changes to the board as the board should catch the exception
+	 * that was thrown by the fox
+	 *
+	 * The board should not change anything in its own representation
+	 * It should throw an exception for the callee to be notified
+	 */
+	void testMoveFoxRightFourOutOfBoard() {
+		// Create a board
+		Board board = new Board(5);
+
+		// Create a fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Add to board
+		// Initial Layout
+		// F F E E E
+		// E E E E E
+		// E E E E E
+		// E E E E E
+		try {
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
+
+		// Move across the board four units right
+		// Attempted Layout
+		// E E E E F F  <---- the tail ends up off of the board, which is an issue
+		// E E E E E
+		// E E E E E
+		// E E E E E
+
+		int moveSpaces = 4;
+		Direction moveDirection = Direction.RIGHT;
+
+		// Store copies of the current state for comparison
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+
+		BoardItem initialItems[][] = new BoardItem[board.getRows()][board.getColumns()];
+
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				initialItems[row][column] = board.getItem(row, column);
+			}
+		}
+
+		assertThrows(SlideOutOfBoundsException.class, () -> {
+			board.slide(moveDirection, moveSpaces, initialHead);
+		}, "should not be able to move off of the board");
+
+		assertEquals(initialCoordinates, fox.getCoordinates(), "the fox coordinates should not have changed");
+
+		assertEquals(fox, board.getItem(initialHead),
+				"The initial head coordinate should still have the fox");
+
+		assertEquals(fox, board.getItem(initialTail),
+				"The initial tail coordinate should still have the fox");
+
+		// Make sure nothing in the board has changed
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				assertEquals(board.getItem(row, column), initialItems[row][column],
+						"the item at " + row + ":" + column + "should not have changed");
+			}
+		}
+	}
+
+
+	@Test
+	/**
+	 * Move fox right by 1 space into a rabbit
+	 * This should not cause any changes to the board as the board should catch the exception
+	 * that was thrown by the fox
+	 *
+	 * The board should not change anything in its own representation
+	 * It should throw an exception for the callee to be notified
+	 */
+	void testMoveFoxRightThroughObstacle() {
+		// Create a board
+		Board board = new Board(5);
+
+		// Create a fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Rabbit
+		Coordinate rabbitCoordinate = new Coordinate(0, 2);
+		BoardItem rabbit = new Rabbit(0, 2);
+
+		// Add to board
+		// Initial Layout
+		// F F R E E
+		// E E E E E
+		// E E E E E
+		// E E E E E
+		try {
+			board.setItem(rabbit.getCoordinates(), rabbit);
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
+
+		// Move across the board one unit right into the rabbit
+		// Attempted Layout
+		// E F FxR  E E <--- the fox would be at the same place as the rabbit
+		// E E E    E E
+		// E E E    E E
+		// E E E    E E
+
+		int moveSpaces = 4;
+		Direction moveDirection = Direction.RIGHT;
+
+		// Store copies of the current state for comparison
+		List<Coordinate> initialFoxCoordinates = fox.getCoordinates();
+		List<Coordinate> initialRabbitCoordinates = rabbit.getCoordinates();
+
+		BoardItem initialItems[][] = new BoardItem[board.getRows()][board.getColumns()];
+
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				initialItems[row][column] = board.getItem(row, column);
+			}
+		}
+
+		assertThrows(SlideHitObstacleException.class, () -> {
+			board.slide(moveDirection, moveSpaces, initialHead);
+		}, "should not be able to move off of the board");
+
+		assertEquals(initialFoxCoordinates, fox.getCoordinates(), "the fox coordinates should not have changed");
+		assertEquals(fox, board.getItem(initialHead),
+				"The initial head coordinate should still have the fox");
+		assertEquals(fox, board.getItem(initialTail),
+				"The initial tail coordinate should still have the fox");
+
+		assertEquals(initialRabbitCoordinates, rabbit.getCoordinates(), "the rabbit's " +
+				"coordinates should not have changed");
+
+		// Make sure nothing in the board has changed
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				assertEquals(board.getItem(row, column), initialItems[row][column],
+						"the item at " + row + ":" + column + "should not have changed");
+			}
+		}
+	}
+
+	@Test
+	/**
+	 * Move fox right by zero space
+	 * This should not cause any changes to the board
+	 */
+	void testMoveFoxRightZero() {
+		// Create a board
+		Board board = new Board(5);
+
+		// Create a fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Add to board
+		// Initial Layout
+		// F F E E E
+		// E E E E E
+		// E E E E E
+		// E E E E E
+		try {
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// Move across the board one unit right into the rabbit
+		// Expected Layout
+		// F F E E E <--- the fox would be at the same place as the rabbit
+		// E E E E E
+		// E E E E E
+		// E E E E E
+
+		int moveSpaces = 0;
+		Direction moveDirection = Direction.RIGHT;
+
+		// Store copies of the current state for comparison
+		List<Coordinate> initialFoxCoordinates = fox.getCoordinates();
+
+		BoardItem initialItems[][] = new BoardItem[board.getRows()][board.getColumns()];
+
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				initialItems[row][column] = board.getItem(row, column);
+			}
+		}
+
+		try {
+			board.slide(moveDirection, moveSpaces, initialHead);
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertEquals(initialFoxCoordinates, fox.getCoordinates(), "the fox coordinates should not have changed");
+
+		// Make sure nothing in the board has changed
+		for (int row = 0; row < board.getRows(); row++) {
+			for (int column = 0; column < board.getColumns(); column++) {
+				assertEquals(board.getItem(row, column), initialItems[row][column],
+						"the item at " + row + ":" + column + "should not have changed");
+			}
+		}
+	}
+
 	@Test
 	/**
 	 * Should not allow moving a non-movable item

@@ -140,8 +140,7 @@ public class Board {
 
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonMovableItemException 
-	{
+			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		// Throw an error if does not implement Movable
@@ -183,20 +182,15 @@ public class Board {
 		// Move Item
 		Slidable movableItem = (Slidable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
-		try {
-			newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
-			
-			// Clear old coordinates
-			for (Coordinate initialCoordinate: initialCoordinates) {
-				setEmptyItem(initialCoordinate);
-			}
-			
-			// Change the board representation
-			setItem(newCoordinates, itemAtCoordinate);
-		} catch (BoardItemNotEmptyException e) {
-		} catch (SlideFailedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
+
+		// Clear old coordinates
+		for (Coordinate initialCoordinate: initialCoordinates) {
+			setEmptyItem(initialCoordinate);
 		}
+
+		// Change the board representation
+		setItem(newCoordinates, itemAtCoordinate);
 	}
 }

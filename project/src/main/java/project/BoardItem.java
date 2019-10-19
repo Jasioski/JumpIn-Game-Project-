@@ -32,6 +32,23 @@ public abstract class BoardItem {
 	}
 	
 	public abstract void setCoordinates(List<Coordinate> coordinates);
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null) return false;
+
+		if (this.getClass() != o.getClass()) {
+			return false;
+		}
+
+		BoardItem boardItem = (BoardItem) o;
+
+		return (this.displayCharacter.equals(boardItem.displayCharacter) &&
+			this.coordinates.equals(boardItem.coordinates)
+		);
+	}
+
 	
 }

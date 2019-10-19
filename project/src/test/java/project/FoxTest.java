@@ -129,7 +129,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -174,7 +174,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			fail("Exception was thrown");
 		}
 		
@@ -218,7 +218,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -263,7 +263,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -310,7 +310,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -361,7 +361,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -413,7 +413,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideOutOfBoundsException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);
 		}, "the fox should not be able to move outside of the slices range");
 
@@ -453,7 +453,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideHitObstacleException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);
 		}, "the fox should not be able to move through an " +
 				"obstacle");
@@ -493,7 +493,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -544,7 +544,7 @@ class FoxTest {
 		// Store the results
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
@@ -596,7 +596,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideOutOfBoundsException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);
 		}, "the fox should not be able to move outside of the slices range");
 
@@ -635,7 +635,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideHitObstacleException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);
 		}, "the fox should not be able to move through an " +
 				"obstacle");
@@ -670,7 +670,7 @@ class FoxTest {
 
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
-		} catch (SlideFailedException e) {
+		} catch (Exception e) {
 			fail("Exception was thrown");
 		}
 
@@ -747,7 +747,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 		
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideOutOfBoundsException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);	
 		}, "the fox should not be able to move outside of the slices range");
 		
@@ -783,7 +783,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 		
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideOutOfBoundsException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);	
 		}, "the fox should not be able to move outside of the slices range");
 		
@@ -819,7 +819,7 @@ class FoxTest {
 		// Store the fox coordinates
 		List<Coordinate> initialCoordinates = fox.getCoordinates();
 		
-		assertThrows(SlideFailedException.class, () -> {
+		assertThrows(SlideHitObstacleException.class, () -> {
 			fox.slide(moveDirection, moveSpaces, slice);	
 		}, "the fox should not be able to move throgh obstacles");
 		

@@ -228,7 +228,7 @@ public class Fox extends BoardItem implements Slidable {
 
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
-			throws SlideFailedException {
+			throws SlideOutOfBoundsException, SlideHitObstacleException {
 
 		// Move zero spaces
 		if (spaces == 0) {
@@ -271,7 +271,7 @@ public class Fox extends BoardItem implements Slidable {
 			// Restore the coordinates
 			this.setCoordinates(initialCoordinates);
 			
-			throw new SlideFailedException(e);
+			throw e;
 		}
 		
 		return newCoordinates;
