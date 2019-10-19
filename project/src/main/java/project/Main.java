@@ -17,7 +17,7 @@ public class Main {
 		Board board = new Board(5);
 		
 		Coordinate head = new Coordinate(0,0);
-		Coordinate tail = new Coordinate(0,0);
+		Coordinate tail = new Coordinate(0,1);
 		
 		Fox fox = new Fox(head, tail);
 		
