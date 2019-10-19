@@ -94,15 +94,13 @@ public class Rabbit extends BoardItem implements Jumpable {
 
 		if (hitObstacle) {
 			this.setCoordinate(newCoordinate);
-			System.out.println("Hit rabbit...");
 			return jumpRight(slice);
 		}
 		else {
 			List<Coordinate> newCoordinates = new ArrayList<>();
 			newCoordinates.add(newCoordinate);
 			this.setCoordinate(newCoordinate);
-			System.out.println("Encountered empty spot.." + newCoordinate);
-			return newCoordinates;			
+			return newCoordinates;
 		}
 
 	}
