@@ -159,7 +159,7 @@ public class Board {
 	private List<BoardItem> getColumn(int column) {
 		List <BoardItem> slice = new ArrayList<BoardItem>();
 
-		for (int row = 0; column < this.rows; row++) {
+		for (int row = 0; row < this.rows; row++) {
 			slice.add(items[row][column]);
 		}
 
@@ -184,7 +184,7 @@ public class Board {
 		switch (moveDirection) {
 			case UP:
 			case DOWN:
-				slice = this.getColumn(itemCoordinate.row);
+				slice = this.getColumn(itemCoordinate.column);
 				break;
 			case LEFT:
 			case RIGHT:

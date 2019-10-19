@@ -561,6 +561,63 @@ public class BoardTest {
 
 	@Test
 	/**
+	 * Move fox up by 1 space
+	 */
+	void testMoveFoxUpOne() {
+		// Create a board
+		Board board = new Board(5);
+
+		// Create a fox
+		Coordinate initialHead = new Coordinate(1, 0);
+		Coordinate initialTail = new Coordinate(2, 0);
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Add to board
+		// Initial Layout
+		// E E E E E
+		// F E E E E
+		// F E E E E
+		// E E E E E
+		try {
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
+
+		// Move across the board one unit right
+		// Expected Layout
+		// F E E E E
+		// F E E E E
+		// E E E E E
+		// E E E E E
+
+		int moveSpaces = 1;
+		Direction moveDirection = Direction.UP;
+
+		try {
+			board.slide(moveDirection, moveSpaces, initialHead);
+		}
+		catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertEquals(fox, board.getItem(initialHead),
+				"The initial head coordinate should still have the fox");
+
+		assertNotEquals(fox, board.getItem(initialTail),
+				"The tail should still no longer contain the fox");
+
+		assertTrue(board.getItem(initialTail) instanceof EmptyBoardItem,
+				"The initial tail coordinate should be an empty item");
+
+		assertEquals(fox.getTail(), initialHead,
+				"The tail should be where the head was");
+
+		assertEquals(fox.getHead(), new Coordinate(0, 0),
+				"The head should be where the head was plus one unit up ");
+	}
+	@Test
+	/**
 	 * Should not allow moving a non-movable item
 	 */
 	void testMoveNonMovable() {
