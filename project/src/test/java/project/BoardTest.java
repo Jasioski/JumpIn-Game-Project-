@@ -1,15 +1,11 @@
 package project;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
 
@@ -642,6 +638,103 @@ public class BoardTest {
 			board.slide(moveDirection, moveSpaces, coordinate);	
 		});
 	}
-	
-	
+
+	@Test
+	/**
+	 * Jump rabbit right over one obstacle
+	 */
+	void testRabbitRightOverObstacle() {
+		// Layout
+		//   0  1  2 3
+		// 0 RJ RO E E
+		// 1 E  E  E
+		Board board = new Board(2, 4);
+
+		Coordinate rabbitJumpingCoordinate = new Coordinate(0, 0);
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(0, 1);
+
+		Direction jumpDirection = Direction.RIGHT;
+
+
+		try {
+			// Expected Layout
+			//    0  1   2  3
+			// 0  E  RO  RJ E
+			// 1  E  E   E  E
+			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
+			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
+			board.jump(jumpDirection, rabbitJumpingCoordinate);
+
+            Coordinate expectedCoordinate = new Coordinate(0, 2);
+            assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+                    "the rabbit should be at the new expected coordinate");
+
+            assertNotEquals(rabbitJumping, board.getItem(rabbitJumpingCoordinate),
+                    "the old position should no longer contain the rabbit");
+
+            assertTrue(board.getItem(rabbitJumpingCoordinate) instanceof EmptyBoardItem,
+                    "the old position should contain an empty item");
+		} catch (Exception e) {
+		    fail("Exception was thrown");
+		}
+
+	}
+
+//	@Test
+//	/**
+//	 * Jump rabbit right four and outside of board should fail
+//	 */
+
+	@Test
+	/**
+	 * Jump rabbit outside of the hole over an obstacle
+	 */
+	void testJumpRabbitOutsideOfHole () {
+		// Layout
+		// 0      1   2  3
+		// H(RJ)  RO  E  E
+		// E      E   E  E
+		Board board = new Board(2, 4);
+
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(0, 1);
+
+		try {
+			// Place rabbit in the hole
+			hole.containRabbit(rabbitJumping);
+			// Add to board
+			board.setItem(hole.getCoordinates(), hole);
+			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
+
+			// Expected Layout
+			// 0  1   2  3
+			// H  RO  RJ  E
+			// E  E   E  E
+
+			// Jump out
+			Direction jumpDirection = Direction.RIGHT;
+            board.jumpOut(jumpDirection, hole.getCoordinate());
+
+			assertFalse(hole.getContainingItem().isPresent(), "the hole should" +
+					"be empty");
+			assertEquals(board.getItem(new Coordinate(0, 1))
+					,rabbitObstacle,
+					"the obstacle should not have moved");
+
+			Coordinate expectedCoordinate = new Coordinate(0, 2);
+			assertEquals(board.getItem(expectedCoordinate),
+					rabbitJumping,
+					"the rabbit should be at the expected location");
+			assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+					"the rabbit should have had its own reference" +
+							"updated");
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+	}
+
+	// todo: try jumping out of hole where there is no obstacle next to it
 }

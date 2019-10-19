@@ -226,6 +226,8 @@ public class Fox extends BoardItem implements Slidable {
 	}
 
 
+	// TODO: fox should not be able to move left if vertical, or up if
+	//  horizontal
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
 			throws SlideOutOfBoundsException, SlideHitObstacleException {

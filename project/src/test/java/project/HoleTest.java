@@ -36,7 +36,7 @@ class HoleTest {
 		
 		Hole hole = new Hole(coordinate);
 		
-		Optional<BoardItem> containingItem = hole.getContainingItem();
+		Optional<Rabbit> containingItem = hole.getContainingItem();
 		assertTrue(containingItem.isEmpty(),
 				"the containing item should not exist");
 	}
@@ -54,7 +54,7 @@ class HoleTest {
 		Hole hole = new Hole(holeCoordinate);
 		hole.setContainingItem(new Rabbit(rabbitCoordinate));
 		
-		Optional<BoardItem> containingItem = hole.getContainingItem();
+		Optional<Rabbit> containingItem = hole.getContainingItem();
 		
 		assertTrue(containingItem.isPresent(),
 				"the containing item should exist");
@@ -132,6 +132,59 @@ class HoleTest {
 		} catch (HoleIsEmptyException e) {
 			fail("Exception was thrown");
 		}
-		
 	}
+
+	@Test
+	/**
+	 * Contain a rabbit inside the hole
+	 */
+	void testContainRabbit() {
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbit = new Rabbit(1,0);
+
+		try {
+			hole.containRabbit(rabbit);
+		} catch (Exception e) {
+		    fail("Exception was thrown");
+		}
+
+		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
+				"now contain something");
+		assertEquals(rabbit, hole.getContainingItem().get(), "the hole should" +
+				"now contain the rabbit");
+		assertEquals(hole.getCoordinates(), rabbit.getCoordinates(), "" +
+				"the rabbits coordinates should be the same as the hole" );
+	}
+
+
+    @Test
+    /**
+     * Try containing a rabbit in a hole that already has a rabbit
+     */
+    void testContainRabbitWhenTheHoleAlreadyHasARabbit() {
+        Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbitHole = new Rabbit(0,0);
+
+		Coordinate rabbitOutsideCoordinate = new Coordinate(1, 0);
+		Rabbit rabbitOutside = new Rabbit(rabbitOutsideCoordinate);
+
+		try {
+			hole.containRabbit(rabbitHole);
+		} catch (Exception e) {
+		    fail("Exception was thrown");
+		}
+
+		assertThrows(HoleAlreadyHasRabbitException.class, () -> {
+			hole.containRabbit(rabbitOutside);
+		});
+
+        assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
+                "still contain something");
+        assertEquals(rabbitHole, hole.getContainingItem().get(), "the hole " +
+				"should" +
+                "should still contain the old rabbit");
+        assertEquals(rabbitOutsideCoordinate,
+				rabbitOutside.getCoordinates().get(0),
+                "the rabbit outside should not have moved" );
+    }
 }

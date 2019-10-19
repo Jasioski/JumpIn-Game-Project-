@@ -113,7 +113,7 @@ class RabbitTest {
 		List<BoardItem> slice = new ArrayList<BoardItem>();
 		slice.add(rabbitJumping);
 		slice.add(rabbitObstacle);
-		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 2));
 		slice.add(new EmptyBoardItem(0, 3));
 		
 		// Jump Rabbit
@@ -229,7 +229,6 @@ class RabbitTest {
 
 		// Jump Rabbit
 		Direction moveDirection = Direction.RIGHT;
-
 
 		// Store original coordinates
 		List<Coordinate> originalCoordinates = rabbitJumping.getCoordinates();

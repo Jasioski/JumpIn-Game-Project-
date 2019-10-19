@@ -6,7 +6,7 @@ import java.util.Optional;
 public class Hole extends BoardItem {
 
 	private static final Character HOLE_DISPLAY_CHARACTER = 'H';
-	private Optional<BoardItem> containingItem;
+	private Optional<Rabbit> containingItem;
 	
 	public Hole(Coordinate coordinate) {
 		super(HOLE_DISPLAY_CHARACTER);
@@ -33,24 +33,34 @@ public class Hole extends BoardItem {
 		return this.getCoordinates().get(0);
 	}
 
-	public Optional<BoardItem> getContainingItem() {
+	public Optional<Rabbit> getContainingItem() {
 		return this.containingItem;
 	}
 
+	// TODO: merge with containRabbit
 	public void setContainingItem(Rabbit rabbit) {
 		this.containingItem = Optional.of(rabbit);
 		rabbit.setCoordinate(this.getCoordinate());
 	}
-	
-	public BoardItem removeContainingItem() throws HoleIsEmptyException {
+
+	// todo: merge with removeRabbit maybe
+	public Rabbit removeContainingItem() throws HoleIsEmptyException {
 		if (this.containingItem.isEmpty()) {
 			throw new HoleIsEmptyException("there is no item in the hole");
 		}
 		
-		BoardItem item = this.containingItem.get();
+		Rabbit rabbit = this.containingItem.get();
 		this.containingItem = Optional.empty();
 				
-		return item;
+		return rabbit;
 	}
-	
+
+	public void containRabbit(Rabbit rabbit) throws HoleAlreadyHasRabbitException {
+		if (this.containingItem.isPresent()) {
+			throw new HoleAlreadyHasRabbitException("the hole already has a " +
+					"rabbit");
+		}
+
+		this.setContainingItem(rabbit);
+	}
 }

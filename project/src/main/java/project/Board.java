@@ -2,6 +2,7 @@ package project;
 
 import java.util.ArrayList;	
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -166,22 +167,12 @@ public class Board {
 		return slice;
 	}
 
-	@SuppressWarnings("PMD.AvoidPrintStackTrace")
-	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
-		BoardItem itemAtCoordinate = getItem(itemCoordinate);
-		
-		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Slidable)) {
-			throw new NonMovableItemException("cannot move a not movable item");
-		}
 
-		// Get slice
-		List<BoardItem> slice = new ArrayList<>();
-		
-		// TODO: write tests for up and down
-		
-		switch (moveDirection) {
+	private List<BoardItem> getSlice(Direction direction, BoardItem item) {
+		Coordinate itemCoordinate = item.getCoordinates().get(0);
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+
+		switch (direction) {
 			case UP:
 			case DOWN:
 				slice = this.getColumn(itemCoordinate.column);
@@ -192,9 +183,28 @@ public class Board {
 				break;
 			default:
 				break;
-				
 		}
+
+		return slice;
+	}
+
+
+	// TODO: slide and jump have al ot of common functionalitu that needs
+	// to be extracted
+	@SuppressWarnings("PMD.AvoidPrintStackTrace")
+	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
+			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
+		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
+		// Throw an error if does not implement Movable
+		if (!(itemAtCoordinate instanceof Slidable)) {
+			// TODO: rename to nonslidable
+			throw new NonMovableItemException("cannot move a not movable item");
+		}
+
+		// Get slice
+		List<BoardItem> slice = this.getSlice(moveDirection, itemAtCoordinate);
+
 		// Store initial coordinates
 		List<Coordinate> initialCoordinates = 
 				itemAtCoordinate.getCoordinates()
@@ -214,5 +224,66 @@ public class Board {
 
 		// Change the board representation
 		setItem(newCoordinates, itemAtCoordinate);
+	}
+
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
+
+		jump(jumpDirection, itemAtCoordinate);
+	}
+	// TODO: merge this method with jumpout
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+
+		// Throw an error if does not implement Movable
+		if (!(itemAtCoordinate instanceof Slidable)) {
+			// TODO: fix this with a nonjumpable error
+//			throw new NonMovableItemException("cannot move a not movable item");
+		}
+
+		List<BoardItem> slice = this.getSlice(jumpDirection, itemAtCoordinate);
+
+		// Store initial coordinates
+		List<Coordinate> initialCoordinates =
+				itemAtCoordinate.getCoordinates()
+						.stream().map(coordinate -> new Coordinate(coordinate))
+						.collect(Collectors.toList());
+
+		// Move Item
+		Jumpable jumpableItem = (Jumpable) itemAtCoordinate;
+		List<Coordinate> newCoordinates;
+
+		newCoordinates = jumpableItem.jump(jumpDirection, slice );
+
+		// Clear old coordinates
+		for (Coordinate initialCoordinate: initialCoordinates) {
+			setEmptyItem(initialCoordinate);
+		}
+
+		// Change the board representation
+		setItem(newCoordinates, itemAtCoordinate);
+	}
+
+	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, JumpObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+		// Get the item
+		BoardItem itemAtCoordinate = getItem(holeCoordinate);
+
+		// Check if it is a hole
+		if (!(itemAtCoordinate instanceof Hole)) {
+			// TODO: fix this with a different error
+			// throw exception if it is not a hole
+//			throw new NonMovableItemException("cannot move a not movable item");
+		}
+
+		Hole hole = (Hole) itemAtCoordinate;
+
+		Rabbit rabbit = null;
+		try {
+			rabbit = hole.removeContainingItem();
+		} catch (HoleIsEmptyException e) {
+		    hole.setContainingItem(rabbit);
+		    throw e;
+		}
+
+		this.jump(jumpDirection, rabbit);
 	}
 }
