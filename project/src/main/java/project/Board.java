@@ -102,7 +102,7 @@ public class Board {
 	 * This method delegates to item.setCoordinate() to set the coordinates
 	 * of the item as well.
 	 * 
-	 * @param coordinate where to set
+	 * @param coordinates where to set
 	 * @param item to set
 	 * @throws BoardItemNotEmptyException if the coordinate is not empty
 	 */
@@ -138,6 +138,34 @@ public class Board {
 		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
 	}
 
+	/**
+	 * Returns a slice of the board along the given row
+	 * @return List of items on that row
+	 */
+	private List<BoardItem> getRow(int row) {
+		List <BoardItem> slice = new ArrayList<BoardItem>();
+
+		for (int column = 0; column < this.columns; column++) {
+			slice.add(items[row][column]);
+		}
+
+		return slice;
+	}
+
+	/**
+	 * Returns a slice of the board down the given column
+	 * @return List of items down the column
+	 */
+	private List<BoardItem> getColumn(int column) {
+		List <BoardItem> slice = new ArrayList<BoardItem>();
+
+		for (int row = 0; column < this.rows; row++) {
+			slice.add(items[row][column]);
+		}
+
+		return slice;
+	}
+
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
 			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
@@ -148,25 +176,19 @@ public class Board {
 			throw new NonMovableItemException("cannot move a not movable item");
 		}
 
-		
 		// Get slice
 		List<BoardItem> slice = new ArrayList<>();
 		
-		// TODO: write other directions
-		// TODO: write tests
+		// TODO: write tests for up and down
 		
 		switch (moveDirection) {
+			case UP:
 			case DOWN:
+				slice = this.getColumn(itemCoordinate.row);
 				break;
 			case LEFT:
 			case RIGHT:
-				// Get all items on row
-				int row = itemAtCoordinate.getCoordinates().get(0).row;
-				for (int column = 0; column < this.columns; column++) {
-					slice.add(items[row][column]);
-				}
-				break;
-			case UP:
+				slice = this.getRow(itemCoordinate.row);
 				break;
 			default:
 				break;

@@ -499,6 +499,66 @@ public class BoardTest {
 		}
 	}
 
+
+	@Test
+	/**
+	 * Move fox left by 1 space
+	 */
+	void testMoveFoxLeftOne() {
+		// Create a board
+		Board board = new Board(5);
+
+		// Create a fox
+		Coordinate initialHead = new Coordinate(0, 3);
+		Coordinate initialTail = new Coordinate(0, 4);
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Add to board
+		// Initial Layout
+		// E E E F F
+		// E E E E E
+		// E E E E E
+		// E E E E E
+		try {
+			board.setItem(fox.getCoordinates(), fox);
+		} catch (BoardItemNotEmptyException e) {
+			fail("Exception was thrown");
+		}
+
+		// Move across the board one unit right
+		// Expected Layout
+		// E E F F E
+		// E E E E E
+		// E E E E E
+		// E E E E E
+
+		int moveSpaces = 1;
+		Direction moveDirection = Direction.LEFT;
+
+		try {
+			board.slide(moveDirection, moveSpaces, initialHead);
+		}
+		catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertEquals(fox, board.getItem(initialHead),
+				"The initial head coordinate should still have the fox");
+
+		assertNotEquals(fox, board.getItem(initialTail),
+				"The tail should still no longer contain the fox");
+
+		assertTrue(board.getItem(initialTail) instanceof EmptyBoardItem,
+				"The initial tail coordinate should be an empty item");
+
+		assertEquals(fox.getTail(), initialHead,
+				"The tail should be where the head was");
+
+		assertEquals(fox.getHead(), new Coordinate(0, 2),
+				"The head should be where the head was minus one unit " +
+						"left");
+	}
+
 	@Test
 	/**
 	 * Should not allow moving a non-movable item
