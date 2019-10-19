@@ -178,6 +178,7 @@ public class Fox extends BoardItem implements Slidable {
 			return moveRight(spaces - 1, slice);
 		}
 	}
+
 	private List<Coordinate> slideUp(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
 	    List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 	    Coordinate head = this.getHead();
@@ -199,8 +200,31 @@ public class Fox extends BoardItem implements Slidable {
 		} else  {
 			return slideUp(spaces - 1, slice);
 		}
-
 	}
+
+	private List<Coordinate> slideDown(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
+		Coordinate head = this.getHead();
+		Coordinate tail = this.getTail();
+
+		// Compute new coordinates
+		Coordinate newHead = new Coordinate(head.row + 1, head.column);
+		Coordinate newTail = new Coordinate(tail.row + 1, tail.column);
+
+		newCoordinates.add(newHead);
+		newCoordinates.add(newTail);
+
+		ValidateMove(newCoordinates, slice);
+
+		this.setCoordinates(newCoordinates);
+
+		if (spaces == 1) {
+			return newCoordinates;
+		} else  {
+			return slideDown(spaces - 1, slice);
+		}
+	}
+
 
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
@@ -229,6 +253,7 @@ public class Fox extends BoardItem implements Slidable {
 			// Compute where the fox would move to
 			switch (direction) {
 			case DOWN:
+				newCoordinates = this.slideDown(spaces, slice);
 				break;
 			case LEFT:
 				newCoordinates = this.slideLeft(spaces, slice);

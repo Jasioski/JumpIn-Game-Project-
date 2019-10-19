@@ -462,6 +462,188 @@ class FoxTest {
 				"the fox coordinates should not have changed");
 	}
 
+
+	@Test
+	/**
+	 * Slide fox down one unit
+	 */
+	void testSlideDownOne()  {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(1, 0);
+
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Setup slice
+		// Row   Item:
+		// 0     F
+		// 1     E
+		// 2     E
+		// 3     E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(2, 0));
+		slice.add(new EmptyBoardItem(3, 0));
+
+		// Move Fox
+		Direction moveDirection = Direction.DOWN;
+		int moveSpaces = 1;
+
+		// Store the results
+		try {
+			fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideFailedException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
+
+		// Expected result
+		// Row   Item:
+		// 0     E
+		// 1     F
+		// 2     F
+		// 3     E
+		Coordinate newHead = new Coordinate(1, 0);
+		Coordinate newTail = new Coordinate(2, 0);
+
+		assertEquals(newHead, fox.getHead(), "the head should be at the "
+				+ "new location");
+
+		assertEquals(newTail, fox.getTail(),
+				"the tail should be at the new location");
+	}
+
+	@Test
+	/**
+	 * Slide fox down two units
+	 */
+	void testSlideDownTwo()  {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(1, 0);
+
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Setup slice
+		// Row   Item:
+		// 0     F
+		// 1     F
+		// 2     E
+		// 3     E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(2, 0));
+		slice.add(new EmptyBoardItem(3, 0));
+
+		// Move Fox
+		Direction moveDirection = Direction.DOWN;
+		int moveSpaces = 2;
+
+		// Store the results
+		try {
+			fox.slide(moveDirection, moveSpaces, slice);
+		} catch (SlideFailedException e) {
+			// TODO Auto-generated catch block
+			fail("Exception was thrown");
+		}
+
+		// Expected result
+		// Row   Item:
+		// 0     E
+		// 1     E
+		// 2     F
+		// 3     F
+		Coordinate newHead = new Coordinate(2, 0);
+		Coordinate newTail = new Coordinate(3, 0);
+
+		assertEquals(newHead, fox.getHead(), "the head should be at the "
+				+ "new location");
+
+		assertEquals(newTail, fox.getTail(),
+				"the tail should be at the new location");
+	}
+
+	@Test
+	/**
+	 * Slide fox down three units. This should cause the fox to fall out
+	 * of the slice
+	 */
+	void testSlideDownThreeOutOfBounds()  {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(1, 0);
+
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Setup slice
+		// Row   Item:
+		// 0     F
+		// 1     F
+		// 2     E
+		// 3     E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(2, 0));
+		slice.add(new EmptyBoardItem(3, 0));
+
+		// Move Fox
+		Direction moveDirection = Direction.DOWN;
+		int moveSpaces = 3;
+
+		// Store the fox coordinates
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+
+		assertThrows(SlideFailedException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);
+		}, "the fox should not be able to move outside of the slices range");
+
+		assertEquals(initialCoordinates, fox.getCoordinates(),
+				"the fox coordinates should not have changed");
+	}
+
+	@Test
+	/**
+	 * Make sure you cannot slide through an obstacle when moving up
+	 */
+	void testSlideDownThroughObstacle() {
+
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(1, 0);
+
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Setup slice
+		// Row   Item:
+		// 0     F
+		// 1     F
+		// 2     R
+		// 3     E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new Rabbit(2, 0));
+		slice.add(new EmptyBoardItem(3, 0));
+
+		// Move Fox
+		Direction moveDirection = Direction.DOWN;
+		int moveSpaces = 1;
+
+		// Store the fox coordinates
+		List<Coordinate> initialCoordinates = fox.getCoordinates();
+
+		assertThrows(SlideFailedException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);
+		}, "the fox should not be able to move through an " +
+				"obstacle");
+
+		assertEquals(initialCoordinates, fox.getCoordinates(),
+				"the fox coordinates should not have changed");
+	}
+
 	@Test
 	/**
 	 * Should not move at all if the spaces is 0
