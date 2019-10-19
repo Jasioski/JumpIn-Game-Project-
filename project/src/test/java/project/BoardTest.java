@@ -375,7 +375,6 @@ public class BoardTest {
 		Fox fox = new Fox(initialHead, initialTail);
 
 		// Rabbit
-		Coordinate rabbitCoordinate = new Coordinate(0, 2);
 		BoardItem rabbit = new Rabbit(0, 2);
 
 		// Add to board
