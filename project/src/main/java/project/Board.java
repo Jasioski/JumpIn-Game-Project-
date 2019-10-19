@@ -24,7 +24,7 @@ public class Board{
 	
 	public Board(int rows, int columns) {
 		//setting GameState
-		this.currentGameState = GameState.IN_PROGRESS;
+		
 		
 		//Setting up the number of Rabbits in the hole
 		rabbitsContainedInHoles = 0;
@@ -47,7 +47,6 @@ public class Board{
 	public Board(int dimension) {		
 		this(dimension, dimension);
 		//Setting the gameState
-		this.currentGameState = GameState.IN_PROGRESS;
 		//Setting up the number of Rabbits in the hole
 		rabbitsContainedInHoles = 0;
 	}
@@ -207,6 +206,9 @@ public class Board{
 			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
+		
+		//test code
+		this.currentGameState = GameState.IN_PROGRESS;
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
 			// TODO: rename to nonslidable
@@ -239,12 +241,14 @@ public class Board{
 
 	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
-
+		
+		//test code
+		this.currentGameState = GameState.IN_PROGRESS;
 		jump(jumpDirection, itemAtCoordinate);
 	}
 	// TODO: merge this method with jumpout
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
-
+		this.currentGameState = GameState.IN_PROGRESS;
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
 			// TODO: fix this with a nonjumpable error
