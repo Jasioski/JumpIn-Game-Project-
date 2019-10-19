@@ -241,4 +241,48 @@ class RabbitTest {
 		// the rabbit should not have moved
 		assertEquals(originalCoordinates, rabbitJumping.getCoordinates());
 	}
+	
+	@Test 
+	/**
+	 * Jump down over one rabbit 
+	 * 
+	 */
+	 void testJumpDownOne() {
+		
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(1, 0);
+		
+		// Setup slice
+		// RJ 	0 0
+		// RO	1 0 
+		// E	2 0
+		// E  	3 0
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(rabbitJumping);
+		slice.add(rabbitObstacle);
+		slice.add(new EmptyBoardItem(2,0));
+		slice.add(new EmptyBoardItem(3, 0));
+		
+		// Jump Rabbit
+		Direction moveDirection = Direction.DOWN;
+		
+		try {
+			List<Coordinate> newCoordinates = rabbitJumping.jump(moveDirection, slice);
+			// Expected result
+			// E	0 0
+			// RO	1 0 
+			// RJ	2 0
+			// E  	3 0
+			
+			Coordinate newRabbitJumpingCoordinate = new Coordinate(2, 0);
+			assertEquals(newRabbitJumpingCoordinate ,rabbitJumping.getCoordinate(), "the rabbit should be at"
+					+ "the new location" );
+			
+			assertEquals(newRabbitJumpingCoordinate, newCoordinates.get(0), "The method should return new coordinate for"
+					+ "the rabbit");
+			
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+	}
 }

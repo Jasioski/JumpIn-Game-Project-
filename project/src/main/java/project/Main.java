@@ -20,10 +20,13 @@ public class Main {
 		Coordinate tail = new Coordinate(0,1);
 		
 		Fox fox = new Fox(head, tail);
+		Fox fox2 = new Fox(1,0,1,1);
+		Rabbit r = new Rabbit(0,2);
 		
 		try {
 			board.setItem(fox.getCoordinates(), fox);
-			
+			board.setItem(r.getCoordinates(),r);
+			board.setItem(fox2.getCoordinates(),fox2);
 //			int moveSpaces = 1;
 //			board.move(Direction.RIGHT, head, moveSpaces);
 //			
@@ -36,7 +39,18 @@ public class Main {
 		if (logger.isDebugEnabled()) {
 			logger.debug("printing board");
 			logger.debug("\n" + board.toString());
+			
 		}
+		Coordinate c = new Coordinate(0,2);
+		Coordinate c2 = new Coordinate(1,1);
+		try {
+		//board.slide(Direction.RIGHT,2, c);
+		board.slide(Direction.RIGHT,2,c2);
+		board.jump(Direction.DOWN, c);
+		}catch(Exception e) {
+			logger.error(e);
+		}
+		logger.debug(board.toString());
 	}
 
 }

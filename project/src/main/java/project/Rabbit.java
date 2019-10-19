@@ -53,20 +53,25 @@ public class Rabbit extends BoardItem implements Jumpable {
 		List<Coordinate> newCoordinates = new ArrayList<>();
 
 		List<Coordinate> oldCoordinates = this.getCoordinates();
-
-		switch(direction) {
-		case RIGHT:
-			try {
-				newCoordinates = this.jumpRight(slice);
-			} catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
-				this.setCoordinates(oldCoordinates);
-				throw e;
+		try {
+			switch(direction) {
+			case RIGHT:
+					newCoordinates = this.jumpRight(slice);
+				break;
+				
+			case DOWN:
+					newCoordinates = this.jumpDown(slice);
+				break;
+				
+			default: 
+				break;
+			
 			}
-			break;
-		default: 
-			break;
-		
+		}catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
+			this.setCoordinates(oldCoordinates);
+			throw e;
 		}
+		
 		return newCoordinates;
 	}
 
@@ -111,6 +116,73 @@ public class Rabbit extends BoardItem implements Jumpable {
 
 			// Keep going
 			return jumpRight(slice);
+		}
+		// Found empty spot
+		else {
+			List<Coordinate> newCoordinates = new ArrayList<>();
+
+			// If we have jumped over something
+			if (isCurrentlyJumping) {
+				// Stay in the new spot
+				newCoordinates.add(newCoordinate);
+				this.setCoordinate(newCoordinate);
+				isCurrentlyJumping = false;
+				return newCoordinates;
+			}
+
+			// If we haven't jumped over anything then throw
+			// Rabbits cannot jump to adjacent blocks,
+			// they must jump over something
+			else {
+				throw new JumpFailedNoObstacleException("the rabbit did not " +
+						"jump over anything");
+			}
+		}
+	}
+	
+	//TODO:
+	//Merge common code from this one to the other one
+	private List<Coordinate> jumpDown(List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+		Coordinate currentCoordinate = this.getCoordinate();
+		Coordinate newCoordinate = new Coordinate(currentCoordinate.row + 1, currentCoordinate.column);
+
+		// Get all coordinates in the slice without duplicates
+		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
+
+		for (BoardItem item : slice) {
+			sliceCoordinates.addAll(item.getCoordinates());
+		}
+
+		// Check if we are in the board
+		if (!sliceCoordinates.contains(newCoordinate)) {
+			throw new JumpFailedOutOfBoundsException("Jumping the rabbit " +
+					"caused the rabbit to go out of the slice");
+		}
+
+		// Check if we are hitting an obstacle
+		// loop over all the items in the slice
+		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
+			// check if is at the same coordinate as one of the new coordinates
+			if (sliceItem.getCoordinates().contains(newCoordinate)) {
+				// match if the item is not empty
+				// and not the current item
+				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
+					if (!(sliceItem.equals(this))) {
+						return true;
+					}
+				}
+			}
+			// do not match if the item is empty or the current item
+			return false;
+		});
+
+		// Hitting Obstacle
+		if (hitObstacle) {
+			this.setCoordinate(newCoordinate);
+			isCurrentlyJumping = true;
+
+			// Keep going
+			return jumpDown(slice);
 		}
 		// Found empty spot
 		else {

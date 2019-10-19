@@ -2,7 +2,6 @@ package project;
 
 import java.util.ArrayList;	
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -228,7 +227,6 @@ public class Board {
 
 	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
-
 		jump(jumpDirection, itemAtCoordinate);
 	}
 	// TODO: merge this method with jumpout
