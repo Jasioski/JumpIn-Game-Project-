@@ -50,8 +50,7 @@ public class Rabbit extends BoardItem implements Jumpable {
 		List<Coordinate> oldCoordinates = this.getCoordinates();
 
 		try {
-			List<Coordinate> newCoordinates = performJump(direction, slice);
-			return newCoordinates;
+			return performJump(direction, slice);
 		} catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
 			this.setCoordinates(oldCoordinates);
 			throw e;
