@@ -21,6 +21,7 @@ public class Main {
 		case "Down":
 			return Direction.DOWN;
 		default:
+			// TODO: remove this part of the enum, it is not needed
 			return Direction.NONSPECIFIED;
 		}
 

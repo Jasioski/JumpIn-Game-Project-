@@ -14,6 +14,10 @@ public class Hole extends BoardItem {
 		this.containingItem = Optional.empty();
 	}
 
+	public Hole(int row, int column) {
+		this(new Coordinate(row, column));
+	}
+
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);

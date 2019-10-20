@@ -104,16 +104,13 @@ public class Fox extends BoardItem implements Slidable {
 			for (BoardItem sliceItem: slice) {
 				if (sliceItem.getCoordinates().contains(newCoordinate))
 				{
-					if (sliceItem.getClass() == EmptyBoardItem.class) {
-						EmptyBoardItem emptyBoardItem = (EmptyBoardItem) sliceItem;
-						if (emptyBoardItem.getIsElevated()) {
-							hitElevated = true;
-						}
+					if (sliceItem.getClass() == ElevatedBoardItem.class) {
+						hitElevated = true;
 					}
 
 					// match if the item is not empty
 					// and not the current item
-					if ((sliceItem.getClass() != EmptyBoardItem.class)) {
+					else if ((sliceItem.getClass() != EmptyBoardItem.class)) {
 						if (!(sliceItem.equals(this))) {
 							hitObstacle = true;
 						}

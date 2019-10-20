@@ -845,7 +845,7 @@ class FoxTest {
 		List<BoardItem> slice = new ArrayList<BoardItem>();
 		slice.add(fox);
 		slice.add(fox);
-		slice.add(new EmptyBoardItem(0, 2, true));
+		slice.add(new ElevatedBoardItem(0, 2));
 		slice.add(new EmptyBoardItem(0, 3));
 
 		// Move Fox
