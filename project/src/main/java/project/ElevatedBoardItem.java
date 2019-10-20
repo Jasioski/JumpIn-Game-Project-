@@ -1,6 +1,8 @@
 package project;
 
 public class ElevatedBoardItem extends Hole {
+
+
     public ElevatedBoardItem(Coordinate coordinate) {
         super(coordinate);
     }
