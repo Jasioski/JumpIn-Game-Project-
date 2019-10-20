@@ -74,7 +74,7 @@ public class Main {
 
 				System.out.println("Please enter command: ");
 				String userInput = scanner.nextLine();
-				System.out.println("dsfhdfsuhf:  " + userInput);
+				//System.out.println("dsfhdfsuhf:  " + userInput);
 				String[] commands = userInput.toString().split(" ");
 				
 				
@@ -89,9 +89,9 @@ public class Main {
 
 				if(!commands[0].equals("")) {
 					
-					if (!commands[0].equals("Jump") || !commands[0].equals("Slide")) {
-						System.out.println("Please enter the correct move type e..g, either Jump or Slide");
-					}
+					//if (!commands[0].equals("Jump") || !commands[0].equals("Slide")) {
+					//	System.out.println("Please enter the correct move type e..g, either Jump or Slide");
+					//}
 					
 				moveType = commands[0];
 				
