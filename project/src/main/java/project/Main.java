@@ -39,18 +39,19 @@ public class Main {
 		if (logger.isDebugEnabled()) {
 			logger.debug("printing board");
 			logger.debug("\n" + board.toString());
-			
 		}
-		Coordinate c = new Coordinate(0,2);
-		Coordinate c2 = new Coordinate(1,1);
+
 		try {
-		//board.slide(Direction.RIGHT,2, c);
-		board.slide(Direction.DOWN, 1, new Coordinate(1, 1));
-		//board.jump(Direction.DOWN, c);
+			board.slide(Direction.DOWN, 1, new Coordinate(1, 1));
 		}catch(Exception e) {
 			logger.error(e);
 		}
-		logger.debug("\n" + board.toString());
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("printing board");
+			logger.debug("\n" + board.toString());
+			
+		}
 	}
 
 }

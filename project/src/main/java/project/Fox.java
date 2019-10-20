@@ -29,6 +29,24 @@ public class Fox extends BoardItem implements Slidable {
 			throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
 		}
 	}
+	
+	private void verifyDirection(Direction direction) throws IllegalArgumentException {
+		if (direction == Direction.DOWN || direction == Direction.UP) {
+			//Don't allow vertical slide if not oriented vertically
+			if (this.getHead().column != this.getTail().column) {
+				throw new IllegalArgumentException("Must slide in same direction "
+					+ "as oriented");
+			}
+		}
+		
+		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+			//Don't allow horizontal slide if not oriented horizontally
+			if (this.getHead().row != this.getTail().row) {
+				throw new IllegalArgumentException("Must slide in same direction "
+						+ "as oriented");
+			}
+		}
+	}
 
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
 		this(new Coordinate(headRow, headColumn),
@@ -132,12 +150,6 @@ public class Fox extends BoardItem implements Slidable {
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
 		
-		//Don't allow horizontal slide if not oriented horizontally
-		if (this.getHead().row != this.getTail().row) {
-			throw new IllegalArgumentException("Must slide in same direction "
-					+ "as oriented");
-		}
-		
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row, head.column - 1);
 		Coordinate newTail = new Coordinate(tail.row, tail.column - 1);
@@ -156,7 +168,6 @@ public class Fox extends BoardItem implements Slidable {
 		}
 	}
 	
-	// TODO: rename to slideRight
 	private List<Coordinate> slideRight(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
 		if (spaces == 0) {
 			return this.getCoordinates();
@@ -165,12 +176,6 @@ public class Fox extends BoardItem implements Slidable {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
-		
-		//Don't allow horizontal slide if not oriented horizontally
-		if (this.getHead().row != this.getTail().row) {
-			throw new IllegalArgumentException("Must slide in same direction "
-					+ "as oriented");
-		}
 		
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row, head.column + 1);
@@ -195,12 +200,6 @@ public class Fox extends BoardItem implements Slidable {
 	    List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 	    Coordinate head = this.getHead();
 	    Coordinate tail = this.getTail();
-	    
-	    //Don't allow vertical slide if not oriented vertically
-	  	if (this.getHead().column != this.getTail().column) {
-	  		throw new IllegalArgumentException("Must slide in same direction "
-	  				+ "as oriented");
-	  	}
 
 	    // Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row - 1, head.column);
@@ -224,12 +223,6 @@ public class Fox extends BoardItem implements Slidable {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
-		
-		//Don't allow vertical slide if not oriented vertically
-		if (this.getHead().column != this.getTail().column) {
-			throw new IllegalArgumentException("Must slide in same direction "
-				+ "as oriented");
-		}
 
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row + 1, head.column);
@@ -248,10 +241,7 @@ public class Fox extends BoardItem implements Slidable {
 			return slideDown(spaces - 1, slice);
 		}
 	}
-
-
-	// TODO: fox should not be able to move left if vertical, or up if
-	//  horizontal
+	
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
 			throws SlideOutOfBoundsException, SlideHitObstacleException {
@@ -279,21 +269,25 @@ public class Fox extends BoardItem implements Slidable {
 			// Compute where the fox would move to
 			switch (direction) {
 			case DOWN:
+				verifyDirection(Direction.DOWN);
 				newCoordinates = this.slideDown(spaces, slice);
 				break;
 			case LEFT:
+				verifyDirection(Direction.LEFT);
 				newCoordinates = this.slideLeft(spaces, slice);
 				break;
 			case RIGHT:
+				verifyDirection(Direction.RIGHT);
 				newCoordinates = this.slideRight(spaces, slice);
 				break;
 			case UP:
+				verifyDirection(Direction.UP);
 				newCoordinates = this.slideUp(spaces, slice);
 				break;
 			default:
 				break;
 			}
-		} catch (SlideOutOfBoundsException | SlideHitObstacleException e) {
+		} catch (SlideOutOfBoundsException | SlideHitObstacleException | IllegalArgumentException e) {
 			// Restore the coordinates
 			this.setCoordinates(initialCoordinates);
 			
