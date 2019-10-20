@@ -29,6 +29,24 @@ public class Fox extends BoardItem implements Slidable {
 			throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
 		}
 	}
+	
+	private void verifyDirection(Direction direction) throws IllegalArgumentException {
+		if (direction == Direction.DOWN || direction == Direction.UP) {
+			//Don't allow vertical slide if not oriented vertically
+			if (this.getHead().column != this.getTail().column) {
+				throw new IllegalArgumentException("Must slide in same direction "
+					+ "as oriented");
+			}
+		}
+		
+		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+			//Don't allow horizontal slide if not oriented horizontally
+			if (this.getHead().row != this.getTail().row) {
+				throw new IllegalArgumentException("Must slide in same direction "
+						+ "as oriented");
+			}
+		}
+	}
 
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
 		this(new Coordinate(headRow, headColumn),
@@ -143,21 +161,23 @@ public class Fox extends BoardItem implements Slidable {
 		Coordinate newHead;
 		Coordinate newTail;
 
-		switch(direction) {
+		verifyDirection(direction);
+
+		switch (direction) {
 			case DOWN:
 				newHead = new Coordinate(head.row + 1, head.column);
 				newTail = new Coordinate(tail.row + 1, tail.column);
-			break;
+				break;
 			case UP:
 				newHead = new Coordinate(head.row - 1, head.column);
 				newTail = new Coordinate(tail.row - 1, tail.column);
 				break;
 			case RIGHT:
-				newHead = new Coordinate(head.row,  head.column + 1);
+				newHead = new Coordinate(head.row, head.column + 1);
 				newTail = new Coordinate(tail.row, tail.column + 1);
 				break;
 			case LEFT:
-				newHead = new Coordinate(head.row,  head.column - 1);
+				newHead = new Coordinate(head.row, head.column - 1);
 				newTail = new Coordinate(tail.row, tail.column - 1);
 				break;
 			default:
@@ -173,15 +193,11 @@ public class Fox extends BoardItem implements Slidable {
 
 		if (spaces == 1) {
 			return newCoordinates;
-		} else  {
+		} else {
 			return performSlide(direction, spaces - 1, slice);
 		}
 	}
 
-
-
-	// TODO: fox should not be able to move left if vertical, or up if
-	//  horizontal
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
 			throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {

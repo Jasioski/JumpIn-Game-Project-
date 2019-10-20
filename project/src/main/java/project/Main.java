@@ -21,7 +21,7 @@ public class Main {
 		case "Down":
 			return Direction.DOWN;
 		default:
-			// TODO: remove this part of the enum, it is not needed
+			// TODO: remove this part of the enum, it is not neede
 			return Direction.NONSPECIFIED;
 		}
 
@@ -161,7 +161,8 @@ public class Main {
 				System.out.println(
 						"Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
 								+ " different coordinates.");
-			} catch (NonMovableItemException e) {
+			} catch (NonSlideableException e) {
+				// TODO rename slidable to slideable in all places
 				// TODO CHANGE TO NOT SLIDEABLE
 				System.out.println(
 						"Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
@@ -172,7 +173,8 @@ public class Main {
 				System.out.println(
 						"Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
 								+ " Please enteer the command with different coordinates.");
-			} catch (SlideHitElevatedException e) {
+			}
+			catch (SlideHitElevatedException e) {
 				System.out.println(
 						"Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
 								+ " Please enteer the command with different coordinates.");

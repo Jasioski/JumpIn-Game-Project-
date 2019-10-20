@@ -195,19 +195,19 @@ public class Board{
 	}
 
 
-	// TODO: slide and jump have al ot of common functionalitu that needs
+	// TODO: slide and jump have a lot of common functionality that needs
 	// to be extracted
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
+			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
-			// TODO: rename to nonslidable
-			throw new NonMovableItemException("cannot move a not movable item");
+			// TODO: rename to non-slidable
+			throw new NonSlideableException("cannot slide a non-slidable item");
 		}
 
 		// Get slice
@@ -222,10 +222,8 @@ public class Board{
 		// Move Item
 		Slidable movableItem = (Slidable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
-	
 
 		newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
-
 		// Clear old coordinates
 		for (Coordinate initialCoordinate: initialCoordinates) {
 			setEmptyItem(initialCoordinate);
