@@ -35,11 +35,16 @@ public class Main {
 
 		Coordinate head = new Coordinate(0, 2);
 		Coordinate tail = new Coordinate(0, 3);
+		
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(0, 1);
 
-		Fox fox = new Fox(head, tail);
+		//Fox fox = new Fox(head, tail);
 
 		try {
-			board.setItem(fox.getCoordinates(), fox);
+			//board.setItem(fox.getCoordinates(), fox);
+			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
+			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
 
 //			int moveSpaces = 1;
 //			board.move(Direction.RIGHT, head, moveSpaces);
@@ -69,7 +74,7 @@ public class Main {
 				System.out.println(
 						"1) Jump Rabbit row(e.g., 1),colums e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
 				System.out.println("2) Slide Fox row(e.g., 1), colums e.g., 2 Number of boad uints/ spaces (e.g., 2)");
-				System.out.println("Sample command: \n Jump Rabbit 1,2 Right");
+				System.out.println("Sample command: \n Jump Rabbit 0,0 Right");
 				System.out.println("Sample command: \n Slide Fox 0,2 2 Left");
 
 				System.out.println("Please enter command: ");
@@ -89,17 +94,12 @@ public class Main {
 
 				if(!commands[0].equals("")) {
 					
-					//if (!commands[0].equals("Jump") || !commands[0].equals("Slide")) {
-					//	System.out.println("Please enter the correct move type e..g, either Jump or Slide");
-					//}
 					
 				moveType = commands[0];
 				
-				if (!commands[0].equals("Rabbit") || !commands[0].equals("Fox")) {
-					System.out.println("Please enter the item type e..g, either Rabbit or Fox");
-				}
 				
-				if(!commands[1].toString().equals("")) {
+				
+				if(!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
 				itemType = commands[1];
 				}
 				
@@ -113,11 +113,15 @@ public class Main {
 					unitsToMove = Integer.parseInt(commands[3]);
 
 				} catch (Exception e) {
-
+					if(!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
+						userEnteredDirection = commands[3];
+						}
 				}
 				// if String assign it to direction
-				if(!commands[4].equals("")) {
+				if(commands.length > 4) {
+				if(!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
 				userEnteredDirection = commands[4];
+				}
 				}
 				
 
