@@ -132,6 +132,12 @@ public class Fox extends BoardItem implements Slidable {
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
 		
+		//Don't allow horizontal slide if not oriented horizontally
+		if (this.getHead().row != this.getTail().row) {
+			throw new IllegalArgumentException("Must slide in same direction "
+					+ "as oriented");
+		}
+		
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row, head.column - 1);
 		Coordinate newTail = new Coordinate(tail.row, tail.column - 1);
@@ -151,7 +157,7 @@ public class Fox extends BoardItem implements Slidable {
 	}
 	
 	// TODO: rename to slideRight
-	private List<Coordinate> moveRight(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	private List<Coordinate> slideRight(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
 		if (spaces == 0) {
 			return this.getCoordinates();
 		}
@@ -159,6 +165,12 @@ public class Fox extends BoardItem implements Slidable {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
+		
+		//Don't allow horizontal slide if not oriented horizontally
+		if (this.getHead().row != this.getTail().row) {
+			throw new IllegalArgumentException("Must slide in same direction "
+					+ "as oriented");
+		}
 		
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row, head.column + 1);
@@ -175,7 +187,7 @@ public class Fox extends BoardItem implements Slidable {
 		if (spaces == 1) {
 			return newCoordinates;
 		} else {
-			return moveRight(spaces - 1, slice);
+			return slideRight(spaces - 1, slice);
 		}
 	}
 
@@ -183,6 +195,12 @@ public class Fox extends BoardItem implements Slidable {
 	    List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 	    Coordinate head = this.getHead();
 	    Coordinate tail = this.getTail();
+	    
+	    //Don't allow vertical slide if not oriented vertically
+	  	if (this.getHead().column != this.getTail().column) {
+	  		throw new IllegalArgumentException("Must slide in same direction "
+	  				+ "as oriented");
+	  	}
 
 	    // Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row - 1, head.column);
@@ -206,6 +224,12 @@ public class Fox extends BoardItem implements Slidable {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
+		
+		//Don't allow vertical slide if not oriented vertically
+		if (this.getHead().column != this.getTail().column) {
+			throw new IllegalArgumentException("Must slide in same direction "
+				+ "as oriented");
+		}
 
 		// Compute new coordinates
 		Coordinate newHead = new Coordinate(head.row + 1, head.column);
@@ -261,7 +285,7 @@ public class Fox extends BoardItem implements Slidable {
 				newCoordinates = this.slideLeft(spaces, slice);
 				break;
 			case RIGHT:
-				newCoordinates = this.moveRight(spaces, slice);
+				newCoordinates = this.slideRight(spaces, slice);
 				break;
 			case UP:
 				newCoordinates = this.slideUp(spaces, slice);

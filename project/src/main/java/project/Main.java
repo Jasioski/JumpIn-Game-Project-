@@ -20,7 +20,7 @@ public class Main {
 		Coordinate tail = new Coordinate(0,1);
 		
 		Fox fox = new Fox(head, tail);
-		Fox fox2 = new Fox(1,0,1,1);
+		Fox fox2 = new Fox(1,1,1,2);
 		Rabbit r = new Rabbit(0,2);
 		
 		try {
@@ -45,12 +45,12 @@ public class Main {
 		Coordinate c2 = new Coordinate(1,1);
 		try {
 		//board.slide(Direction.RIGHT,2, c);
-		board.slide(Direction.RIGHT,2,c2);
-		board.jump(Direction.DOWN, c);
+		board.slide(Direction.DOWN, 1, new Coordinate(1, 1));
+		//board.jump(Direction.DOWN, c);
 		}catch(Exception e) {
 			logger.error(e);
 		}
-		logger.debug(board.toString());
+		logger.debug("\n" + board.toString());
 	}
 
 }

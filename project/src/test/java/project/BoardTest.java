@@ -631,7 +631,7 @@ public class BoardTest {
 		}
 
 		// Trying to move should throw
-		assertThrows(NonMovableItemException.class, () -> {
+		assertThrows(NonSlideableException.class, () -> {
 			int moveSpaces = 1;
 			Direction moveDirection = Direction.RIGHT;
 			
