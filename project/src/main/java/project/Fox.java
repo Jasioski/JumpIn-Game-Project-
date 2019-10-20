@@ -78,7 +78,8 @@ public class Fox extends BoardItem implements Slidable {
 		this.coordinates.addAll(coordinates);
 	}
 
-	private void ValidateSlide(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	private void ValidateSlide(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException,
+			SlideHitElevatedException {
 		// Get all coordinates in the slice without duplicates
 		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
 		
@@ -97,32 +98,46 @@ public class Fox extends BoardItem implements Slidable {
 		// or the current item then it must have hit an obstacle
 		for (Coordinate newCoordinate: newCoordinates) {
 			// loop over all the items in the slice
-			boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
-				// check if is at the same coordinate as one of the new coordinates
-				if (sliceItem.getCoordinates().contains(newCoordinate)) 
+			boolean hitObstacle = false;
+			boolean hitElevated = false;
+
+			for (BoardItem sliceItem: slice) {
+				if (sliceItem.getCoordinates().contains(newCoordinate))
 				{
-					// match if the item is not empty 
+					if (sliceItem.getClass() == EmptyBoardItem.class) {
+						EmptyBoardItem emptyBoardItem = (EmptyBoardItem) sliceItem;
+						if (emptyBoardItem.getIsElevated()) {
+							hitElevated = true;
+						}
+					}
+
+					// match if the item is not empty
 					// and not the current item
 					if ((sliceItem.getClass() != EmptyBoardItem.class)) {
 						if (!(sliceItem.equals(this))) {
-							return true;
+							hitObstacle = true;
 						}
 					}
+					// match if it is an elevated
 				}
-				// do not match if the item is empty or the current item
-				return false;
-			});
-			
+				// DO NOT MATCH IF THE ITEM IS EMPTY OR THE CURRENT ITEM
+			}
+
 			if (hitObstacle) {
 				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle");
 			}
-				
+
+			if (hitElevated) {
+				throw new SlideHitElevatedException("fox hit an elevated tile position" +
+					"when it was trying to slide");
+			}
+
 		}
 		
 
 	}
 
-	public List<Coordinate> performSlide(Direction direction, int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	public List<Coordinate> performSlide(Direction direction, int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
@@ -172,7 +187,7 @@ public class Fox extends BoardItem implements Slidable {
 	//  horizontal
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
-			throws SlideOutOfBoundsException, SlideHitObstacleException {
+			throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 
 		// Move zero spaces
 		if (spaces == 0) {

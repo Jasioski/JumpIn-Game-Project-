@@ -192,7 +192,7 @@ public class Board {
 	// to be extracted
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
+			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		// Throw an error if does not implement Movable
