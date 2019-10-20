@@ -2,6 +2,7 @@ package project;
 
 import java.util.ArrayList;	
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -274,14 +275,24 @@ public class Board {
 
 		Hole hole = (Hole) itemAtCoordinate;
 
-		Rabbit rabbit = null;
 		try {
-			rabbit = hole.removeContainingItem();
-		} catch (HoleIsEmptyException e) {
-		    hole.setContainingItem(rabbit);
-		    throw e;
+			Optional<Rabbit> rabbitOptional = hole.getContainingItem();
+			if (rabbitOptional.isPresent()) {
+				Rabbit rabbit = hole.removeContainingItem();
+				try {
+					this.jump(jumpDirection, rabbit);
+				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
+					System.out.println("some jumping exception");
+					hole.setContainingItem(rabbit);
+					throw e;
+				}
+			}
+		}
+		catch(HoleIsEmptyException e)
+		{
+			throw e;
 		}
 
-		this.jump(jumpDirection, rabbit);
+
 	}
 }
