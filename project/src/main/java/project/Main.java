@@ -46,9 +46,7 @@ public class Main {
 			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
 			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
 
-//			int moveSpaces = 1;
-//			board.move(Direction.RIGHT, head, moveSpaces);
-//			
+			
 		} catch (BoardItemNotEmptyException e) {
 			if (logger.isErrorEnabled()) {
 				logger.catching(Level.ERROR, e);
@@ -98,7 +96,7 @@ public class Main {
 				moveType = commands[0];
 				
 				
-				
+				//TODO string to lowercase
 				if(!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
 				itemType = commands[1];
 				}
@@ -146,8 +144,6 @@ public class Main {
 				} else if (moveType.equals("Slide")) {
 					// deals with the Foxes
 					if (unitsToMove != -1) {
-						System.out.println("here....");
-
 						board.slide(direction, unitsToMove, coordinates);
 
 					}
@@ -184,7 +180,9 @@ public class Main {
 			
 		} while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
-		System.out.println(board.getCurrentGameState());
+		board.getCurrentGameState();
+		System.out.println("Game has been solved successfully!");
+		
 	}
 
 }
