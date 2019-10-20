@@ -13,7 +13,6 @@ public class Board{
 	private int rows;
 	private int columns;
 	protected GameState currentGameState;
-	private int rabbitsContainedInHoles;
 	
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
 		if (rows <= 0 || columns <= 0) { 
@@ -24,10 +23,7 @@ public class Board{
 	
 	public Board(int rows, int columns) {
 		//setting GameState
-		
-		
-		//Setting up the number of Rabbits in the hole
-		rabbitsContainedInHoles = 0;
+		this.currentGameState = GameState.IN_PROGRESS;
 		validateArguments(rows, columns);
 		
 		this.rows = rows;
@@ -46,9 +42,9 @@ public class Board{
 
 	public Board(int dimension) {		
 		this(dimension, dimension);
-		//Setting the gameState
-		//Setting up the number of Rabbits in the hole
-		rabbitsContainedInHoles = 0;
+		//setting the game state
+		this.currentGameState = GameState.IN_PROGRESS;
+
 	}
 
 	public int getRows() {
@@ -207,8 +203,7 @@ public class Board{
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		
-		//test code
-		this.currentGameState = GameState.IN_PROGRESS;
+
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
 			// TODO: rename to nonslidable
@@ -227,6 +222,7 @@ public class Board{
 		// Move Item
 		Slidable movableItem = (Slidable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
+	
 
 		newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
 
@@ -242,13 +238,13 @@ public class Board{
 	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 		
-		//test code
-		this.currentGameState = GameState.IN_PROGRESS;
+		
 		jump(jumpDirection, itemAtCoordinate);
+
 	}
 	// TODO: merge this method with jumpout
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
-		this.currentGameState = GameState.IN_PROGRESS;
+
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
 			// TODO: fix this with a nonjumpable error
@@ -276,6 +272,9 @@ public class Board{
 
 		// Change the board representation
 		setItem(newCoordinates, itemAtCoordinate);
+		
+		//making a call to function to check the current game state
+		updateGameState();
 	}
 
 	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, JumpObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
@@ -296,26 +295,27 @@ public class Board{
 			rabbit = hole.removeContainingItem();
 		} catch (HoleIsEmptyException e) {
 		    hole.setContainingItem(rabbit);
-		    
-		  //Increase the int value every time a rabbit is placed in the hole
-			rabbitsContainedInHoles++;
-			if(rabbitsContainedInHoles == 3) {
-				//If three holes have been occupied by the rabbits
-				//make call to puzzleSolved function
-				puzzleSolved();
-			}
 		    throw e;
 		}
 
 		this.jump(jumpDirection, rabbit);
 	}
 	
+	//Itterates over the board, if no rabbits found, game state change to
+	//won else, game state is set to in progress
+	public void updateGameState() {
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
+				if (items[row][column] instanceof Rabbit) {
+					this.currentGameState = GameState.IN_PROGRESS;
+					return;
+				}
+			}
+		}
+		this.currentGameState = GameState.SOLVED;
+	}
+
 	public GameState getCurrentGameState() {
 		return currentGameState;
-	}
-	@SuppressWarnings("static-access")
-	public void puzzleSolved() {
-		this.currentGameState = GameState.SOLVED;
-		
 	}
 }
