@@ -86,11 +86,13 @@ public class Main {
 				String userEnteredCoordinates = "";
 				String itemType = "";
 				String moveType = "";
-				if (!commands[0].equals("Jump") || !commands[0].equals("Slide")) {
-					System.out.println("Please enter the correct move type e..g, either Jump or Slide");
-				}
-				
+
 				if(!commands[0].equals("")) {
+					
+					if (!commands[0].equals("Jump") || !commands[0].equals("Slide")) {
+						System.out.println("Please enter the correct move type e..g, either Jump or Slide");
+					}
+					
 				moveType = commands[0];
 				
 				if (!commands[0].equals("Rabbit") || !commands[0].equals("Fox")) {
