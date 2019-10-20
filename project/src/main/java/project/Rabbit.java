@@ -8,7 +8,6 @@ import java.util.Set;
 public class Rabbit extends BoardItem implements Jumpable {
 
 	private static final Character RABBIT_DISPLAY_CHARACTER = 'R';
-
 	private boolean isCurrentlyJumping;
 
 	public Rabbit(int row, int column) {
@@ -24,7 +23,6 @@ public class Rabbit extends BoardItem implements Jumpable {
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);
-
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class Rabbit extends BoardItem implements Jumpable {
 						+ "of length 1");
 			}
 		}
-		
+
 		this.setCoordinate(coordinates.get(0));
 	}
 
@@ -48,31 +46,36 @@ public class Rabbit extends BoardItem implements Jumpable {
 	}
 
 	@Override
-	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
-		// TODO Auto-generated method stub
-		List<Coordinate> newCoordinates = new ArrayList<>();
-
+	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		List<Coordinate> oldCoordinates = this.getCoordinates();
 
-		switch(direction) {
-		case RIGHT:
-			try {
-				newCoordinates = this.jumpRight(slice);
-			} catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
-				this.setCoordinates(oldCoordinates);
-				throw e;
-			}
-			break;
-		default: 
-			break;
-		
+		try {
+			return performJump(direction, slice);
+		} catch (JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
+			this.setCoordinates(oldCoordinates);
+			throw e;
 		}
-		return newCoordinates;
 	}
 
-	private List<Coordinate> jumpRight(List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		Coordinate currentCoordinate = this.getCoordinate();
-		Coordinate newCoordinate = new Coordinate(currentCoordinate.row, currentCoordinate.column + 1);
+		Coordinate newCoordinate;
+		switch (direction) {
+			case RIGHT:
+				newCoordinate = new Coordinate(currentCoordinate.row, currentCoordinate.column + 1);
+				break;
+			case LEFT:
+				newCoordinate = new Coordinate(currentCoordinate.row, currentCoordinate.column - 1);
+				break;
+			case DOWN:
+				newCoordinate = new Coordinate(currentCoordinate.row + 1, currentCoordinate.column);
+				break;
+			case UP:
+				newCoordinate = new Coordinate(currentCoordinate.row - 1, currentCoordinate.column);
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid Direction");
+		}
 
 		// Get all coordinates in the slice without duplicates
 		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
@@ -110,7 +113,7 @@ public class Rabbit extends BoardItem implements Jumpable {
 			isCurrentlyJumping = true;
 
 			// Keep going
-			return jumpRight(slice);
+			return performJump(direction, slice);
 		}
 		// Found empty spot
 		else {
@@ -134,5 +137,4 @@ public class Rabbit extends BoardItem implements Jumpable {
 			}
 		}
 	}
-
 }

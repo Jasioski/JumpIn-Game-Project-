@@ -5,15 +5,28 @@ import java.util.List;
 public class EmptyBoardItem extends BoardItem {
 
 	private static final Character TYPE = 'E';
+
+	private boolean isElevated;
 	
-	public EmptyBoardItem(int row, int column) {
-		this(new Coordinate(row, column));
+	public EmptyBoardItem(int row, int column, boolean isElevated) {
+		this(new Coordinate(row, column), isElevated);
 	}
-	
+
+	public EmptyBoardItem(int row, int column) {
+		this(new Coordinate(row, column), false);
+	}
+
 	public EmptyBoardItem(Coordinate coordinate) {
+		this(coordinate, false);
+	}
+
+	public EmptyBoardItem(Coordinate coordinate, boolean isElevated) {
 		super(TYPE);
 		this.setCoordinate(coordinate);
+		this.isElevated = isElevated;
 	}
+
+	public boolean getIsElevated() {return this.isElevated; }
 
 	public void setCoordinate(Coordinate coordinate) {
 	

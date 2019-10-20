@@ -826,4 +826,40 @@ class FoxTest {
 		assertEquals(initialCoordinates, fox.getCoordinates(),
 				"the fox coordinates should not have changed");
 	}
+
+
+	@Test
+	/**
+	 * move fox right one unit into an elevated position
+	 */
+	void testMoveRightOneToElevated() {
+		// Setup Fox
+		Coordinate initialHead = new Coordinate(0, 0);
+		Coordinate initialTail = new Coordinate(0, 1);
+
+		Fox fox = new Fox(initialHead, initialTail);
+
+		// Setup slice
+		// index:  0 1 2 3
+		// Layout: F F E! E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(fox);
+		slice.add(fox);
+		slice.add(new EmptyBoardItem(0, 2, true));
+		slice.add(new EmptyBoardItem(0, 3));
+
+		// Move Fox
+		Direction moveDirection = Direction.RIGHT;
+		int moveSpaces = 1;
+
+		assertThrows(SlideHitElevatedException.class, () -> {
+			fox.slide(moveDirection, moveSpaces, slice);
+		});
+
+		assertEquals(initialHead, fox.getHead(), "the head should not have" +
+				"changed");
+
+		assertEquals(initialTail, fox.getTail(),
+				"the tail should not have moved");
+	}
 }

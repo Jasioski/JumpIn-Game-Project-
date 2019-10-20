@@ -199,7 +199,7 @@ public class Board{
 	// to be extracted
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
+			throws NonMovableItemException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
 		
@@ -235,15 +235,14 @@ public class Board{
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
-		
-		
+
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException {
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
@@ -277,7 +276,7 @@ public class Board{
 		updateGameState();
 	}
 
-	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, JumpObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
@@ -290,15 +289,25 @@ public class Board{
 
 		Hole hole = (Hole) itemAtCoordinate;
 
-		Rabbit rabbit = null;
 		try {
-			rabbit = hole.removeContainingItem();
-		} catch (HoleIsEmptyException e) {
-		    hole.setContainingItem(rabbit);
-		    throw e;
+			Optional<Rabbit> rabbitOptional = hole.getContainingItem();
+			if (rabbitOptional.isPresent()) {
+				Rabbit rabbit = hole.removeContainingItem();
+				try {
+					this.jump(jumpDirection, rabbit);
+				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
+					System.out.println("some jumping exception");
+					hole.setContainingItem(rabbit);
+					throw e;
+				}
+			}
+		}
+		catch(HoleIsEmptyException e)
+		{
+			throw e;
 		}
 
-		this.jump(jumpDirection, rabbit);
+
 	}
 	
 	//Itterates over the board, if no rabbits found, game state change to
