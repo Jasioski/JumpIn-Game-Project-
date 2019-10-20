@@ -46,18 +46,18 @@ public class Rabbit extends BoardItem implements Jumpable {
 	}
 
 	@Override
-	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		List<Coordinate> oldCoordinates = this.getCoordinates();
 
 		try {
 			return performJump(direction, slice);
-		} catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
+		} catch (JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
 			this.setCoordinates(oldCoordinates);
 			throw e;
 		}
 	}
 
-	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		Coordinate currentCoordinate = this.getCoordinate();
 		Coordinate newCoordinate;
 		switch (direction) {

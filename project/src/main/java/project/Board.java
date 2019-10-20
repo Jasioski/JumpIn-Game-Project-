@@ -225,12 +225,12 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 		jump(jumpDirection, itemAtCoordinate);
 	}
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException {
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
@@ -261,7 +261,7 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, JumpObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
