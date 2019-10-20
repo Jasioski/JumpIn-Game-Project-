@@ -278,7 +278,4 @@ public class Fox extends BoardItem implements Slidable {
 		
 		return newCoordinates;
 	}
-
-
-
 }
