@@ -81,7 +81,6 @@ public class Main {
             board.setItem(mushroom2);
 
 		} catch (Exception e) {
-		    System.out.println(e);
 			if (logger.isErrorEnabled()) {
 				logger.catching(Level.ERROR, e);
 			}

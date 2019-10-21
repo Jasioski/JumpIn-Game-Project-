@@ -876,8 +876,6 @@ public class BoardTest {
 		try {
 			board.jump(jumpDirection, new Coordinate(0, 0));
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
 			fail("Exception was thrown");
 		}
 
@@ -933,8 +931,6 @@ public class BoardTest {
 		try {
 			board.jump(jumpDirection, new Coordinate(0, 0));
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
 			fail("Exception was thrown");
 		}
 
