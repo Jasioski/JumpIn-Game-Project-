@@ -21,8 +21,7 @@ public class Main {
 		case "Down":
 			return Direction.DOWN;
 		default:
-			// TODO: remove this part of the enum, it is not neede
-			return Direction.NONSPECIFIED;
+			return null;
 		}
 
 	}
@@ -80,8 +79,8 @@ public class Main {
 				String userInput = scanner.nextLine();
 				//System.out.println("dsfhdfsuhf:  " + userInput);
 				String[] commands = userInput.toString().split(" ");
-
-
+				
+				
 				int unitsToMove = -1;
 				String userEnteredDirection = "";
 				String[] rowColumn;
@@ -91,46 +90,46 @@ public class Main {
 				String itemType = "";
 				String moveType = "";
 
-				if (!commands[0].equals("")) {
+				if(!commands[0].equals("")) {
+					
+					
+				moveType = commands[0];
+				
+				
+				//TODO string to lowercase
+				if(!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
+				itemType = commands[1];
+				}
+				
+				if(!commands[2].equals("")) {
+				userEnteredCoordinates = commands[2];
+				}
 
+				// Checking if the last part of the command is an Integer or a string
+				try {
+					// if integer, assign it to unitsToMove else; will get default value -1
+					unitsToMove = Integer.parseInt(commands[3]);
 
-					moveType = commands[0];
-
-
-					//TODO string to lowercase
-					if (!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
-						itemType = commands[1];
-					}
-
-					if (!commands[2].equals("")) {
-						userEnteredCoordinates = commands[2];
-					}
-
-					// Checking if the last part of the command is an Integer or a string
-					try {
-						// if integer, assign it to unitsToMove else; will get default value -1
-						unitsToMove = Integer.parseInt(commands[3]);
-
-					} catch (Exception e) {
-						if (!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
-							userEnteredDirection = commands[3];
+				} catch (Exception e) {
+					if(!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
+						userEnteredDirection = commands[3];
 						}
-					}
-					// if String assign it to direction
-					if (commands.length > 4) {
-						if (!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
-							userEnteredDirection = commands[4];
-						}
-					}
+				}
+				// if String assign it to direction
+				if(commands.length > 4) {
+				if(!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
+				userEnteredDirection = commands[4];
+				}
+				}
+				
 
-
-					System.out.println(
-							"moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
-									+ " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
-					rowColumn = userEnteredCoordinates.split(",", 2);
-					row = Integer.parseInt(rowColumn[0]);
-
-					column = Integer.parseInt(rowColumn[1]);
+				System.out.println(
+						"moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
+								+ " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
+				rowColumn = userEnteredCoordinates.split(",", 2);
+				row = Integer.parseInt(rowColumn[0]);
+				
+				column = Integer.parseInt(rowColumn[1]);
 				}
 				if (row == -1 || column == -1) {
 					System.out.println("Please enter correct coordinates in format e.g., row,column i.e., 2,3");
@@ -145,10 +144,16 @@ public class Main {
 				} else if (moveType.equals("Slide")) {
 					// deals with the Foxes
 					if (unitsToMove != -1) {
-						board.slide(direction, unitsToMove, coordinates);
+						try {
+							board.slide(direction, unitsToMove, coordinates);
+						} catch (SlideHitElevatedException e) {
+							System.out.println("Warning: Action coud not be performed. The fox hit the elevated item while trying to reach the "
+									+ " destination spot");
+						}
 
 					}
 				}
+
 			} catch (JumpFailedOutOfBoundsException e) {
 				System.out.println(
 						"Warning: Action coud not be performed. The coordinated were invalid. Please enter command with "
@@ -162,7 +167,6 @@ public class Main {
 						"Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
 								+ " different coordinates.");
 			} catch (NonSlideableException e) {
-				// TODO rename slidable to slideable in all places
 				// TODO CHANGE TO NOT SLIDEABLE
 				System.out.println(
 						"Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
@@ -173,17 +177,12 @@ public class Main {
 				System.out.println(
 						"Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
 								+ " Please enteer the command with different coordinates.");
-			}
-			catch (SlideHitElevatedException e) {
-				System.out.println(
-						"Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
-								+ " Please enteer the command with different coordinates.");
-			}
 
+			}
+			
 		} while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
-		board.getCurrentGameState();
-		System.out.println("Game has been solved successfully!");
+		System.out.println(board.getCurrentGameState());
 		
 	}
 

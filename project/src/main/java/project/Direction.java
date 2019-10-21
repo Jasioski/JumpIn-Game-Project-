@@ -1,5 +1,5 @@
 package project;
 
 public enum Direction {
-	LEFT, RIGHT, UP, DOWN, NONSPECIFIED
+	LEFT, RIGHT, UP, DOWN
 }
