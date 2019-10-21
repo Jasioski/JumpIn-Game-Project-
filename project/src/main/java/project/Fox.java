@@ -5,12 +5,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A class that represents a fox on the board, which can slide across the board to move.
+ */
 public class Fox extends BoardItem implements Slidable {
 
+	/**
+	 * Ensures that given head and tail coordinates do not conflict with each other
+	 * @param head The coordinate of the head.
+	 * @param tail The coordinate of the tail.
+	 */
 	private static void validateArguments(Coordinate head, Coordinate tail) {
 		validateArguments(head.row, head.column, tail.row, tail.column);
 	}
-	
+
+	/**
+	 * Ensures that the head and tail do not conflict with each other.
+	 * @param headRow The row of the fox's head.
+	 * @param headColumn The column of the fox's head.
+	 * @param tailRow The row of the fox's tail.
+	 * @param tailColumn The column of the fox's tail.
+	 * @throws IllegalArgumentException If the hea and tail conflict with eachother.
+	 */
 	private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
 			throws IllegalArgumentException {
 
@@ -27,7 +43,12 @@ public class Fox extends BoardItem implements Slidable {
 			throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
 		}
 	}
-	
+
+	/**
+	 * Ensures that the fox can slide in a specific direction.
+	 * @param direction The direction that the fox should slide in.
+	 * @throws IllegalArgumentException If the fox cannot slide in that direction.
+	 */
 	private void verifyDirection(Direction direction) throws IllegalArgumentException {
 		if (direction == Direction.DOWN || direction == Direction.UP) {
 			//Don't allow vertical slide if not oriented vertically
@@ -46,11 +67,23 @@ public class Fox extends BoardItem implements Slidable {
 		}
 	}
 
+	/**
+	 * Creates a new fox with specific row and columns for its head and tail.
+	 * @param headRow The head's row.
+	 * @param headColumn The head's column.
+	 * @param tailRow The tail's row.
+	 * @param tailColumn The tail's column.
+	 */
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
 		this(new Coordinate(headRow, headColumn),
 				new Coordinate(tailRow, tailColumn));	
 	}
 
+	/**
+	 * Creates a new fox with coordinates for the head and tail.
+	 * @param head The head's coordinates.
+	 * @param tail The tail's coordinates.
+	 */
 	public Fox(Coordinate head, Coordinate tail) {
 		super(ItemUIRepresentation.FOX);
 		
@@ -59,14 +92,27 @@ public class Fox extends BoardItem implements Slidable {
 		this.setHeadAndTail(head, tail);
 	}
 
+	/**
+	 * Returns the coordinates of the head.
+	 * @return The head's coordinates.
+	 */
 	public Coordinate getHead() {
 		return this.getCoordinates().get(0);
 	}
-	
+
+	/**
+	 * Returns the coordinates of the tail.
+	 * @return The tail's coordinates.
+	 */
 	public Coordinate getTail() {
 		return this.getCoordinates().get(1);
 	}
-	
+
+	/**
+	 * Sets the head and tail of the fox with new coordinates.
+	 * @param head The coordinates of the head.
+	 * @param tail The coordinates of the tail.
+	 */
 	public void setHeadAndTail(Coordinate head, Coordinate tail) {
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
 		
@@ -77,11 +123,11 @@ public class Fox extends BoardItem implements Slidable {
 		
 		this.setCoordinates(coordinates);
 	}
-	
+
 	/**
-	 * Sets the coordinates of the Fox where
-	 * head is stored at index = 0 and tail
-	 * is stored at index = 1
+	 * Sets the coordinates of the Fox using a list where the
+	 * head is stored at index = 0 and tail is stored at index = 1
+	 * @param coordinates A list of the new coordinates.
 	 */
 	@Override
 	public void setCoordinates(List<Coordinate> coordinates) {
@@ -94,6 +140,14 @@ public class Fox extends BoardItem implements Slidable {
 		this.coordinates.addAll(coordinates);
 	}
 
+	/**
+	 * Ensures that the slide can occur based on its new location and the rest of the slice.
+	 * @param newCoordinates The new coordinates of the fox.
+	 * @param slice The slice where the slide is happening.
+	 * @throws SlideOutOfBoundsException If the fox would slide out of bounds.
+	 * @throws SlideHitObstacleException If the fox would hit an obstacle.
+	 * @throws SlideHitElevatedException If the fox would hit an elevated item.
+	 */
 	private void ValidateSlide(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException,
 			SlideHitElevatedException {
 		// Get all coordinates in the slice without duplicates
@@ -150,6 +204,16 @@ public class Fox extends BoardItem implements Slidable {
 
 	}
 
+	/**
+	 * Performs the slide in the desired direction and number of spaces.
+	 * @param direction The direction of the slide.
+	 * @param spaces The number of spaces for the slide.
+	 * @param slice The slice where the slides is happening.
+	 * @return A list containing the new coordinates of the fox.
+	 * @throws SlideOutOfBoundsException If the slide would push the fox out of bounds.
+	 * @throws SlideHitObstacleException If the slide would cause the fox to collide with an obstacle.
+	 * @throws SlideHitElevatedException If the slide would cause the fox to hit an elevated item.
+	 */
 	public List<Coordinate> performSlide(Direction direction, int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
@@ -196,6 +260,17 @@ public class Fox extends BoardItem implements Slidable {
 		}
 	}
 
+	/**
+	 * Attempts to slide the fox in a specific direction along a slice.
+	 * Ensures the slice is correct, then uses performSlide for the actual slide logic.
+	 * @param direction The direction where the item should slide.
+	 * @param spaces The amount of spaces the item should slide.
+	 * @param slice The slide where the slide is being performed.
+	 * @return The new coordinates of the fox.
+	 * @throws SlideOutOfBoundsException If the slide would push the fox out of bounds.
+	 * @throws SlideHitObstacleException If the slide would cause the fox to collide with an obstacle.
+	 * @throws SlideHitElevatedException If the slide would cause the fox to hit an elevated item.
+	 */
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
 			throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
@@ -225,7 +300,6 @@ public class Fox extends BoardItem implements Slidable {
 			this.setCoordinates(initialCoordinates);
 			
 			throw e;
-		}
-		
+		}	
 	}
 }
