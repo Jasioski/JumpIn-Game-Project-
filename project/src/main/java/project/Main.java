@@ -74,11 +74,9 @@ public class Main {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("printing board");
-			// logger.debug("\n" + board.toString());
 		}
 
 		// JumpIn client
-
 		Scanner scanner = new Scanner(System.in);
 		Coordinate coordinates = null;
 		Direction direction = null;
@@ -87,13 +85,11 @@ public class Main {
 			try {
 
           print("\n" + board.toString());
-          print("Please type one of the following commands");
-          print(
-                      "1) Jump Rabbit row(e.g., 1),columns e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
-          print("2) Slide Fox row(e.g., 1), columns e.g., 2 Number of boad " +
-                  "uints/ spaces (e.g., 2)");
-          print("Sample command: \n Jump Rabbit 0,0 Right");
-          print("Sample command: \n Slide Fox 0,2 2 Left");
+          print("Please type one of the following commands: ");
+          print("-> Jump Rabbit row (current row of Rabbit), column (current column of Rabbit) Direction(Right, Left, Up, Down)");
+          print("-> Slide Fox row (e.g., 1), columns (e.g., 2) Number of board " +
+                  "uints/spaces (e.g., 2)");
+          print("Sample commands: \n Jump Rabbit 0,0 Right \n Slide Fox 0,2 2 Left");
 
           print("Please enter command: ");
           String userInput = scanner.nextLine();
@@ -203,6 +199,9 @@ public class Main {
                 "Warning: Action coud not be performed. the hole does not " +
                         "have a rabbit "
                         + " Please enteer the command with different coordinates.");
+            }
+			catch(Exception e) {
+			    print("Invalid input, please try again");
             }
 
         } while (board.currentGameState == GameState.IN_PROGRESS);

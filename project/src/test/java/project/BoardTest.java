@@ -948,5 +948,8 @@ public class BoardTest {
 
 		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
 				"the rabbits internal coordinate should have changed");
+
+		assertTrue(board.getItem(0, 0) instanceof ElevatedBoardItem,
+				"the elevated item should still be there");
 	}
 }
