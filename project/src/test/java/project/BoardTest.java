@@ -781,4 +781,41 @@ public class BoardTest {
 		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
 				"the rabbits internal coordinate should not have changed");
 	}
+
+	@Test
+	/**
+	 * Jump rabbit outside of a hole but into an empty adjacent block
+	 * this should fail because the rabbit should be trying to jump over
+	 * something first
+	 */
+	void testJumpRabbitIntoHole () {
+		// Layout
+		//  0   1   2   3
+		//  RJ  RO  HE  E
+		//  E   E   E   E
+		Board board = new Board(2, 4);
+
+		Hole hole = new Hole(new Coordinate(0, 2));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitfixed = new Rabbit(0, 1);
+		try {
+
+			// Add to board
+			board.setItem(hole.getCoordinates(), hole);
+			board.setItem(rabbitfixed.getCoordinates(), rabbitfixed);
+			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
+			board.jump(Direction.RIGHT, rabbitJumping.getCoordinate());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+
+			fail("Exception was thrown");
+		}
+		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
+				"not be empty");
+		assertEquals(hole.getContainingItem().get(), rabbitJumping, "The hole should contain the rabbit");
+		assertEquals(hole.getCoordinate(), rabbitJumping.getCoordinate(), "The hole coordinates should be same as that of the rabbit");
+		assertTrue(board.getItem(new Coordinate(0, 0)) instanceof EmptyBoardItem, "The original position should be empty");
+	}
+
 }

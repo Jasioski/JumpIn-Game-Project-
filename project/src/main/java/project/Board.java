@@ -268,7 +268,9 @@ public class Board{
 		}
 
 		// Change the board representation
-		setItem(newCoordinates, itemAtCoordinate);
+		if (newCoordinates.size() > 0) {
+			setItem(newCoordinates, itemAtCoordinate);
+		}
 		
 		//making a call to function to check the current game state
 		updateGameState();

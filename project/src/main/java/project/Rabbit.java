@@ -93,16 +93,20 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 		// loop over all the items in the slice
 		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
 
-			// do not match if not an empty elevated
-			if (sliceItem.getClass() == ElevatedBoardItem.class) {
-				ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) sliceItem;
-				if (elevatedBoardItem.getContainingItem().isEmpty()) {
-					return false;
-				}
-			}
 
 			// check if is at the same coordinate as one of the new coordinates
 			if (sliceItem.getCoordinates().contains(newCoordinate)) {
+
+				// do not match if not an empty elevated
+				System.out.println(sliceItem.getClass());
+				if (sliceItem instanceof ContainerItem) {
+					ContainerItem containerItem = (ContainerItem) sliceItem;
+					if (containerItem.getContainingItem().isEmpty()) {
+						System.out.println("found container item");
+						return false;
+					}
+				}
+
 				// not empty
 				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
 					// not current item
@@ -130,6 +134,23 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 			// If we have jumped over something
 			if (isCurrentlyJumping) {
+
+				// If we are settling in a containable
+				for (BoardItem sliceItem: slice) {
+					if (sliceItem.getCoordinates().contains(newCoordinate)) {
+						if (sliceItem instanceof ContainerItem) {
+							ContainerItem containerItem = (ContainerItem) sliceItem;
+							try {
+								containerItem.contain(this);
+								isCurrentlyJumping = false;
+								return new ArrayList<Coordinate>();
+							} catch (HoleAlreadyHasRabbitException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+
 				// Stay in the new spot
 				newCoordinates.add(newCoordinate);
 				this.setCoordinate(newCoordinate);
