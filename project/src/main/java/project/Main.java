@@ -210,9 +210,14 @@ public class Main {
           print(
                              "Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
                              + " Please enteer the command with different coordinates.");
-			}
+			} catch (HoleIsEmptyException e) {
+			    print(
+                "Warning: Action coud not be performed. the hole does not " +
+                        "have a rabbit "
+                        + " Please enteer the command with different coordinates.");
+            }
 
-		} while (board.currentGameState == GameState.IN_PROGRESS);
+        } while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
 		board.getCurrentGameState();
 		logger.info(board.toString());

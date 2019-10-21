@@ -282,14 +282,19 @@ public class Board{
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException {
+
+		if (itemAtCoordinate instanceof ContainerItem) {
+			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
+			return;
+		}
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {

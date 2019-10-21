@@ -839,4 +839,50 @@ public class BoardTest {
 		assertTrue(board.getItem(new Coordinate(0, 0)) instanceof EmptyBoardItem, "The original position should be empty");
 	}
 
+
+	@Test
+	/**
+	 * Jump rabbit outside of a of an elevated to an empty after going over
+	 * obstacle
+	 */
+	void testJumpRabbitOutsideElevatedToEmpty () {
+		// Layout
+		// 0      1    2  3
+		// U(RJ)  RO   E  E
+		// E      E    E  E
+		Board board = new Board(2, 4);
+
+		ElevatedBoardItem elevatedBoardItem = new ElevatedBoardItem(new Coordinate(0, 0));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(0, 1);
+
+		try {
+			board.setItem(elevatedBoardItem);
+			board.setItem(rabbitObstacle);
+
+			elevatedBoardItem.contain(rabbitJumping);
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// Jump out
+		Direction jumpDirection = Direction.RIGHT;
+		try {
+			board.jump(jumpDirection, new Coordinate(0, 0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			fail("Exception was thrown");
+		}
+
+		assertTrue(elevatedBoardItem.getContainingItem().isEmpty(),
+		"the elevated item should now be empty");
+
+		Coordinate expectedCoordinate = new Coordinate(0, 2);
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate());
+
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+				"the rabbits internal coordinate should have changed");
+	}
 }
