@@ -54,7 +54,7 @@ public class Board{
 	 * @param columns The number of columns the board should contain.
 	 */
 	public Board(int rows, int columns) {
-		//setting GameState
+		// Setting the initial game state
 		this.currentGameState = GameState.IN_PROGRESS;
 		validateArguments(rows, columns);
 
@@ -78,8 +78,6 @@ public class Board{
 	 */
 	public Board(int dimension) {		
 		this(dimension, dimension);
-		//setting the game state
-		this.currentGameState = GameState.IN_PROGRESS;
 	}
 
 	/**
@@ -139,9 +137,8 @@ public class Board{
 		for (int i = 0; i < rows; i++) {
 			rowLine += "-------";
 		}
-			// TODO: refactor
-		for (int row = 0; row < rows; row ++) {
 
+		for (int row = 0; row < rows; row ++) {
 			str += rowLine;
 			str += "\n";
 
@@ -207,13 +204,13 @@ public class Board{
 			throw new IllegalArgumentException("coordinates cannot be empty");
 		}
 		
-		// Check that the coordinates are empty
+		// Check that the item at the coordinates are not an empty item
 		for (Coordinate coordinate: coordinates) {
-			BoardItem itemCoord =
-					items[coordinate.row][coordinate.column];
+			BoardItem itemCoord = items[coordinate.row][coordinate.column];
 
 			Class itemClass = itemCoord.getClass();
 
+			// If it is not a board item or a container item
 			if (itemClass != EmptyBoardItem.class) {
 				if (!(itemCoord instanceof ContainerItem)) {
 					throw new BoardItemNotEmptyException(
@@ -322,9 +319,6 @@ public class Board{
 		return slice;
 	}
 
-
-	// TODO: slide and jump have a lot of common functionality that needs
-	// to be extracted
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
 			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
@@ -367,6 +361,7 @@ public class Board{
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
+
 	// TODO: merge this method with jumpout
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException {
 
@@ -452,12 +447,11 @@ public class Board{
 				}
 			}
 		}
+
 		catch(HoleIsEmptyException e)
 		{
 			throw e;
 		}
-
-
 	}
 
 
