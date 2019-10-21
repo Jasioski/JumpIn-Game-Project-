@@ -5,25 +5,47 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A class representing the rabbit object on the board. Can jump over other objects and land inside containers.
+ */
 public class Rabbit extends BoardItem implements Jumpable, Containable {
-
+	/**
+	 * Denotes whether the object is currently attempting to jump, used by the jumping functions.
+	 */
 	private boolean isCurrentlyJumping;
 
+	/**
+	 * Creates a rabbit at a specific row and column.
+	 * @param row The rabbit's row.
+	 * @param column The rabbit's column.
+	 */
 	public Rabbit(int row, int column) {
 		this(new Coordinate(row, column));
 	}
 
+	/**
+	 * Creates a rabbit at a specific coordinate.
+	 * @param coordinate The rabbit's coordinate.
+	 */
 	public Rabbit(Coordinate coordinate) {
 		super(ItemUIRepresentation.RABBIT);
 		this.setCoordinate(coordinate);
 		isCurrentlyJumping = false;
 	}
 
+	/**
+	 * Sets the rabbit's coordinate.
+	 * @param coordinate The coordinate the rabbit is being set at.
+	 */
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);
 	}
 
+	/**
+	 * Sets the rabbit's coordinates using a list of coordinates.
+	 * @param coordinates The item's coordinates.
+	 */
 	@Override
 	public void setCoordinates(List<Coordinate> coordinates) {
 		if (coordinates.size() != 1) {
@@ -37,13 +59,20 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 	}
 
 	/**
-	 * Get the first coordinate
-	 * Rabbits only have a single coordinate
+	 * Gets the rabbit's coordinates.
 	 */
 	public Coordinate getCoordinate() {
 		return this.getCoordinates().get(0);
 	}
 
+	/**
+	 * Attempts to jump in a specific direction and slice on the board.
+	 * @param direction The direction where the item is jumping.
+	 * @param slice The slice where the jump is being performed.
+	 * @return The new coordinates of the rabbit.
+	 * @throws JumpFailedNoObstacleException If there is no obstacle for the rabbit to jump over.
+	 * @throws JumpFailedOutOfBoundsException If the rabbit would be jumping out of bounds.
+	 */
 	@Override
 	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		List<Coordinate> oldCoordinates = this.getCoordinates();
@@ -56,6 +85,14 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 		}
 	}
 
+	/**
+	 * Used by the jump function to actually perform the jump, and contains the logic to determine whether the rabbit can jump.
+	 * @param direction The direction the rabbit is jumping in.
+	 * @param slice The slice where the jump is being performed.
+	 * @return The new coordinates where the rabbit lands.
+	 * @throws JumpFailedNoObstacleException If the rabbit has no obstacle to jump over.
+	 * @throws JumpFailedOutOfBoundsException If the rabbit would be jumping out of bounds.
+	 */
 	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		Coordinate currentCoordinate = this.getCoordinate();
 		Coordinate newCoordinate;
