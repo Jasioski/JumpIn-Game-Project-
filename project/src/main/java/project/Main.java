@@ -34,21 +34,45 @@ public class Main {
 
 		Board board = new Board(5);
 
-		Coordinate head = new Coordinate(0, 2);
-		Coordinate tail = new Coordinate(0, 3);
-		
-		Rabbit rabbitJumping = new Rabbit(0, 0);
-		Rabbit rabbitObstacle = new Rabbit(0, 1);
+		System.out.println(ANSIColor.RED + ItemUIRepresentation.HOLE_EMPTY.getRepresentation() + ANSIColor.RESET);
 
-		//Fox fox = new Fox(head, tail);
+		Hole hole1 = new Hole(0, 0);
+		Hole hole2 = new Hole(0, 4);
+		Hole hole3 = new Hole(4, 0);
+		Hole hole4 = new Hole(4, 4);
+		Hole hole5 = new Hole(2, 2);
+
+		Fox fox1 = new Fox(3,2,3,3);
+
+		Rabbit rabbit1 = new Rabbit(4, 2);
+		Mushroom mushroom1 = new Mushroom(2, 2);
+
+		ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
+		ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
+		ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(4,2);
+		ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(2,2);
 
 		try {
-			//board.setItem(fox.getCoordinates(), fox);
-			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
-			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
+			board.setItem(hole1);
+			board.setItem(hole2);
+			board.setItem(hole3);
+			board.setItem(hole4);
+			board.setItem(hole5);
 
-			
-		} catch (BoardItemNotEmptyException e) {
+			board.setItem(hole5);
+
+			board.setItem(fox1);
+
+			board.setItem(elevatedBoardItem1);
+			board.setItem(elevatedBoardItem2);
+			board.setItem(elevatedBoardItem3);
+			board.setItem(elevatedBoardItem4);
+			board.setItem(rabbit1);
+
+			elevatedBoardItem1.contain(mushroom1);
+
+
+		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
 				logger.catching(Level.ERROR, e);
 			}
@@ -183,7 +207,9 @@ public class Main {
 		} while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
 		board.getCurrentGameState();
-		System.out.println("Game has been solved successfully!");
+		System.out.println(board.toString());
+		System.out.println(ANSIColor.GREEN + "Game has been solved " +
+				"successfully!" + ANSIColor.RESET);
 		
 	}
 

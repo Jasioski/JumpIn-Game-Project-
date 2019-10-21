@@ -62,6 +62,7 @@ public abstract class ContainerItem extends BoardItem {
 
 	public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
 		if (this.containingItem.isPresent()) {
+			// TODO: ContainerAlreadyHasContainableException
 			throw new HoleAlreadyHasRabbitException("the hole already has a " +
 					"rabbit");
 		}

@@ -1,46 +1,47 @@
 package project;
 
 
-import java.util.ArrayList;	
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Board{
-	
+
 	private BoardItem[][] items;
 
 	private int rows;
 	private int columns;
 	protected GameState currentGameState;
-	
-	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
-		if (rows <= 0 || columns <= 0) { 
+
+	private static void validateArguments(int rows, int columns) throws IllegalArgumentException {
+		if (rows <= 0 || columns <= 0) {
 			throw new IllegalArgumentException("Rows and columns must be positive"
 					+ "integers");
 		}
 	}
-	
+
 	public Board(int rows, int columns) {
 		//setting GameState
 		this.currentGameState = GameState.IN_PROGRESS;
 		validateArguments(rows, columns);
-		
+
 		this.rows = rows;
 		this.columns = columns;
-		
+
 		items = new BoardItem[rows][columns];
-		
+
 		// Initialize Board Items
 		for (int row = 0; row < rows; row ++) {
 			for (int column = 0; column < columns; column++) {
 				items[row][column] = new EmptyBoardItem(row, column);
 			}
 		}
-		
+
 	}
 
-	public Board(int dimension) {		
+	public Board(int dimension) {
 		this(dimension, dimension);
 		//setting the game state
 		this.currentGameState = GameState.IN_PROGRESS;
@@ -56,37 +57,58 @@ public class Board{
 	}
 
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
-		
+
 		if (row < 0 || column < 0) {
 			throw new IllegalArgumentException("row and column must be positive integers");
 		}
-		
+
 		if (row >= this.rows || column >= this.columns) {
 			throw new IllegalArgumentException("row and column must be within the range of the board");
 		}
-		
+
 		return items[row][column];
 	}
-	
+
 
 	public BoardItem getItem(Coordinate coordinate) {
 		return getItem(coordinate.row, coordinate.column);
 	}
-	
+
 	@Override
 	public String toString() {
 		String str = "";
-		
+
+		String rowLine = "";
+		for (int i = 0; i < rows; i++) {
+			rowLine += "-------";
+		}
+			// TODO: refactor
 		for (int row = 0; row < rows; row ++) {
+
+			str += rowLine;
+			str += "\n";
+
 			for (int column = 0; column < columns; column++) {
 				BoardItem item = items[row][column];
-				str += item.toString();
+				str += "| ";
+
+				//test code
+				if (item.toString().length() == 10) {
+					str += " " + item.toString() + " ";
+				}
+				else if (item.toString().length() == 11) {
+					str += " " + item.toString();
+				}
+				else {
+					System.err.println("badly sized ui text");
+				}
+
 				str += " ";
 			}
-			
-			str += "\n";
+
+			str += " |\n";
 		}
-		
+
 		return str;
 	}
 
@@ -123,16 +145,37 @@ public class Board{
 		
 		// Check that the coordinates are empty
 		for (Coordinate coordinate: coordinates) {
-			if (items[coordinate.row][coordinate.column].getClass()
-					!= EmptyBoardItem.class) {
-				
-				throw new BoardItemNotEmptyException(
-						"Cannot set an item on the "
-						+ "board if there is already a non empty item in the"
-						+ "slot");
+			BoardItem itemCoord =
+					items[coordinate.row][coordinate.column];
+
+			Class itemClass = itemCoord.getClass();
+
+			if (itemClass != EmptyBoardItem.class) {
+				if (!(itemCoord instanceof ContainerItem)) {
+					throw new BoardItemNotEmptyException(
+							"Cannot set an item on the "
+									+ "board if there is already a non empty item in the"
+									+ "slot");
+				}
+
+				// We have a container now
+				else {
+					ContainerItem containerItem = (ContainerItem) itemCoord;
+					if (item instanceof Containable) {
+
+						Containable containable = (Containable) item;
+						try {
+							containerItem.contain(containable);
+							return;
+						} catch (HoleAlreadyHasRabbitException e) {
+							// TODO: fix error handling
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		}
-		
+
 		// Set the coordinates
 		for (Coordinate coordinate: coordinates) {
 			items[coordinate.row][coordinate.column] = item;
@@ -140,6 +183,11 @@ public class Board{
 		
 		item.setCoordinates(coordinates);
 	}
+
+	public void setItem(BoardItem item) throws BoardItemNotEmptyException {
+		setItem(item.getCoordinates(), item);
+	}
+
 	
 	public void setEmptyItem(Coordinate coordinate) {
 		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
@@ -281,23 +329,23 @@ public class Board{
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
 		// Check if it is a hole
-		if (!(itemAtCoordinate instanceof Hole)) {
+		if (!(itemAtCoordinate instanceof ContainerItem)) {
 			// TODO: fix this with a different error
 			// throw exception if it is not a hole
 //			throw new NonMovableItemException("cannot move a not movable item");
 		}
 
-		Hole hole = (Hole) itemAtCoordinate;
+		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
 
 		try {
-			Optional<Containable> optionlContainable = hole.getContainingItem();
+			Optional<Containable> optionlContainable = containerItem.getContainingItem();
 
 			if (optionlContainable.isPresent()) {
 				if (optionlContainable.get().getClass() != Rabbit.class) {
 					throw new IllegalArgumentException("Must be a rabbit that jumps out ");
 				}
 
-				Containable containable = hole.removeContainingItem();
+				Containable containable = containerItem.removeContainingItem();
 
 				try {
 					if (containable.getClass() == Rabbit.class) {
@@ -310,7 +358,7 @@ public class Board{
 					}
 				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
 					try {
-						hole.contain(containable);
+						containerItem.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
 						ex.printStackTrace();
 					}

@@ -130,7 +130,33 @@ public class BoardTest {
 		assertEquals(1, setItem.getCoordinates().size(), 
 			"The item should only have one coordinate");
 	}
-	
+
+
+	@Test
+	/**
+	 * Set a mushroom in a hole
+	 */
+	void testSetItemInHole() {
+		Board board = new Board(5);
+
+		Hole hole = new Hole(0, 0);
+		Mushroom mushroom = new Mushroom(0, 0);
+
+		try {
+			board.setItem(hole.getCoordinates(), hole);
+			board.setItem(mushroom.getCoordinates(), mushroom);
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertTrue(hole.getContainingItem().isPresent(),
+				"the hole should contain sometingk now");
+		assertEquals(hole.getCoordinates(), mushroom.getCoordinates(),
+				"the mushroom should have the same coordinates as the hole");
+		assertEquals(ItemUIRepresentation.HOLE_MUSHROOM, hole.getUIRepresentation());
+	}
+
 	// TODO: should fail when trying to set outside the board dimensions
 	
 	
