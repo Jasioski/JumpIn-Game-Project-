@@ -391,9 +391,11 @@ public class Board {
 
 		newCoordinates = jumpableItem.jump(jumpDirection, slice);
 
-		// Clear old coordinates
+		// Clear old coordinates if it is not a containable
 		for (Coordinate initialCoordinate: initialCoordinates) {
-			setEmptyItem(initialCoordinate);
+			if (!(this.getItem(initialCoordinate) instanceof ContainerItem)) {
+				setEmptyItem(initialCoordinate);
+			}
 		}
 
 		// Change the board representation
