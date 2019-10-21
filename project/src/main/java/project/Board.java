@@ -7,22 +7,52 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The main board class that contains and controls all objects on the board.
+ */
 public class Board{
 
+	/**
+	 * This is the 2D array that contains all the items in the board.
+	 */
 	private BoardItem[][] items;
 
+	/**
+	 * The number of rows that the board contains.
+	 */
 	private int rows;
-	private int columns;
-	protected GameState currentGameState;
-	private static Logger logger = LogManager.getLogger(Board.class);
 
+	/**
+	 * The number of columns that the board contains.
+	 */
+	private int columns;
+
+	/**
+	 * The current state of the game, based on the GameState enum (either in progress or solved).
+	 */
+	protected GameState currentGameState;
+
+  	private static Logger logger = LogManager.getLogger(Board.class);
+  
+	/**
+	 * This method ensures that a given row and column are not negative.
+	 * @param rows The given row.
+	 * @param columns The given column.
+	 * @throws IllegalArgumentException if the rows and columns are negative.
+	 */
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException {
 		if (rows <= 0 || columns <= 0) {
+
 			throw new IllegalArgumentException("Rows and columns must be positive"
 					+ "integers");
 		}
 	}
 
+	/**
+	 * Constructor that initializes the board with a specific number of rows and columns.
+	 * @param rows The number of rows the board should contain.
+	 * @param columns The number of columns the board should contain.
+	 */
 	public Board(int rows, int columns) {
 		//setting GameState
 		this.currentGameState = GameState.IN_PROGRESS;
@@ -42,21 +72,39 @@ public class Board{
 
 	}
 
+	/**
+	 *  Constructor that creates the board with the same dimension for the rows and columns.
+	 * @param dimension Amount of rows and columns for the board.
+	 */
 	public Board(int dimension) {		
 		this(dimension, dimension);
 		//setting the game state
 		this.currentGameState = GameState.IN_PROGRESS;
-
 	}
 
+	/**
+	 * Gets the number of rows in the board.
+	 * @return The number of rows.
+	 */
 	public int getRows() {
-		return columns;
-	}
-
-	public int getColumns() {
 		return rows;
 	}
 
+	/**
+	 * Gets the number of columns in the board.
+	 * @return The number of columns.
+	 */
+	public int getColumns() {
+		return columns;
+	}
+
+	/**
+	 * Gets the board item at the specified row and column on the board.
+	 * @param row The row of the item being searched for.
+	 * @param column The column of the item being searched for.
+	 * @return The item at the board position specified.
+	 * @throws IllegalArgumentException If the rows and columns are negative or out of range of the board.
+	 */
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
 
 		if (row < 0 || column < 0) {
@@ -70,11 +118,19 @@ public class Board{
 		return items[row][column];
 	}
 
-
+	/**
+	 * Gets the item at a specific coordinate.
+	 * @param coordinate The coordinate of the item being retrieved.
+	 * @return The item found at the coordinate.
+	 */
 	public BoardItem getItem(Coordinate coordinate) {
 		return getItem(coordinate.row, coordinate.column);
 	}
-
+  
+	/**
+	 * Prints out a string representation of the board.
+	 * @return The string representation of the board.
+	 */
 	@Override
 	public String toString() {
 		String str = "";
@@ -113,6 +169,13 @@ public class Board{
 		return str;
 	}
 
+	/**
+	 * Sets an item at a specific location on the board.
+	 * @param row The row where the item should be set.
+	 * @param column The column where the item should be set.
+	 * @param item The item being placed into the board.
+	 * @throws BoardItemNotEmptyException If there is already an item in that location.
+	 */
 	public void setItem(int row, int column, BoardItem item) 
 			throws BoardItemNotEmptyException {
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
@@ -188,18 +251,26 @@ public class Board{
 		item.setCoordinates(coordinates);
 	}
 
+	/**
+	 * Sets a board item that already has defined coordinates.
+	 * @param item The board item being set.
+	 * @throws BoardItemNotEmptyException if the coordinate is not empty
+	*/
 	public void setItem(BoardItem item) throws BoardItemNotEmptyException {
 		setItem(item.getCoordinates(), item);
 	}
-
 	
+	/**
+	 * Sets an EmptyBoardItem at a specific coordinate.
+	 * @param coordinate The coordinate where the empty item is being placed.
+	 */
 	public void setEmptyItem(Coordinate coordinate) {
 		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
 	}
 
 	/**
-	 * Returns a slice of the board along the given row
-	 * @return List of items on that row
+	 * Returns a slice of the board along the given row.
+	 * @return The list of items in that row.
 	 */
 	private List<BoardItem> getRow(int row) {
 		List <BoardItem> slice = new ArrayList<BoardItem>();
@@ -213,7 +284,7 @@ public class Board{
 
 	/**
 	 * Returns a slice of the board down the given column
-	 * @return List of items down the column
+	 * @return The list of items in the column
 	 */
 	private List<BoardItem> getColumn(int column) {
 		List <BoardItem> slice = new ArrayList<BoardItem>();
@@ -225,7 +296,12 @@ public class Board{
 		return slice;
 	}
 
-
+	/**
+	 * Gets a slice in a direction from a specific item on the board.
+	 * @param direction The direction of the slice wanted.
+	 * @param item The item where the slice is located.
+	 * @return The list of the items in that slice.
+	 */
 	private List<BoardItem> getSlice(Direction direction, BoardItem item) {
 		Coordinate itemCoordinate = item.getCoordinates().get(0);
 		List<BoardItem> slice = new ArrayList<BoardItem>();
@@ -383,9 +459,11 @@ public class Board{
 
 
 	}
-	
-	//Itterates over the board, if no rabbits found, game state change to
-	//won else, game state is set to in progress
+
+
+	/**
+	 * Updates the gamestate to won if there are no rabbits remaining on the board.
+	 */
 	public void updateGameState() {
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
@@ -415,6 +493,10 @@ public class Board{
 		this.currentGameState = GameState.SOLVED;
 	}
 
+	/**
+	 * Gets the current gamestate of the board.
+	 * @return The current gamestate.
+	 */
 	public GameState getCurrentGameState() {
 		return currentGameState;
 	}
