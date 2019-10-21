@@ -41,7 +41,7 @@ public class Board{
 
 	}
 
-	public Board(int dimension) {
+	public Board(int dimension) {		
 		this(dimension, dimension);
 		//setting the game state
 		this.currentGameState = GameState.IN_PROGRESS;
