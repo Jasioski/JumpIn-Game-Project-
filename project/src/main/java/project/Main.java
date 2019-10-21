@@ -9,26 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
-	private static Direction StringToEnum(String direction) {
-//
-//		switch (directon) {
-//		case "RIGHT":
-//			return Direction.RIGHT;
-//		case "LEFT":
-//			return Direction.LEFT;
-//		case "UP":
-//			return Direction.UP;
-//		case "DOWN":
-//			return Direction.DOWN;
-//		default:
-//			// TODO: remove this part of the enum, it is not needed
-//			return Direction.NONSPECIFIED;
-//		}
-		
+	private static Direction StringToEnum(String direction) {	
 		return Direction.valueOf(direction);
-		//TODO: try to figure out a way to enum the direction. 
-		//return Direction.direction would work
-
 	}
 
 
@@ -115,7 +97,6 @@ public class Main {
 
           print("Please enter command: ");
           String userInput = scanner.nextLine();
-          //logger.info("dsfhdfsuhf:  " + userInput);
           String[] commands = userInput.toString().split(" ");
 
 
@@ -204,8 +185,6 @@ public class Main {
                              "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
                              + " different coordinates.");
       } catch (NonSlideableException e) {
-          // TODO rename slidable to slideable in all places
-          // TODO CHANGE TO NOT SLIDEABLE
           print(
                              "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
       } catch (SlideOutOfBoundsException e) {
