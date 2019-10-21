@@ -11,11 +11,6 @@ import java.util.Set;
 public class Fox extends BoardItem implements Slidable {
 
 	/**
-	 * The display character representing the fox, F.
-	 */
-	private static final Character FOX_DISPLAY_CHARACTER = 'F';
-
-	/**
 	 * Ensures that given head and tail coordinates do not conflict with each other
 	 * @param head The coordinate of the head.
 	 * @param tail The coordinate of the tail.
@@ -305,7 +300,6 @@ public class Fox extends BoardItem implements Slidable {
 			this.setCoordinates(initialCoordinates);
 			
 			throw e;
-		}
-		
+		}	
 	}
 }

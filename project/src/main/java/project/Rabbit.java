@@ -1,5 +1,8 @@
 package project;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +16,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 	 * Denotes whether the object is currently attempting to jump, used by the jumping functions.
 	 */
 	private boolean isCurrentlyJumping;
+	private static Logger logger = LogManager.getLogger(Rabbit.class);
 
 	/**
 	 * Creates a rabbit at a specific row and column.
@@ -33,10 +37,12 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 		isCurrentlyJumping = false;
 	}
 
+
 	/**
 	 * Sets the rabbit's coordinate.
 	 * @param coordinate The coordinate the rabbit is being set at.
 	 */
+	@Override
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);
@@ -130,16 +136,18 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 		// loop over all the items in the slice
 		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
 
-			// do not match if not an empty elevated
-			if (sliceItem.getClass() == ElevatedBoardItem.class) {
-				ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) sliceItem;
-				if (elevatedBoardItem.getContainingItem().isEmpty()) {
-					return false;
-				}
-			}
 
 			// check if is at the same coordinate as one of the new coordinates
 			if (sliceItem.getCoordinates().contains(newCoordinate)) {
+
+				// do not match if not an empty elevated
+				if (sliceItem instanceof ContainerItem) {
+					ContainerItem containerItem = (ContainerItem) sliceItem;
+					if (containerItem.getContainingItem().isEmpty()) {
+						return false;
+					}
+				}
+
 				// not empty
 				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
 					// not current item
@@ -167,6 +175,23 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 			// If we have jumped over something
 			if (isCurrentlyJumping) {
+
+				// If we are settling in a containable
+				for (BoardItem sliceItem: slice) {
+					if (sliceItem.getCoordinates().contains(newCoordinate)) {
+						if (sliceItem instanceof ContainerItem) {
+							ContainerItem containerItem = (ContainerItem) sliceItem;
+							try {
+								containerItem.contain(this);
+								isCurrentlyJumping = false;
+								return new ArrayList<Coordinate>();
+							} catch (HoleAlreadyHasRabbitException e) {
+								logger.error(e);
+							}
+						}
+					}
+				}
+
 				// Stay in the new spot
 				newCoordinates.add(newCoordinate);
 				this.setCoordinate(newCoordinate);

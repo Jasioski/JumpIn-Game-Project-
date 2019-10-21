@@ -1,7 +1,5 @@
 package project;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,20 +15,12 @@ public abstract class ContainerItem extends BoardItem {
 	private Optional<Containable> containingItem;
 
 	/**
-	 * The item's UI representation.
-	 */
-	private ItemUIRepresentation emptyRepresentation;
-
-	// TODO: there should be no default displayCharacter
-
-	/**
 	 * Creates the container item with a specific coordinate and UI representation.
 	 * @param coordinate The item's coordinate.
 	 * @param emptyRepresentation The item's UI representation.
 	 */
 	public ContainerItem(Coordinate coordinate, ItemUIRepresentation emptyRepresentation) {
 		super(emptyRepresentation);
-		this.emptyRepresentation = emptyRepresentation;
 
 		this.setCoordinate(coordinate);
 		this.containingItem = Optional.empty();
@@ -110,6 +100,7 @@ public abstract class ContainerItem extends BoardItem {
 	 */
 	public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
 		if (this.containingItem.isPresent()) {
+			// TODO: ContainerAlreadyHasContainableException
 			throw new HoleAlreadyHasRabbitException("the hole already has a " +
 					"rabbit");
 		}

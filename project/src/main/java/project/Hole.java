@@ -1,26 +1,12 @@
 package project;
 
-import java.util.Optional;
-
-/**
- * A hole, which is a specific containable item that rabbits must jump into to win the game.
- */
 public class Hole extends ContainerItem {
-    /**
-     * Display character of an empty hole.
-     */
-    private static final Character HOLE_EMPTY_DISPLAY_CHARACTER = 'H';
 
-    /**
-     * Display character of an occupied hole.
-     */
-    private static final Character HOLE_OCCUPIED_DISPLAY_CHARACTER = 'O';
-
+    
     /**
      * Constructs a hole at a specific coordinate.
      * @param coordinate The coordinate of the hole being created.
      */
-    // TODO: check if hole is occupied for showing the display character
     public Hole(Coordinate coordinate) {
         super(coordinate, ItemUIRepresentation.HOLE_EMPTY);
     }

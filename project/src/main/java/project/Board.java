@@ -1,9 +1,10 @@
 package project;
 
-import java.util.ArrayList;	
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The main board class that contains and controls all objects on the board.
@@ -30,14 +31,18 @@ public class Board{
 	 */
 	protected GameState currentGameState;
 
+  private static Logger logger = LogManager.getLogger(Board.class);
+
+  
 	/**
 	 * This method ensures that a given row and column are not negative.
 	 * @param rows The given row.
 	 * @param columns The given column.
 	 * @throws IllegalArgumentException if the rows and columns are negative.
 	 */
-	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
-		if (rows <= 0 || columns <= 0) { 
+	private static void validateArguments(int rows, int columns) throws IllegalArgumentException {
+		if (rows <= 0 || columns <= 0) {
+
 			throw new IllegalArgumentException("Rows and columns must be positive"
 					+ "integers");
 		}
@@ -52,19 +57,19 @@ public class Board{
 		//setting GameState
 		this.currentGameState = GameState.IN_PROGRESS;
 		validateArguments(rows, columns);
-		
+
 		this.rows = rows;
 		this.columns = columns;
-		
+
 		items = new BoardItem[rows][columns];
-		
+
 		// Initialize Board Items
 		for (int row = 0; row < rows; row ++) {
 			for (int column = 0; column < columns; column++) {
 				items[row][column] = new EmptyBoardItem(row, column);
 			}
 		}
-		
+
 	}
 
 	/**
@@ -101,15 +106,15 @@ public class Board{
 	 * @throws IllegalArgumentException If the rows and columns are negative or out of range of the board.
 	 */
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
-		
+
 		if (row < 0 || column < 0) {
 			throw new IllegalArgumentException("row and column must be positive integers");
 		}
-		
+
 		if (row >= this.rows || column >= this.columns) {
 			throw new IllegalArgumentException("row and column must be within the range of the board");
 		}
-		
+
 		return items[row][column];
 	}
 
@@ -121,7 +126,7 @@ public class Board{
 	public BoardItem getItem(Coordinate coordinate) {
 		return getItem(coordinate.row, coordinate.column);
 	}
-
+  
 	/**
 	 * Prints out a string representation of the board.
 	 * @return The string representation of the board.
@@ -129,17 +134,38 @@ public class Board{
 	@Override
 	public String toString() {
 		String str = "";
-		
+
+		String rowLine = "";
+		for (int i = 0; i < rows; i++) {
+			rowLine += "-------";
+		}
+			// TODO: refactor
 		for (int row = 0; row < rows; row ++) {
+
+			str += rowLine;
+			str += "\n";
+
 			for (int column = 0; column < columns; column++) {
 				BoardItem item = items[row][column];
-				str += item.toString();
+				str += "| ";
+
+				//test code
+				if (item.toString().length() == 10) {
+					str += " " + item.toString() + " ";
+				}
+				else if (item.toString().length() == 11) {
+					str += " " + item.toString();
+				}
+				else {
+					logger.error("badly sized ui text");
+				}
+
 				str += " ";
 			}
-			
-			str += "\n";
+
+			str += " |\n";
 		}
-		
+
 		return str;
 	}
 
@@ -183,16 +209,40 @@ public class Board{
 		
 		// Check that the coordinates are empty
 		for (Coordinate coordinate: coordinates) {
-			if (items[coordinate.row][coordinate.column].getClass()
-					!= EmptyBoardItem.class) {
-				
-				throw new BoardItemNotEmptyException(
-						"Cannot set an item on the "
-						+ "board if there is already a non empty item in the"
-						+ "slot");
+			BoardItem itemCoord =
+					items[coordinate.row][coordinate.column];
+
+			Class itemClass = itemCoord.getClass();
+
+			if (itemClass != EmptyBoardItem.class) {
+				if (!(itemCoord instanceof ContainerItem)) {
+					throw new BoardItemNotEmptyException(
+							"Cannot set an item on the "
+									+ "board if there is already a non empty item in the"
+									+ "slot");
+				}
+
+				// We have a container now
+				else {
+					ContainerItem containerItem = (ContainerItem) itemCoord;
+					if (item instanceof Containable) {
+
+						Containable containable = (Containable) item;
+						try {
+							containerItem.contain(containable);
+							return;
+						} catch (HoleAlreadyHasRabbitException e) {
+							// TODO: fix error handling
+							this.logger.error(e);
+						}
+					} else {
+						throw new BoardItemNotEmptyException("trying to set a" +
+								" non containable on a container");
+					}
+				}
 			}
 		}
-		
+
 		// Set the coordinates
 		for (Coordinate coordinate: coordinates) {
 			items[coordinate.row][coordinate.column] = item;
@@ -200,6 +250,7 @@ public class Board{
 		
 		item.setCoordinates(coordinates);
 	}
+
 
 	/**
 	 * Sets an EmptyBoardItem at a specific coordinate.
@@ -302,14 +353,19 @@ public class Board{
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException {
+
+		if (itemAtCoordinate instanceof ContainerItem) {
+			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
+			return;
+		}
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
@@ -329,7 +385,7 @@ public class Board{
 		Jumpable jumpableItem = (Jumpable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
 
-		newCoordinates = jumpableItem.jump(jumpDirection, slice );
+		newCoordinates = jumpableItem.jump(jumpDirection, slice);
 
 		// Clear old coordinates
 		for (Coordinate initialCoordinate: initialCoordinates) {
@@ -337,34 +393,37 @@ public class Board{
 		}
 
 		// Change the board representation
-		setItem(newCoordinates, itemAtCoordinate);
+		if (!newCoordinates.isEmpty()) {
+			setItem(newCoordinates, itemAtCoordinate);
+		}
 		
 		//making a call to function to check the current game state
 		updateGameState();
 	}
 
-	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	private void jumpOut(Direction jumpDirection,
+						   Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
 		// Check if it is a hole
-		if (!(itemAtCoordinate instanceof Hole)) {
+		if (!(itemAtCoordinate instanceof ContainerItem)) {
 			// TODO: fix this with a different error
 			// throw exception if it is not a hole
 //			throw new NonMovableItemException("cannot move a not movable item");
 		}
 
-		Hole hole = (Hole) itemAtCoordinate;
+		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
 
-		try {
-			Optional<Containable> optionlContainable = hole.getContainingItem();
+    try {
+      Optional<Containable> optionlContainable = containerItem.getContainingItem();
 
 			if (optionlContainable.isPresent()) {
 				if (optionlContainable.get().getClass() != Rabbit.class) {
 					throw new IllegalArgumentException("Must be a rabbit that jumps out ");
 				}
 
-				Containable containable = hole.removeContainingItem();
+				Containable containable = containerItem.removeContainingItem();
 
 				try {
 					if (containable.getClass() == Rabbit.class) {
@@ -376,11 +435,10 @@ public class Board{
 						throw new IllegalArgumentException("tried to jump out a non rabbit");
 					}
 				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
-					System.out.println("some jumping exception");
 					try {
-						hole.contain(containable);
+						containerItem.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
-						ex.printStackTrace();
+						this.logger.error(ex);
 					}
 					throw e;
 				}
@@ -401,12 +459,29 @@ public class Board{
 	public void updateGameState() {
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
+				// make sure there are no top level rabbits
 				if (items[row][column] instanceof Rabbit) {
 					this.currentGameState = GameState.IN_PROGRESS;
 					return;
 				}
+				// make sure there are no rabbits inside elevated positions
+				else if (items[row][column] instanceof ElevatedBoardItem) {
+					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
+							items[row][column];
+					if ( elevatedBoardItem.getContainingItem().isPresent()) {
+						Containable containable =
+								elevatedBoardItem.getContainingItem().get();
+
+						if (containable instanceof  Rabbit) {
+							this.currentGameState = GameState.IN_PROGRESS;
+							return;
+						}
+					}
+				}
 			}
 		}
+
+
 		this.currentGameState = GameState.SOLVED;
 	}
 

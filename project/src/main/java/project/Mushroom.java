@@ -33,6 +33,7 @@ public class Mushroom extends BoardItem implements Containable {
      * Setst the coordinates of the mushroom.
      * @param coordinate The coordinates where the item is being placed.
      */
+    @Override
     public void setCoordinate(Coordinate coordinate) {
         this.coordinates.clear();
         this.coordinates.add(coordinate);
