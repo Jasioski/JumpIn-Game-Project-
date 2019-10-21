@@ -108,12 +108,8 @@ public class Main {
           String moveType = "";
 
           if (!commands[0].equals("")) {
-
-
               moveType = commands[0];
 
-
-              //TODO string to lowercase
               if (!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
                   itemType = commands[1];
               }
