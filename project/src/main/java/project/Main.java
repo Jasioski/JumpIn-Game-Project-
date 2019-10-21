@@ -27,6 +27,13 @@ public class Main {
 
 	}
 
+
+    @SuppressWarnings("PMD")
+	public static void print(String message) {
+	    System.out.println(message);
+    }
+
+
     @SuppressWarnings("PMD.UseVarargs")
 	public static void main(String[] args) {
 		Logger logger = LogManager.getLogger(Main.class);
@@ -91,15 +98,16 @@ public class Main {
 		do {
 			try {
 
-          logger.info("\n" + board.toString());
-          logger.info("Please type one of the following commands");
-          logger.info(
+          print("\n" + board.toString());
+          print("Please type one of the following commands");
+          print(
                       "1) Jump Rabbit row(e.g., 1),colums e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
-          logger.info("2) Slide Fox row(e.g., 1), colums e.g., 2 Number of boad uints/ spaces (e.g., 2)");
-          logger.info("Sample command: \n Jump Rabbit 0,0 Right");
-          logger.info("Sample command: \n Slide Fox 0,2 2 Left");
+          print("2) Slide Fox row(e.g., 1), colums e.g., 2 Number of boad " +
+                  "uints/ spaces (e.g., 2)");
+          print("Sample command: \n Jump Rabbit 0,0 Right");
+          print("Sample command: \n Slide Fox 0,2 2 Left");
 
-          logger.info("Please enter command: ");
+          print("Please enter command: ");
           String userInput = scanner.nextLine();
           //logger.info("dsfhdfsuhf:  " + userInput);
           String[] commands = userInput.toString().split(" ");
@@ -147,7 +155,7 @@ public class Main {
               }
 
 
-              logger.info(
+              print(
                                  "moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
                                  + " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
               rowColumn = userEnteredCoordinates.split(",", 2);
@@ -156,7 +164,8 @@ public class Main {
               column = Integer.parseInt(rowColumn[1]);
           }
           if (row == -1 || column == -1) {
-              logger.info("Please enter correct coordinates in format e.g., row,column i.e., 2,3");
+              print("Please enter correct coordinates in format e.g., row," +
+                      "column i.e., 2,3");
           }
           coordinates = new Coordinate(row, column);
           direction = StringToEnum(userEnteredDirection);
@@ -173,32 +182,32 @@ public class Main {
               }
           }
       } catch (JumpFailedOutOfBoundsException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. The coordinated were invalid. Please enter command with "
                              + " valid coordinates.");
       } catch (JumpFailedNoObstacleException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. There was no obstacle to jump over. Please eneter command with "
                              + " different coordinates.");
       } catch (BoardItemNotEmptyException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
                              + " different coordinates.");
       } catch (NonSlideableException e) {
           // TODO rename slidable to slideable in all places
           // TODO CHANGE TO NOT SLIDEABLE
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
       } catch (SlideOutOfBoundsException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
       } catch (SlideHitObstacleException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
                              + " Please enteer the command with different coordinates.");
 			}
 			catch (SlideHitElevatedException e) {
-          logger.info(
+          print(
                              "Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
                              + " Please enteer the command with different coordinates.");
 			}
