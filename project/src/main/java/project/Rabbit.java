@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Rabbit extends BoardItem implements Jumpable {
+public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 	private boolean isCurrentlyJumping;
 

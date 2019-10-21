@@ -2,7 +2,7 @@ package project;
 
 import java.util.List;
 
-public class Mushroom extends BoardItem {
+public class Mushroom extends BoardItem implements Containable {
 
     private static final Character MUSHROOM_DISPLAY_CHARACTER = 'M';
 

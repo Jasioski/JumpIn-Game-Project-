@@ -703,7 +703,7 @@ public class BoardTest {
 
 		try {
 			// Place rabbit in the hole
-			hole.containRabbit(rabbitJumping);
+			hole.contain(rabbitJumping);
 			// Add to board
 			board.setItem(hole.getCoordinates(), hole);
 			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
@@ -754,7 +754,7 @@ public class BoardTest {
 
 		try {
 			// Place rabbit in the hole
-			hole.containRabbit(rabbitJumping);
+			hole.contain(rabbitJumping);
 			// Add to board
 			board.setItem(hole.getCoordinates(), hole);
 

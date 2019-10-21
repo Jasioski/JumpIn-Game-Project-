@@ -288,15 +288,28 @@ public class Board{
 		Hole hole = (Hole) itemAtCoordinate;
 
 		try {
-			Optional<Rabbit> rabbitOptional = hole.getContainingItem();
-			if (rabbitOptional.isPresent()) {
-				Rabbit rabbit = hole.removeContainingItem();
+			Optional<Containable> optionlContainable = hole.getContainingItem();
+
+			if (optionlContainable.isPresent()) {
+				if (optionlContainable.get().getClass() != Rabbit.class) {
+					throw new IllegalArgumentException("Must be a rabbit that jumps out ");
+				}
+
+				Containable containable = hole.removeContainingItem();
+
 				try {
-					this.jump(jumpDirection, rabbit);
+					if (containable.getClass() == Rabbit.class) {
+						Rabbit rabbit = (Rabbit) containable;
+						this.jump(jumpDirection, rabbit);
+					}
+					else
+					{
+						throw new IllegalArgumentException("tried to jump out a non rabbit");
+					}
 				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
 					System.out.println("some jumping exception");
 					try {
-						hole.containRabbit(rabbit);
+						hole.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
 						ex.printStackTrace();
 					}

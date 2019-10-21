@@ -36,7 +36,7 @@ class HoleTest {
 		
 		Hole hole = new Hole(coordinate);
 		
-		Optional<Rabbit> containingItem = hole.getContainingItem();
+		Optional<Containable> containingItem = hole.getContainingItem();
 		assertTrue(containingItem.isEmpty(),
 				"the containing item should not exist");
 	}
@@ -53,16 +53,17 @@ class HoleTest {
 		
 		Hole hole = new Hole(holeCoordinate);
 		try {
-			hole.containRabbit(new Rabbit(rabbitCoordinate));
+			hole.contain(new Rabbit(rabbitCoordinate));
 		} catch (HoleAlreadyHasRabbitException e) {
 			fail("An exception was thrown");
 		}
 
-		Optional<Rabbit> containingItem = hole.getContainingItem();
+		Optional<Containable> containingItem = hole.getContainingItem();
+		Rabbit rabbit = (Rabbit) containingItem.get();
 		
 		assertTrue(containingItem.isPresent(),
 				"the containing item should exist");
-		assertEquals(holeCoordinate, containingItem.get().getCoordinates()
+		assertEquals(holeCoordinate, rabbit.getCoordinates()
 				.get(0),
 				"the rabbits coordinates should have been set to the "
 				+ "holes coordinates");
@@ -125,15 +126,13 @@ class HoleTest {
 		Rabbit item = new Rabbit(1,1);
 
 		try {
-			hole.containRabbit(item);
+			hole.contain(item);
 		} catch (HoleAlreadyHasRabbitException e) {
 			fail("Exception was thrown");
 		}
 
-		BoardItem containingItem;
-		
 		try {
-			containingItem = hole.removeContainingItem();
+			Containable containingItem = hole.removeContainingItem();
 			assertEquals(containingItem, item, "should get the same item back");
 			assertTrue(hole.getContainingItem().isEmpty(), 
 					"the hole should now be empty");
@@ -151,7 +150,7 @@ class HoleTest {
 		Rabbit rabbit = new Rabbit(1,0);
 
 		try {
-			hole.containRabbit(rabbit);
+			hole.contain(rabbit);
 		} catch (Exception e) {
 		    fail("Exception was thrown");
 		}
@@ -166,6 +165,29 @@ class HoleTest {
 
 	@Test
 	/**
+	 * Contain a mushroom inside the hole
+	 */
+	void testContainMushroom() {
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Mushroom mushroom = new Mushroom(1, 0);
+
+		try {
+			hole.contain(mushroom);
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
+				"now contain something");
+		assertEquals(mushroom, hole.getContainingItem().get(), "the hole should" +
+				"now contain the mushroom");
+		assertEquals(hole.getCoordinates(), mushroom.getCoordinates(), "" +
+				"the rabbits coordinates should be the same as the hole" );
+		assertEquals(ItemUIRepresentation.HOLE_MUSHROOM, hole.getUIRepresentation(), "the mushroom is now in the hole");
+	}
+
+	@Test
+	/**
 	 * UI Representation when it contains a rabbit
 	 */
 	void testGetUIRepresentationRabbit () {
@@ -173,7 +195,7 @@ class HoleTest {
 		Rabbit rabbit = new Rabbit(1,0);
 
 		try {
-			hole.containRabbit(rabbit);
+			hole.contain(rabbit);
 		} catch (Exception e) {
 			fail("Exception was thrown");
 		}
@@ -181,6 +203,28 @@ class HoleTest {
 		assertEquals(ItemUIRepresentation.HOLE_OCCUPIED_RABBIT, hole.getUIRepresentation(), "the hole should" +
 				"now should now be showing the occupied character");
 	}
+
+	// TODO: test when a rabbit tries to go into a hole that has a mushroom
+
+	// TODO: test when a rabbit tries to jump over a hole that has a mushroom in the rabbit test
+
+//	@Test
+//	/**
+//	 * UI Representation when it contains a mushroom
+//	 */
+//	void testGetUIRepresentationMushroom () {
+//		Hole hole = new Hole(new Coordinate(0, 0));
+//		Mushroom mushroom = new Mushroom(1, 0);
+//
+//		try {
+//			hole.containRabbit(mushroom);
+//		} catch (Exception e) {
+//			fail("Exception was thrown");
+//		}
+//
+//		assertEquals(ItemUIRepresentation.HOLE_OCCUPIED_RABBIT, hole.getUIRepresentation(), "the hole should" +
+//				"now should now be showing the occupied character");
+//	}
 
 	@Test
 	/**
@@ -203,7 +247,7 @@ class HoleTest {
 		Rabbit rabbit = new Rabbit(0, 0);
 
 		try {
-			hole.containRabbit(rabbit);
+			hole.contain(rabbit);
 			hole.removeContainingItem();
 		}
 		catch (Exception e){
@@ -227,13 +271,13 @@ class HoleTest {
 		Rabbit rabbitOutside = new Rabbit(rabbitOutsideCoordinate);
 
 		try {
-			hole.containRabbit(rabbitHole);
+			hole.contain(rabbitHole);
 		} catch (Exception e) {
 		    fail("Exception was thrown");
 		}
 
 		assertThrows(HoleAlreadyHasRabbitException.class, () -> {
-			hole.containRabbit(rabbitOutside);
+			hole.contain(rabbitOutside);
 		});
 
         assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
