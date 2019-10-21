@@ -48,10 +48,12 @@ public class Main {
 		Hole hole4 = new Hole(4, 4);
 		Hole hole5 = new Hole(2, 2);
 
-		Fox fox1 = new Fox(2,3,3,3);
+		Fox fox1 = new Fox(3,2,3,3);
+        Fox fox2 = new Fox(0,1,1,1);
 
 		Rabbit rabbit1 = new Rabbit(4, 2);
-		Mushroom mushroom1 = new Mushroom(2, 2);
+        Rabbit rabbit2 = new Rabbit(2, 0);
+
         Mushroom mushroom2 = new Mushroom(0, 0);
 
 		ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
@@ -67,14 +69,15 @@ public class Main {
 			board.setItem(hole5);
 
 			board.setItem(fox1);
+            board.setItem(fox2);
 
 			board.setItem(elevatedBoardItem1);
 			board.setItem(elevatedBoardItem2);
 			board.setItem(elevatedBoardItem3);
             board.setItem(elevatedBoardItem4);
 			board.setItem(rabbit1);
+            board.setItem(rabbit2);
 
-			board.setItem(mushroom1);
             board.setItem(mushroom2);
 
 		} catch (Exception e) {
