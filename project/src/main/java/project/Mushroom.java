@@ -6,10 +6,6 @@ import java.util.List;
  * A class representing a mushroom item on the board.
  */
 public class Mushroom extends BoardItem implements Containable {
-    /**
-     * The mushroom's display character, M.
-     */
-    private static final Character MUSHROOM_DISPLAY_CHARACTER = 'M';
 
     /**
      * Creates the mushroom at a specific row and column on the board.
