@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class Rabbit extends BoardItem implements Jumpable {
 
-	private static final Character RABBIT_DISPLAY_CHARACTER = 'R';
 	private boolean isCurrentlyJumping;
 
 	public Rabbit(int row, int column) {
@@ -15,7 +14,7 @@ public class Rabbit extends BoardItem implements Jumpable {
 	}
 
 	public Rabbit(Coordinate coordinate) {
-		super(RABBIT_DISPLAY_CHARACTER);
+		super(ItemUIRepresentation.RABBIT);
 		this.setCoordinate(coordinate);
 		isCurrentlyJumping = false;
 	}
@@ -46,19 +45,18 @@ public class Rabbit extends BoardItem implements Jumpable {
 	}
 
 	@Override
-	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		List<Coordinate> oldCoordinates = this.getCoordinates();
 
 		try {
-			List<Coordinate> newCoordinates = performJump(direction, slice);
-			return newCoordinates;
-		} catch (JumpObstacleException | JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
+			return performJump(direction, slice);
+		} catch (JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
 			this.setCoordinates(oldCoordinates);
 			throw e;
 		}
 	}
 
-	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpObstacleException, JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
+	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
 		Coordinate currentCoordinate = this.getCoordinate();
 		Coordinate newCoordinate;
 		switch (direction) {
@@ -94,16 +92,26 @@ public class Rabbit extends BoardItem implements Jumpable {
 		// Check if we are hitting an obstacle
 		// loop over all the items in the slice
 		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
+
+			// do not match if not an empty elevated
+			if (sliceItem.getClass() == ElevatedBoardItem.class) {
+				ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) sliceItem;
+				if (elevatedBoardItem.getContainingItem().isEmpty()) {
+					return false;
+				}
+			}
+
 			// check if is at the same coordinate as one of the new coordinates
 			if (sliceItem.getCoordinates().contains(newCoordinate)) {
-				// match if the item is not empty
-				// and not the current item
+				// not empty
 				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
+					// not current item
 					if (!(sliceItem.equals(this))) {
 						return true;
 					}
 				}
 			}
+
 			// do not match if the item is empty or the current item
 			return false;
 		});

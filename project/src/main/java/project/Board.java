@@ -1,15 +1,18 @@
 package project;
 
+
 import java.util.ArrayList;	
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Board {
+public class Board{
 	
 	private BoardItem[][] items;
 
 	private int rows;
 	private int columns;
+	protected GameState currentGameState;
 	
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException { 
 		if (rows <= 0 || columns <= 0) { 
@@ -19,7 +22,8 @@ public class Board {
 	}
 	
 	public Board(int rows, int columns) {
-		
+		//setting GameState
+		this.currentGameState = GameState.IN_PROGRESS;
 		validateArguments(rows, columns);
 		
 		this.rows = rows;
@@ -36,8 +40,11 @@ public class Board {
 		
 	}
 
-	public Board(int dimension) {
+	public Board(int dimension) {		
 		this(dimension, dimension);
+		//setting the game state
+		this.currentGameState = GameState.IN_PROGRESS;
+
 	}
 
 	public int getRows() {
@@ -192,9 +199,11 @@ public class Board {
 	// to be extracted
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException {
+			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
 		
+		
+
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
 			// TODO: rename to non-slidable
@@ -213,6 +222,7 @@ public class Board {
 		// Move Item
 		Slidable movableItem = (Slidable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
+
 		newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
 		// Clear old coordinates
 		for (Coordinate initialCoordinate: initialCoordinates) {
@@ -223,12 +233,14 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpObstacleException, JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
+
 		jump(jumpDirection, itemAtCoordinate);
+
 	}
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpObstacleException,	JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException {
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
@@ -257,9 +269,12 @@ public class Board {
 
 		// Change the board representation
 		setItem(newCoordinates, itemAtCoordinate);
+		
+		//making a call to function to check the current game state
+		updateGameState();
 	}
 
-	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, JumpObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
@@ -272,14 +287,46 @@ public class Board {
 
 		Hole hole = (Hole) itemAtCoordinate;
 
-		Rabbit rabbit = null;
 		try {
-			rabbit = hole.removeContainingItem();
-		} catch (HoleIsEmptyException e) {
-		    hole.setContainingItem(rabbit);
-		    throw e;
+			Optional<Rabbit> rabbitOptional = hole.getContainingItem();
+			if (rabbitOptional.isPresent()) {
+				Rabbit rabbit = hole.removeContainingItem();
+				try {
+					this.jump(jumpDirection, rabbit);
+				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
+					System.out.println("some jumping exception");
+					try {
+						hole.containRabbit(rabbit);
+					} catch (HoleAlreadyHasRabbitException ex) {
+						ex.printStackTrace();
+					}
+					throw e;
+				}
+			}
+		}
+		catch(HoleIsEmptyException e)
+		{
+			throw e;
 		}
 
-		this.jump(jumpDirection, rabbit);
+
+	}
+	
+	//Itterates over the board, if no rabbits found, game state change to
+	//won else, game state is set to in progress
+	public void updateGameState() {
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
+				if (items[row][column] instanceof Rabbit) {
+					this.currentGameState = GameState.IN_PROGRESS;
+					return;
+				}
+			}
+		}
+		this.currentGameState = GameState.SOLVED;
+	}
+
+	public GameState getCurrentGameState() {
+		return currentGameState;
 	}
 }

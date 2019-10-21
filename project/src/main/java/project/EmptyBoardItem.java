@@ -4,14 +4,12 @@ import java.util.List;
 
 public class EmptyBoardItem extends BoardItem {
 
-	private static final Character TYPE = 'E';
-	
 	public EmptyBoardItem(int row, int column) {
 		this(new Coordinate(row, column));
 	}
-	
+
 	public EmptyBoardItem(Coordinate coordinate) {
-		super(TYPE);
+		super(ItemUIRepresentation.EMPTY);
 		this.setCoordinate(coordinate);
 	}
 

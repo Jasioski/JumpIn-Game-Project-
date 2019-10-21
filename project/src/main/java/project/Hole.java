@@ -1,66 +1,36 @@
 package project;
 
-import java.util.List;
+
 import java.util.Optional;
 
-public class Hole extends BoardItem {
+public class Hole extends ContainerItem {
 
-	private static final Character HOLE_DISPLAY_CHARACTER = 'H';
-	private Optional<Rabbit> containingItem;
-	
-	public Hole(Coordinate coordinate) {
-		super(HOLE_DISPLAY_CHARACTER);
-		this.setCoordinate(coordinate);
-		this.containingItem = Optional.empty();
-	}
+    private static final Character HOLE_EMPTY_DISPLAY_CHARACTER = 'H';
+    private static final Character HOLE_OCCUPIED_DISPLAY_CHARACTER = 'O';
 
-	public void setCoordinate(Coordinate coordinate) {
-		this.coordinates.clear();
-		this.coordinates.add(coordinate);
-	}
 
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) {
-		if (coordinates.size() != 1) {
-			throw new IllegalArgumentException("can only add a coordinate "
-					+ "of length 1");
-		}
-		
-		this.setCoordinate(coordinates.get(0));
-	}
-	
-	public Coordinate getCoordinate () {
-		return this.getCoordinates().get(0);
-	}
+    // TODO: check if hole is occupied for showing the display character
+    public Hole(Coordinate coordinate) {
+        super(coordinate, ItemUIRepresentation.HOLE_EMPTY);
+    }
 
-	public Optional<Rabbit> getContainingItem() {
-		return this.containingItem;
-	}
+    public Hole(int row, int column) {
+        this(new Coordinate(row, column));
+    }
 
-	// TODO: merge with containRabbit
-	public void setContainingItem(Rabbit rabbit) {
-		this.containingItem = Optional.of(rabbit);
-		rabbit.setCoordinate(this.getCoordinate());
-	}
+    @Override
+    public Rabbit removeContainingItem() throws HoleIsEmptyException {
+        Rabbit rabbit = super.removeContainingItem();
 
-	// todo: merge with removeRabbit maybe
-	public Rabbit removeContainingItem() throws HoleIsEmptyException {
-		if (this.containingItem.isEmpty()) {
-			throw new HoleIsEmptyException("there is no item in the hole");
-		}
-		
-		Rabbit rabbit = this.containingItem.get();
-		this.containingItem = Optional.empty();
-				
-		return rabbit;
-	}
+        this.UIRepresentation = ItemUIRepresentation.HOLE_EMPTY;
 
-	public void containRabbit(Rabbit rabbit) throws HoleAlreadyHasRabbitException {
-		if (this.containingItem.isPresent()) {
-			throw new HoleAlreadyHasRabbitException("the hole already has a " +
-					"rabbit");
-		}
+        return rabbit;
+    }
 
-		this.setContainingItem(rabbit);
-	}
+    @Override
+    public void containRabbit(Rabbit rabbit) throws HoleAlreadyHasRabbitException {
+        super.containRabbit(rabbit);
+
+        this.UIRepresentation = ItemUIRepresentation.HOLE_OCCUPIED_RABBIT;
+    }
 }

@@ -736,5 +736,49 @@ public class BoardTest {
 		}
 	}
 
-	// todo: try jumping out of hole where there is no obstacle next to it
+	@Test
+	/**
+	 * Jump rabbit outside of a hole but into an empty adjacent block
+	 * this should fail because the rabbit should be trying to jump over
+	 * something first
+	 */
+	void testJumpRabbitOutsideHoleToEmpty () {
+		// Layout
+		// 0      1   2  3
+		// H(RJ)  E   E  E
+		// E      E   E  E
+		Board board = new Board(2, 4);
+
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+
+		try {
+			// Place rabbit in the hole
+			hole.containRabbit(rabbitJumping);
+			// Add to board
+			board.setItem(hole.getCoordinates(), hole);
+
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// Jump out
+		Direction jumpDirection = Direction.RIGHT;
+		assertThrows(JumpFailedNoObstacleException.class, () ->  {
+			board.jumpOut(jumpDirection, hole.getCoordinate());
+		});
+
+		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
+				"not be empty");
+
+		Coordinate expectedCoordinate = new Coordinate(0, 0);
+		Hole holeFromBoard = (Hole) board.getItem(expectedCoordinate);
+		assertEquals(holeFromBoard.getContainingItem().get(),
+				rabbitJumping,
+				"the rabbit should still in the hole");
+
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+				"the rabbits internal coordinate should not have changed");
+	}
 }
