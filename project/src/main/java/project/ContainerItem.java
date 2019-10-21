@@ -1,21 +1,17 @@
 package project;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
-
 import java.util.List;
 import java.util.Optional;
 
 // TODO: think of a better name for this class
 public abstract class ContainerItem extends BoardItem {
 
-	private Optional<Rabbit> containingItem;
-	private ItemUIRepresentation emptyRepresentation;
+	private Optional<Containable> containingItem;
 
 	// TODO: there should be no default displayCharacter
 
 	public ContainerItem(Coordinate coordinate, ItemUIRepresentation emptyRepresentation) {
 		super(emptyRepresentation);
-		this.emptyRepresentation = emptyRepresentation;
 
 		this.setCoordinate(coordinate);
 		this.containingItem = Optional.empty();
@@ -44,29 +40,30 @@ public abstract class ContainerItem extends BoardItem {
 		return this.getCoordinates().get(0);
 	}
 
-	public Optional<Rabbit> getContainingItem() {
+	public Optional<Containable> getContainingItem() {
 		return this.containingItem;
 	}
 
 	// todo: merge with removeRabbit maybe
-	public Rabbit removeContainingItem() throws HoleIsEmptyException {
+	public Containable removeContainingItem() throws HoleIsEmptyException {
 		if (this.containingItem.isEmpty()) {
 			throw new HoleIsEmptyException("there is no item in the hole");
 		}
 		
-		Rabbit rabbit = this.containingItem.get();
+		Containable containable = this.containingItem.get();
 		this.containingItem = Optional.empty();
 				
-		return rabbit;
+		return containable;
 	}
 
-	public void containRabbit(Rabbit rabbit) throws HoleAlreadyHasRabbitException {
+	public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
 		if (this.containingItem.isPresent()) {
+			// TODO: ContainerAlreadyHasContainableException
 			throw new HoleAlreadyHasRabbitException("the hole already has a " +
 					"rabbit");
 		}
 
-		this.containingItem = Optional.of(rabbit);
-		rabbit.setCoordinate(this.getCoordinate());
+		this.containingItem = Optional.of(containable);
+		containable.setCoordinate(this.getCoordinate());
 	}
 }

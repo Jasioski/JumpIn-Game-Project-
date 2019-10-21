@@ -16,7 +16,6 @@ class FoxTest {
 		Coordinate head = new Coordinate(0, 0);
 		Coordinate tail = new Coordinate(1, 0);
 		
-		Character expectedDisplayCharacter = 'F';
 		ItemUIRepresentation expectedRepresentation = ItemUIRepresentation.FOX;
 
 		Fox fox = new Fox(head, tail);
@@ -113,7 +112,7 @@ class FoxTest {
 		Coordinate tail = new Coordinate(1, 1);
 		
 		assertThrows(IllegalArgumentException.class, () -> {
-			Fox fox = new Fox(head, tail);
+				new Fox(head, tail);
 		}, "the fox should not be able to orient diagonally");
 	}
 	

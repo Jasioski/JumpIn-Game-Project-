@@ -1,16 +1,17 @@
 package project;
 
 public enum ItemUIRepresentation {
-    EMPTY("E"),
-    MUSHROOM("M"),
-    FOX("F"),
-    HOLE_EMPTY("HE"),
-    HOLE_OCCUPIED_RABBIT("HR"),
-    HOLE_MUSHROOM("HM"),
-    ELEVATED("U"),
-    ELEVATED_MUSHROOM("EM"),
-    ELEVATED_RABBIT("ER"),
-    RABBIT("R");
+
+    EMPTY(ANSIColor.GREEN + "E" + ANSIColor.RESET),
+    MUSHROOM(ANSIColor.PURPLE + "M" + ANSIColor.RESET),
+    FOX(ANSIColor.RED + "F" + ANSIColor.RESET),
+    HOLE_EMPTY(ANSIColor.CYAN + "HE" + ANSIColor.RESET),
+    HOLE_OCCUPIED_RABBIT(ANSIColor.BLUE + "HR" + ANSIColor.RESET),
+    HOLE_MUSHROOM(ANSIColor.BLUE + "HM" + ANSIColor.RESET),
+    ELEVATED(ANSIColor.WHITE + "U" + ANSIColor.RESET),
+    ELEVATED_MUSHROOM(ANSIColor.PURPLE + "UM" + ANSIColor.RESET),
+    ELEVATED_RABBIT(ANSIColor.YELLOW + "UR" + ANSIColor.RESET),
+    RABBIT(ANSIColor.YELLOW + "R" + ANSIColor.RESET);
 
     private String representation;
 

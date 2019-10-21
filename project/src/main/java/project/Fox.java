@@ -7,8 +7,6 @@ import java.util.Set;
 
 public class Fox extends BoardItem implements Slidable {
 
-	private static final Character FOX_DISPLAY_CHARACTER = 'F';
-	
 	private static void validateArguments(Coordinate head, Coordinate tail) {
 		validateArguments(head.row, head.column, tail.row, tail.column);
 	}
@@ -230,5 +228,4 @@ public class Fox extends BoardItem implements Slidable {
 		}
 		
 	}
-
 }

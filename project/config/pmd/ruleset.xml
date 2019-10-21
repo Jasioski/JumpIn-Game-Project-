@@ -554,26 +554,6 @@ for (int i = 0, j = 0; i < 10; i++, j += 2) {
         </example>
     </rule>
 
-    <rule name="GuardLogStatement"
-          language="java"
-          since="5.1.0"
-          message="Logger calls should be surrounded by log level guards."
-          class="net.sourceforge.pmd.lang.java.rule.bestpractices.GuardLogStatementRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#guardlogstatement">
-        <description>
-Whenever using a log level, one should check if the loglevel is actually enabled, or
-otherwise skip the associate String creation and manipulation.
-        </description>
-        <priority>2</priority>
-        <example>
-<![CDATA[
-    // Add this for performance
-    if (log.isDebugEnabled() { ...
-        log.debug("log something" + " and " + "concat strings");
-]]>
-        </example>
-    </rule>
-
     <rule name="JUnit4SuitesShouldUseSuiteAnnotation"
           language="java"
           since="4.0"

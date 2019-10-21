@@ -80,3 +80,7 @@ compileJava   {
   sourceCompatibility = 11
   targetCompatibility = 11
 }
+
+run {
+  standardInput = System.in
+}
