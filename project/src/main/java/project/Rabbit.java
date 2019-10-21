@@ -98,11 +98,9 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 			if (sliceItem.getCoordinates().contains(newCoordinate)) {
 
 				// do not match if not an empty elevated
-				System.out.println(sliceItem.getClass());
 				if (sliceItem instanceof ContainerItem) {
 					ContainerItem containerItem = (ContainerItem) sliceItem;
 					if (containerItem.getContainingItem().isEmpty()) {
-						System.out.println("found container item");
 						return false;
 					}
 				}

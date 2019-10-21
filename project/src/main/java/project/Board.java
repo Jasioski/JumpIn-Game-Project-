@@ -309,7 +309,6 @@ public class Board{
 						throw new IllegalArgumentException("tried to jump out a non rabbit");
 					}
 				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
-					System.out.println("some jumping exception");
 					try {
 						hole.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
