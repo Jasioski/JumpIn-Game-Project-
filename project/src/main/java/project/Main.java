@@ -218,6 +218,9 @@ public class Main {
                         "have a rabbit "
                         + " Please enteer the command with different coordinates.");
             }
+			catch (Exception e) {
+			    print("Invalid input, please try again");
+            }
 
         } while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
