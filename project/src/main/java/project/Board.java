@@ -32,8 +32,7 @@ public class Board{
 	 */
 	protected GameState currentGameState;
 
-  private static Logger logger = LogManager.getLogger(Board.class);
-
+  	private static Logger logger = LogManager.getLogger(Board.class);
   
 	/**
 	 * This method ensures that a given row and column are not negative.
@@ -252,7 +251,15 @@ public class Board{
 		item.setCoordinates(coordinates);
 	}
 
-
+	/**
+	 * Sets a board item that already has defined coordinates.
+	 * @param item The board item being set.
+	 * @throws BoardItemNotEmptyException if the coordinate is not empty
+	*/
+	public void setItem(BoardItem item) throws BoardItemNotEmptyException {
+		setItem(item.getCoordinates(), item);
+	}
+	
 	/**
 	 * Sets an EmptyBoardItem at a specific coordinate.
 	 * @param coordinate The coordinate where the empty item is being placed.
