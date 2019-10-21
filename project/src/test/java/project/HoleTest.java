@@ -166,9 +166,9 @@ class HoleTest {
 
 	@Test
 	/**
-	 * Contain a rabbit inside the hole should print O
+	 * UI Representation when it contains a rabbit
 	 */
-	void testGetUIRepresentation () {
+	void testGetUIRepresentationRabbit () {
 		Hole hole = new Hole(new Coordinate(0, 0));
 		Rabbit rabbit = new Rabbit(1,0);
 
@@ -182,6 +182,38 @@ class HoleTest {
 				"now should now be showing the occupied character");
 	}
 
+	@Test
+	/**
+	 * UI Representation when it is empty
+	 */
+	void testGetUIRepresentationEmpty () {
+		Hole hole = new Hole(new Coordinate(0, 0));
+
+		assertEquals(ItemUIRepresentation.HOLE_EMPTY, hole.getUIRepresentation(), "the whole should" +
+				"be empty");
+
+	}
+
+	@Test
+	/**
+	 * UI Representation when it is empty after removing a rabbit that used to be there
+	 */
+	void testGetUIRepresentationRabbitRemoved () {
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbit = new Rabbit(0, 0);
+
+		try {
+			hole.containRabbit(rabbit);
+			hole.removeContainingItem();
+		}
+		catch (Exception e){
+			fail("Exception was thrown");
+		}
+
+		assertEquals(ItemUIRepresentation.HOLE_EMPTY, hole.getUIRepresentation(), "the whole should" +
+				"be empty");
+
+	}
 
 	@Test
     /**
