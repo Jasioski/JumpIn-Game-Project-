@@ -741,7 +741,7 @@ public class BoardTest {
 
 			// Jump out
 			Direction jumpDirection = Direction.RIGHT;
-            board.jumpOut(jumpDirection, hole.getCoordinate());
+            board.jump(jumpDirection, hole.getCoordinate());
 
 			assertFalse(hole.getContainingItem().isPresent(), "the hole should" +
 					"be empty");
@@ -792,7 +792,7 @@ public class BoardTest {
 		// Jump out
 		Direction jumpDirection = Direction.RIGHT;
 		assertThrows(JumpFailedNoObstacleException.class, () ->  {
-			board.jumpOut(jumpDirection, hole.getCoordinate());
+			board.jump(jumpDirection, hole.getCoordinate());
 		});
 
 		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
@@ -839,4 +839,114 @@ public class BoardTest {
 		assertTrue(board.getItem(new Coordinate(0, 0)) instanceof EmptyBoardItem, "The original position should be empty");
 	}
 
+
+	@Test
+	/**
+	 * Jump rabbit outside of a of an elevated to an empty after going over
+	 * obstacle
+	 */
+	void testJumpRabbitOutsideElevatedToEmpty () {
+		// Layout
+		// 0      1    2  3
+		// U(RJ)  RO   E  E
+		// E      E    E  E
+		Board board = new Board(2, 4);
+
+		ElevatedBoardItem elevatedBoardItem = new ElevatedBoardItem(new Coordinate(0, 0));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+		Rabbit rabbitObstacle = new Rabbit(0, 1);
+
+		try {
+			board.setItem(elevatedBoardItem);
+			board.setItem(rabbitObstacle);
+
+			elevatedBoardItem.contain(rabbitJumping);
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// ExpectedLayout
+		// 0      1    2  3
+		// U      RO  RJ  E
+		// E      E    E  E
+
+		// Jump out
+		Direction jumpDirection = Direction.RIGHT;
+		try {
+			board.jump(jumpDirection, new Coordinate(0, 0));
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertTrue(elevatedBoardItem.getContainingItem().isEmpty(),
+		"the elevated item should now be empty");
+
+		Coordinate expectedCoordinate = new Coordinate(0, 2);
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate());
+
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+				"the rabbits internal coordinate should have changed");
+	}
+
+
+	@Test
+	/**
+	 * Jump rabbit into Elevated from another elevated
+	 * obstacle
+	 */
+	void testJumpRabbitFromElevatedIntoElevated () {
+		// Layout
+		// 0    	   1    2  3
+		// U(RJ)       F    F  U
+		// E   		   E    E  E
+		Board board = new Board(2, 4);
+
+		Fox fox = new Fox(0, 1, 0, 2);
+		ElevatedBoardItem initialElevatedBoardItem =
+				new ElevatedBoardItem(new Coordinate(0, 0));
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+
+		ElevatedBoardItem finalElevatedBoardItem =
+				new ElevatedBoardItem(new Coordinate(0, 3));
+
+		try {
+			board.setItem(initialElevatedBoardItem);
+			board.setItem(finalElevatedBoardItem);
+			board.setItem(fox);
+
+			initialElevatedBoardItem.contain(rabbitJumping);
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// ExpectedLayout
+		// 0      1    2  3
+		// U      F    F  U(RJ)
+		// E      E    E  E
+
+		// Jump out
+		Direction jumpDirection = Direction.RIGHT;
+		try {
+			board.jump(jumpDirection, new Coordinate(0, 0));
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertTrue(initialElevatedBoardItem.getContainingItem().isEmpty(),
+				"the initial elevated item should be empty");
+
+		assertTrue(finalElevatedBoardItem.getContainingItem().isPresent(),
+				"the elevated item should now contain something");
+		assertEquals(rabbitJumping,
+				finalElevatedBoardItem.getContainingItem().get(),
+				"the elevated item should now contain the rabbit");
+
+		Coordinate expectedCoordinate = new Coordinate(0, 3);
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate());
+
+		assertEquals(expectedCoordinate, rabbitJumping.getCoordinate(),
+				"the rabbits internal coordinate should have changed");
+	}
 }
