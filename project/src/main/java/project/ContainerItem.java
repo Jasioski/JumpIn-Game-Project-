@@ -1,5 +1,7 @@
 package project;
 
+import com.sun.java.accessibility.util.GUIInitializedListener;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -7,15 +9,20 @@ import java.util.Optional;
 public abstract class ContainerItem extends BoardItem {
 
 	private Optional<Rabbit> containingItem;
-	
-	public ContainerItem(Coordinate coordinate, Character displayCharacter) {
-		super(displayCharacter);
+	private ItemUIRepresentation emptyRepresentation;
+
+	// TODO: there should be no default displayCharacter
+
+	public ContainerItem(Coordinate coordinate, ItemUIRepresentation emptyRepresentation) {
+		super(emptyRepresentation);
+		this.emptyRepresentation = emptyRepresentation;
+
 		this.setCoordinate(coordinate);
 		this.containingItem = Optional.empty();
 	}
 
-	public ContainerItem(int row, int column, Character displayCharacter) {
-		this(new Coordinate(row, column), displayCharacter);
+	public ContainerItem(int row, int column, ItemUIRepresentation emptyRepresentation) {
+		this(new Coordinate(row, column), emptyRepresentation);
 	}
 
 	public void setCoordinate(Coordinate coordinate) {
@@ -41,12 +48,6 @@ public abstract class ContainerItem extends BoardItem {
 		return this.containingItem;
 	}
 
-	// TODO: merge with containRabbit
-	public void setContainingItem(Rabbit rabbit) {
-		this.containingItem = Optional.of(rabbit);
-		rabbit.setCoordinate(this.getCoordinate());
-	}
-
 	// todo: merge with removeRabbit maybe
 	public Rabbit removeContainingItem() throws HoleIsEmptyException {
 		if (this.containingItem.isEmpty()) {
@@ -65,6 +66,7 @@ public abstract class ContainerItem extends BoardItem {
 					"rabbit");
 		}
 
-		this.setContainingItem(rabbit);
+		this.containingItem = Optional.of(rabbit);
+		rabbit.setCoordinate(this.getCoordinate());
 	}
 }

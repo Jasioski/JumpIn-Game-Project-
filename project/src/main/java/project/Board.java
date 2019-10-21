@@ -295,7 +295,11 @@ public class Board{
 					this.jump(jumpDirection, rabbit);
 				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
 					System.out.println("some jumping exception");
-					hole.setContainingItem(rabbit);
+					try {
+						hole.containRabbit(rabbit);
+					} catch (HoleAlreadyHasRabbitException ex) {
+						ex.printStackTrace();
+					}
 					throw e;
 				}
 			}

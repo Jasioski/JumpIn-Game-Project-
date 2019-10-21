@@ -54,7 +54,7 @@ public class Fox extends BoardItem implements Slidable {
 	}
 
 	public Fox(Coordinate head, Coordinate tail) {
-		super(FOX_DISPLAY_CHARACTER);
+		super(ItemUIRepresentation.FOX);
 		
 		validateArguments(head, tail);
 		

@@ -14,7 +14,7 @@ class RabbitTest {
 	@Test
 	void testConstructor() {
 		Coordinate coordinate = new Coordinate(0, 1);
-		Character expectedDisplayCharacter = 'R';
+		ItemUIRepresentation expectedRepresentation = ItemUIRepresentation.RABBIT;
 		
 		Rabbit rabbit = new Rabbit(coordinate);
 		
@@ -23,8 +23,8 @@ class RabbitTest {
 		assertEquals(coordinate, retrievedCoordinate, "the coordinate should"
 				+ "have been set");
 		
-		assertEquals(rabbit.getDisplayCharacter(), expectedDisplayCharacter,
-				"the display character should be " + expectedDisplayCharacter);
+		assertEquals(rabbit.getUIRepresentation(), expectedRepresentation,
+				"the rabbit should have the correct representation");
 	}
 	
 	@Test

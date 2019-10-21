@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class Rabbit extends BoardItem implements Jumpable {
 
-	private static final Character RABBIT_DISPLAY_CHARACTER = 'R';
 	private boolean isCurrentlyJumping;
 
 	public Rabbit(int row, int column) {
@@ -15,7 +14,7 @@ public class Rabbit extends BoardItem implements Jumpable {
 	}
 
 	public Rabbit(Coordinate coordinate) {
-		super(RABBIT_DISPLAY_CHARACTER);
+		super(ItemUIRepresentation.RABBIT);
 		this.setCoordinate(coordinate);
 		isCurrentlyJumping = false;
 	}

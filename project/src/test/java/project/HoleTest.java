@@ -15,14 +15,14 @@ class HoleTest {
 	@Test
 	void testConstructor() {
 		Coordinate coordinate = new Coordinate(0, 0);
-		
-		Character displayCharacter = 'H';
-		
+
+		ItemUIRepresentation expectedRepresentation = ItemUIRepresentation.HOLE_EMPTY;
+
 		Hole hole = new Hole(coordinate);
 		
 		assertEquals(coordinate, hole.getCoordinates().get(0),
 				"the coordinate should be the one that was set");
-		assertEquals(displayCharacter, hole.getDisplayCharacter(),
+		assertEquals(expectedRepresentation, hole.getUIRepresentation(),
 				"the display character should be H");
 	}
 	
@@ -52,8 +52,12 @@ class HoleTest {
 		Coordinate rabbitCoordinate = new Coordinate(1,1);
 		
 		Hole hole = new Hole(holeCoordinate);
-		hole.setContainingItem(new Rabbit(rabbitCoordinate));
-		
+		try {
+			hole.containRabbit(new Rabbit(rabbitCoordinate));
+		} catch (HoleAlreadyHasRabbitException e) {
+			fail("An exception was thrown");
+		}
+
 		Optional<Rabbit> containingItem = hole.getContainingItem();
 		
 		assertTrue(containingItem.isPresent(),
@@ -119,9 +123,13 @@ class HoleTest {
 		Hole hole = new Hole(holeCoordinate);
 		
 		Rabbit item = new Rabbit(1,1);
-		
-		hole.setContainingItem(item);
-		
+
+		try {
+			hole.containRabbit(item);
+		} catch (HoleAlreadyHasRabbitException e) {
+			fail("Exception was thrown");
+		}
+
 		BoardItem containingItem;
 		
 		try {
@@ -156,8 +164,26 @@ class HoleTest {
 				"the rabbits coordinates should be the same as the hole" );
 	}
 
+	@Test
+	/**
+	 * Contain a rabbit inside the hole should print O
+	 */
+	void testGetUIRepresentation () {
+		Hole hole = new Hole(new Coordinate(0, 0));
+		Rabbit rabbit = new Rabbit(1,0);
 
-    @Test
+		try {
+			hole.containRabbit(rabbit);
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		assertEquals(ItemUIRepresentation.HOLE_OCCUPIED_RABBIT, hole.getUIRepresentation(), "the hole should" +
+				"now should now be showing the occupied character");
+	}
+
+
+	@Test
     /**
      * Try containing a rabbit in a hole that already has a rabbit
      */

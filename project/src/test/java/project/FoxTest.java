@@ -17,13 +17,14 @@ class FoxTest {
 		Coordinate tail = new Coordinate(1, 0);
 		
 		Character expectedDisplayCharacter = 'F';
+		ItemUIRepresentation expectedRepresentation = ItemUIRepresentation.FOX;
 
 		Fox fox = new Fox(head, tail);
 
 		assertEquals(fox.getTail(), tail, "tail should be the same");
 		assertEquals(fox.getHead(), head, "head should be the same");
-		assertEquals(fox.getDisplayCharacter(), expectedDisplayCharacter,
-				"the display character should be " + expectedDisplayCharacter);
+		assertEquals(fox.getUIRepresentation(), expectedRepresentation,
+				"the display character should be " + expectedRepresentation);
 	}
 	
 	void testConstructorWithHeadAndTail() {
@@ -36,7 +37,7 @@ class FoxTest {
 		
 		assertEquals(fox.getTail(), tail, "tail should be the same");
 		assertEquals(fox.getHead(), head, "head should be the same");
-		assertEquals(fox.getDisplayCharacter(), expectedDisplayCharacter,
+		assertEquals(fox.getUIRepresentation(), expectedDisplayCharacter,
 				"the display character should be " + expectedDisplayCharacter);
 	}
 
