@@ -4,8 +4,6 @@ import java.util.List;
 
 public class Mushroom extends BoardItem implements Containable {
 
-    private static final Character MUSHROOM_DISPLAY_CHARACTER = 'M';
-
     public Mushroom(int row, int column) {
         this(new Coordinate(row, column));
     }
@@ -15,6 +13,7 @@ public class Mushroom extends BoardItem implements Containable {
         this.setCoordinate(coordinate);
     }
 
+    @Override
     public void setCoordinate(Coordinate coordinate) {
 
         this.coordinates.clear();

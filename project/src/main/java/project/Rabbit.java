@@ -1,5 +1,8 @@
 package project;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.Set;
 public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 	private boolean isCurrentlyJumping;
+	private static Logger logger = LogManager.getLogger(Rabbit.class);
 
 	public Rabbit(int row, int column) {
 		this(new Coordinate(row, column));
@@ -19,6 +23,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 		isCurrentlyJumping = false;
 	}
 
+	@Override
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);
@@ -143,7 +148,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 								isCurrentlyJumping = false;
 								return new ArrayList<Coordinate>();
 							} catch (HoleAlreadyHasRabbitException e) {
-								e.printStackTrace();
+								logger.error(e);
 							}
 						}
 					}

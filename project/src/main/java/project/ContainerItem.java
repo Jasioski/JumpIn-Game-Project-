@@ -1,7 +1,5 @@
 package project;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,13 +7,11 @@ import java.util.Optional;
 public abstract class ContainerItem extends BoardItem {
 
 	private Optional<Containable> containingItem;
-	private ItemUIRepresentation emptyRepresentation;
 
 	// TODO: there should be no default displayCharacter
 
 	public ContainerItem(Coordinate coordinate, ItemUIRepresentation emptyRepresentation) {
 		super(emptyRepresentation);
-		this.emptyRepresentation = emptyRepresentation;
 
 		this.setCoordinate(coordinate);
 		this.containingItem = Optional.empty();

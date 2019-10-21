@@ -1,11 +1,11 @@
 package project;
 
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Board{
 
@@ -14,6 +14,7 @@ public class Board{
 	private int rows;
 	private int columns;
 	protected GameState currentGameState;
+	private static Logger logger = LogManager.getLogger(Board.class);
 
 	private static void validateArguments(int rows, int columns) throws IllegalArgumentException {
 		if (rows <= 0 || columns <= 0) {
@@ -100,7 +101,7 @@ public class Board{
 					str += " " + item.toString();
 				}
 				else {
-					System.err.println("badly sized ui text");
+					logger.error("badly sized ui text");
 				}
 
 				str += " ";
@@ -169,7 +170,7 @@ public class Board{
 							return;
 						} catch (HoleAlreadyHasRabbitException e) {
 							// TODO: fix error handling
-							e.printStackTrace();
+							this.logger.error(e);
 						}
 					}
 				}
@@ -316,7 +317,7 @@ public class Board{
 		}
 
 		// Change the board representation
-		if (newCoordinates.size() > 0) {
+		if (!newCoordinates.isEmpty()) {
 			setItem(newCoordinates, itemAtCoordinate);
 		}
 		
@@ -337,8 +338,8 @@ public class Board{
 
 		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
 
-		try {
-			Optional<Containable> optionlContainable = containerItem.getContainingItem();
+    try {
+      Optional<Containable> optionlContainable = containerItem.getContainingItem();
 
 			if (optionlContainable.isPresent()) {
 				if (optionlContainable.get().getClass() != Rabbit.class) {
@@ -360,7 +361,7 @@ public class Board{
 					try {
 						containerItem.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
-						ex.printStackTrace();
+						this.logger.error(ex);
 					}
 					throw e;
 				}

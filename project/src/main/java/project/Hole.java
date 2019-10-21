@@ -1,15 +1,8 @@
 package project;
 
 
-import java.util.Optional;
-
 public class Hole extends ContainerItem {
 
-    private static final Character HOLE_EMPTY_DISPLAY_CHARACTER = 'H';
-    private static final Character HOLE_OCCUPIED_DISPLAY_CHARACTER = 'O';
-
-
-    // TODO: check if hole is occupied for showing the display character
     public Hole(Coordinate coordinate) {
         super(coordinate, ItemUIRepresentation.HOLE_EMPTY);
     }

@@ -810,9 +810,7 @@ public class BoardTest {
 
 	@Test
 	/**
-	 * Jump rabbit outside of a hole but into an empty adjacent block
-	 * this should fail because the rabbit should be trying to jump over
-	 * something first
+	 * Jump rabbit into a hole over an obstacle
 	 */
 	void testJumpRabbitIntoHole () {
 		// Layout

@@ -1,7 +1,5 @@
 package project;
 
-import org.apache.logging.log4j.core.pattern.AnsiEscape;
-
 public enum ItemUIRepresentation {
 
     EMPTY(ANSIColor.GREEN + "E" + ANSIColor.RESET),
