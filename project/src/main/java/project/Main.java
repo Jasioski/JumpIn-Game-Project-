@@ -13,18 +13,27 @@ public class Main {
 		return Direction.valueOf(direction);
 	}
 
+    public static Logger logger = LogManager.getLogger(Main.class);
 
     @SuppressWarnings("PMD")
 	public static void print(String message) {
 	    System.out.println(message);
     }
 
+    @SuppressWarnings("PMD")
+    public static void warn(String message) {
+        System.out.println(ANSIColor.RED + message + ANSIColor.RESET);
+    }
+
+    @SuppressWarnings("PMD")
+    public static void trace(String message) {
+        logger.trace(message);
+    }
 
     @SuppressWarnings("PMD.UseVarargs")
-	public static void main(String[] args) {
-		Logger logger = LogManager.getLogger(Main.class);
+    public static void main(String[] args) {
 
-		logger.info("Starting main");
+        print("Starting JumpIn");
 
 		Board board = new Board(5);
 
@@ -86,12 +95,22 @@ public class Main {
 
           print("\n" + board.toString());
           print("Please type one of the following commands: ");
-          print("-> Jump Rabbit row (current row of Rabbit), column (current column of Rabbit) Direction(Right, Left, Up, Down)");
-          print("-> Slide Fox row (e.g., 1), columns (e.g., 2) Number of board " +
-                  "uints/spaces (e.g., 2)");
-          print("Sample commands: \n Jump Rabbit 0,0 Right \n Slide Fox 0,2 2 Left");
+          print(ANSIColor.GREEN + "-> Jump Rabbit row (current row of Rabbit)" +
+                  ", " +
+                  "column " +
+                  "(current column of Rabbit) Direction(Right, Left, Up, Down)" + ANSIColor.RESET );
+          print(ANSIColor.GREEN + "-> Slide Fox row (e.g., 1), columns (e.g.," +
+                  " 2) " +
+                  "Number of " +
+                  "board " +
+                  "units / spaces (e.g., 2)" + ANSIColor.RESET);
+          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 0,0 Right" +
+                  " \n " +
+                  "Slide" +
+                  " Fox " +
+                  "0,2 2 Left" + ANSIColor.RESET);
 
-          print("Please enter command: ");
+          print(ANSIColor.CYAN + "Please enter command: " + ANSIColor.RESET);
           String userInput = scanner.nextLine();
           String[] commands = userInput.toString().split(" ");
 
@@ -141,7 +160,7 @@ public class Main {
               }
 
 
-              print(
+              trace(
                                  "moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
                                  + " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
               rowColumn = userEnteredCoordinates.split(",", 2);
@@ -150,7 +169,7 @@ public class Main {
               column = Integer.parseInt(rowColumn[1]);
           }
           if (row == -1 || column == -1) {
-              print("Please enter correct coordinates in format e.g., row," +
+              warn("Please enter correct coordinates in format e.g., row," +
                       "column i.e., 2,3");
           }
           coordinates = new Coordinate(row, column);
@@ -168,40 +187,40 @@ public class Main {
               }
           }
       } catch (JumpFailedOutOfBoundsException e) {
-          print(
-                             "Warning: Action coud not be performed. The coordinated were invalid. Please enter command with "
-                             + " valid coordinates.");
-      } catch (JumpFailedNoObstacleException e) {
-          print(
-                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please enter command with "
-                             + " different coordinates.");
-      } catch (BoardItemNotEmptyException e) {
-          print(
-                             "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
-                             + " different coordinates.");
-      } catch (NonSlideableException e) {
-          print(
-                             "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
-      } catch (SlideOutOfBoundsException e) {
-          print(
-                             "Warning: Action coud not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
+                warn(
+                        "Warning: Action coud not be performed. The coordinated were invalid. Please enter command with "
+                                + " valid coordinates.");
+            } catch (JumpFailedNoObstacleException e) {
+                warn(
+                        "Warning: Action coud not be performed. There was no obstacle to jump over. Please enter command with "
+                                + " different coordinates.");
+            } catch (BoardItemNotEmptyException e) {
+                warn(
+                        "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
+                                + " different coordinates.");
+            } catch (NonSlideableException e) {
+                warn(
+                        "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
+            } catch (SlideOutOfBoundsException e) {
+                warn(
+                        "Warning: Action coud not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
       } catch (SlideHitObstacleException e) {
-          print(
-                             "Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
-                             + " Please enteer the command with different coordinates.");
-			}
+                warn(
+                        "Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
+                                + " Please enteer the command with different coordinates.");
+            }
 			catch (SlideHitElevatedException e) {
-          print(
-                             "Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
-                             + " Please enteer the command with different coordinates.");
+                warn(
+                        "Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
+                                + " Please enteer the command with different coordinates.");
 			} catch (HoleIsEmptyException e) {
-			    print(
+			    warn(
                 "Warning: Action coud not be performed. the hole does not " +
                         "have a rabbit "
                         + " Please enteer the command with different coordinates.");
             }
 			catch(Exception e) {
-			    print("Invalid input, please try again");
+			    warn("Invalid input, please try again");
             }
 
         } while (board.currentGameState == GameState.IN_PROGRESS);
