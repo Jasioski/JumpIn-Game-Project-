@@ -9,8 +9,8 @@ public enum ItemUIRepresentation {
     HOLE_OCCUPIED_RABBIT(ANSIColor.BLUE + "HR" + ANSIColor.RESET),
     HOLE_MUSHROOM(ANSIColor.BLUE + "HM" + ANSIColor.RESET),
     ELEVATED(ANSIColor.WHITE + "U" + ANSIColor.RESET),
-    ELEVATED_MUSHROOM(ANSIColor.PURPLE + "EM" + ANSIColor.RESET),
-    ELEVATED_RABBIT(ANSIColor.YELLOW + "ER" + ANSIColor.RESET),
+    ELEVATED_MUSHROOM(ANSIColor.PURPLE + "UM" + ANSIColor.RESET),
+    ELEVATED_RABBIT(ANSIColor.YELLOW + "UR" + ANSIColor.RESET),
     RABBIT(ANSIColor.YELLOW + "R" + ANSIColor.RESET);
 
     private String representation;

@@ -48,15 +48,16 @@ public class Main {
 		Hole hole4 = new Hole(4, 4);
 		Hole hole5 = new Hole(2, 2);
 
-		Fox fox1 = new Fox(3,2,3,3);
+		Fox fox1 = new Fox(2,3,3,3);
 
 		Rabbit rabbit1 = new Rabbit(4, 2);
 		Mushroom mushroom1 = new Mushroom(2, 2);
+        Mushroom mushroom2 = new Mushroom(0, 0);
 
 		ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
 		ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
 		ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(4,2);
-		ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(2,2);
+        ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(4,3);
 
 		try {
 			board.setItem(hole1);
@@ -65,20 +66,19 @@ public class Main {
 			board.setItem(hole4);
 			board.setItem(hole5);
 
-			board.setItem(hole5);
-
 			board.setItem(fox1);
 
 			board.setItem(elevatedBoardItem1);
 			board.setItem(elevatedBoardItem2);
 			board.setItem(elevatedBoardItem3);
-			board.setItem(elevatedBoardItem4);
+            board.setItem(elevatedBoardItem4);
 			board.setItem(rabbit1);
 
-			elevatedBoardItem1.contain(mushroom1);
-
+			board.setItem(mushroom1);
+            board.setItem(mushroom2);
 
 		} catch (Exception e) {
+		    System.out.println(e);
 			if (logger.isErrorEnabled()) {
 				logger.catching(Level.ERROR, e);
 			}

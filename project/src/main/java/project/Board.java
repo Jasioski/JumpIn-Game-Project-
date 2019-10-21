@@ -172,6 +172,9 @@ public class Board{
 							// TODO: fix error handling
 							this.logger.error(e);
 						}
+					} else {
+						throw new BoardItemNotEmptyException("trying to set a" +
+								" non containable on a container");
 					}
 				}
 			}
@@ -314,7 +317,7 @@ public class Board{
 		Jumpable jumpableItem = (Jumpable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
 
-		newCoordinates = jumpableItem.jump(jumpDirection, slice );
+		newCoordinates = jumpableItem.jump(jumpDirection, slice);
 
 		// Clear old coordinates
 		for (Coordinate initialCoordinate: initialCoordinates) {
@@ -330,7 +333,8 @@ public class Board{
 		updateGameState();
 	}
 
-	public void jumpOut(Direction jumpDirection, Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	private void jumpOut(Direction jumpDirection,
+						   Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
@@ -385,12 +389,29 @@ public class Board{
 	public void updateGameState() {
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
+				// make sure there are no top level rabbits
 				if (items[row][column] instanceof Rabbit) {
 					this.currentGameState = GameState.IN_PROGRESS;
 					return;
 				}
+				// make sure there are no rabbits inside elevated positions
+				else if (items[row][column] instanceof ElevatedBoardItem) {
+					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
+							items[row][column];
+					if ( elevatedBoardItem.getContainingItem().isPresent()) {
+						Containable containable =
+								elevatedBoardItem.getContainingItem().get();
+
+						if (containable instanceof  Rabbit) {
+							this.currentGameState = GameState.IN_PROGRESS;
+							return;
+						}
+					}
+				}
 			}
 		}
+
+
 		this.currentGameState = GameState.SOLVED;
 	}
 
