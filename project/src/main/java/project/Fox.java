@@ -7,8 +7,6 @@ import java.util.Set;
 
 public class Fox extends BoardItem implements Slidable {
 
-	private static final Character FOX_DISPLAY_CHARACTER = 'F';
-	
 	private static void validateArguments(Coordinate head, Coordinate tail) {
 		validateArguments(head.row, head.column, tail.row, tail.column);
 	}
@@ -29,6 +27,24 @@ public class Fox extends BoardItem implements Slidable {
 			throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
 		}
 	}
+	
+	private void verifyDirection(Direction direction) throws IllegalArgumentException {
+		if (direction == Direction.DOWN || direction == Direction.UP) {
+			//Don't allow vertical slide if not oriented vertically
+			if (this.getHead().column != this.getTail().column) {
+				throw new IllegalArgumentException("Must slide in same direction "
+					+ "as oriented");
+			}
+		}
+		
+		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+			//Don't allow horizontal slide if not oriented horizontally
+			if (this.getHead().row != this.getTail().row) {
+				throw new IllegalArgumentException("Must slide in same direction "
+						+ "as oriented");
+			}
+		}
+	}
 
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
 		this(new Coordinate(headRow, headColumn),
@@ -36,7 +52,7 @@ public class Fox extends BoardItem implements Slidable {
 	}
 
 	public Fox(Coordinate head, Coordinate tail) {
-		super(FOX_DISPLAY_CHARACTER);
+		super(ItemUIRepresentation.FOX);
 		
 		validateArguments(head, tail);
 		
@@ -62,11 +78,7 @@ public class Fox extends BoardItem implements Slidable {
 		this.setCoordinates(coordinates);
 	}
 	
-	public Coordinate setTail(Coordinate tail) {
-		return this.getCoordinates().set(1, tail);
-	}
-
-	/**	
+	/**
 	 * Sets the coordinates of the Fox where
 	 * head is stored at index = 0 and tail
 	 * is stored at index = 1
@@ -79,11 +91,11 @@ public class Fox extends BoardItem implements Slidable {
 		}
 		
 		this.coordinates.clear();
-		//FIXME: List does not guarantee ordering??
 		this.coordinates.addAll(coordinates);
 	}
 
-	private void ValidateMove(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	private void ValidateSlide(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException,
+			SlideHitElevatedException {
 		// Get all coordinates in the slice without duplicates
 		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
 		
@@ -102,133 +114,91 @@ public class Fox extends BoardItem implements Slidable {
 		// or the current item then it must have hit an obstacle
 		for (Coordinate newCoordinate: newCoordinates) {
 			// loop over all the items in the slice
-			boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
-				// check if is at the same coordinate as one of the new coordinates
-				if (sliceItem.getCoordinates().contains(newCoordinate)) 
+			boolean hitObstacle = false;
+			boolean hitElevated = false;
+
+			for (BoardItem sliceItem: slice) {
+				if (sliceItem.getCoordinates().contains(newCoordinate))
 				{
-					// match if the item is not empty 
+					if (sliceItem.getClass() == ElevatedBoardItem.class) {
+						hitElevated = true;
+					}
+
+					// match if the item is not empty
 					// and not the current item
-					if ((sliceItem.getClass() != EmptyBoardItem.class)) {
+					else if ((sliceItem.getClass() != EmptyBoardItem.class)) {
 						if (!(sliceItem.equals(this))) {
-							return true;
+							hitObstacle = true;
 						}
 					}
+					// match if it is an elevated
 				}
-				// do not match if the item is empty or the current item
-				return false;
-			});
-			
+				// DO NOT MATCH IF THE ITEM IS EMPTY OR THE CURRENT ITEM
+			}
+
 			if (hitObstacle) {
 				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle");
 			}
-				
+
+			if (hitElevated) {
+				throw new SlideHitElevatedException("fox hit an elevated tile position" +
+					"when it was trying to slide");
+			}
+
 		}
 		
 
 	}
 
-	private List<Coordinate> slideLeft(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
+	public List<Coordinate> performSlide(Direction direction, int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 		Coordinate head = this.getHead();
 		Coordinate tail = this.getTail();
-		
+
 		// Compute new coordinates
-		Coordinate newHead = new Coordinate(head.row, head.column - 1);
-		Coordinate newTail = new Coordinate(tail.row, tail.column - 1);
-		
+		Coordinate newHead;
+		Coordinate newTail;
+
+		verifyDirection(direction);
+
+		switch (direction) {
+			case DOWN:
+				newHead = new Coordinate(head.row + 1, head.column);
+				newTail = new Coordinate(tail.row + 1, tail.column);
+				break;
+			case UP:
+				newHead = new Coordinate(head.row - 1, head.column);
+				newTail = new Coordinate(tail.row - 1, tail.column);
+				break;
+			case RIGHT:
+				newHead = new Coordinate(head.row, head.column + 1);
+				newTail = new Coordinate(tail.row, tail.column + 1);
+				break;
+			case LEFT:
+				newHead = new Coordinate(head.row, head.column - 1);
+				newTail = new Coordinate(tail.row, tail.column - 1);
+				break;
+			default:
+				throw new IllegalArgumentException("invalid direction");
+		}
+
 		newCoordinates.add(newHead);
 		newCoordinates.add(newTail);
 
-		ValidateMove(newCoordinates, slice);
-		
+		ValidateSlide(newCoordinates, slice);
+
 		this.setCoordinates(newCoordinates);
-		
+
 		if (spaces == 1) {
 			return newCoordinates;
 		} else {
-			return slideLeft(spaces - 1, slice);
+			return performSlide(direction, spaces - 1, slice);
 		}
 	}
-	
-	// TODO: rename to slideRight
-	private List<Coordinate> moveRight(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
-		if (spaces == 0) {
-			return this.getCoordinates();
-		}
-
-		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
-		Coordinate head = this.getHead();
-		Coordinate tail = this.getTail();
-		
-		// Compute new coordinates
-		Coordinate newHead = new Coordinate(head.row, head.column + 1);
-		Coordinate newTail = new Coordinate(tail.row, tail.column + 1);
-		
-		newCoordinates.add(newHead);
-		newCoordinates.add(newTail);
-
-		ValidateMove(newCoordinates, slice);
-		
-		// Move the fox
-		this.setCoordinates(newCoordinates);
-		
-		if (spaces == 1) {
-			return newCoordinates;
-		} else {
-			return moveRight(spaces - 1, slice);
-		}
-	}
-
-	private List<Coordinate> slideUp(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
-	    List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
-	    Coordinate head = this.getHead();
-	    Coordinate tail = this.getTail();
-
-	    // Compute new coordinates
-		Coordinate newHead = new Coordinate(head.row - 1, head.column);
-		Coordinate newTail = new Coordinate(tail.row - 1, tail.column);
-
-		newCoordinates.add(newHead);
-		newCoordinates.add(newTail);
-
-		ValidateMove(newCoordinates, slice);
-
-		this.setCoordinates(newCoordinates);
-
-		if (spaces == 1) {
-			return newCoordinates;
-		} else  {
-			return slideUp(spaces - 1, slice);
-		}
-	}
-
-	private List<Coordinate> slideDown(int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException {
-		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
-		Coordinate head = this.getHead();
-		Coordinate tail = this.getTail();
-
-		// Compute new coordinates
-		Coordinate newHead = new Coordinate(head.row + 1, head.column);
-		Coordinate newTail = new Coordinate(tail.row + 1, tail.column);
-
-		newCoordinates.add(newHead);
-		newCoordinates.add(newTail);
-
-		ValidateMove(newCoordinates, slice);
-
-		this.setCoordinates(newCoordinates);
-
-		if (spaces == 1) {
-			return newCoordinates;
-		} else  {
-			return slideDown(spaces - 1, slice);
-		}
-	}
-
 
 	@Override
 	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
-			throws SlideOutOfBoundsException, SlideHitObstacleException {
+			throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 
 		// Move zero spaces
 		if (spaces == 0) {
@@ -247,26 +217,9 @@ public class Fox extends BoardItem implements Slidable {
 		
 		// Store initial coordinates to rollback if an exception is thrown
 		List<Coordinate> initialCoordinates = this.getCoordinates();
-		
-		List<Coordinate> newCoordinates = new ArrayList<>();
+
 		try {
-			// Compute where the fox would move to
-			switch (direction) {
-			case DOWN:
-				newCoordinates = this.slideDown(spaces, slice);
-				break;
-			case LEFT:
-				newCoordinates = this.slideLeft(spaces, slice);
-				break;
-			case RIGHT:
-				newCoordinates = this.moveRight(spaces, slice);
-				break;
-			case UP:
-				newCoordinates = this.slideUp(spaces, slice);
-				break;
-			default:
-				break;
-			}
+			return this.performSlide(direction, spaces, slice);
 		} catch (SlideOutOfBoundsException | SlideHitObstacleException e) {
 			// Restore the coordinates
 			this.setCoordinates(initialCoordinates);
@@ -274,9 +227,5 @@ public class Fox extends BoardItem implements Slidable {
 			throw e;
 		}
 		
-		return newCoordinates;
 	}
-
-
-
 }

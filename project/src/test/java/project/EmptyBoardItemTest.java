@@ -15,8 +15,8 @@ public class EmptyBoardItemTest {
 	public void testConstructor() {
 		
 		Coordinate coordinate = new Coordinate(0, 1);
-		Character type = 'E';
-		
+		ItemUIRepresentation expectedRepresentation = ItemUIRepresentation.EMPTY;
+
 		EmptyBoardItem emptyItem = new EmptyBoardItem(coordinate);
 		
 		List<Coordinate> coordinates = emptyItem.getCoordinates();
@@ -25,8 +25,8 @@ public class EmptyBoardItemTest {
 				+ " coordinate");
 		assertEquals(coordinates.get(0), coordinate, "should contain the "
 				+ "initial coordinate");
-		assertEquals(emptyItem.getDisplayCharacter(), type, 
-				"type should be the same");
+		assertEquals(emptyItem.getUIRepresentation(), expectedRepresentation,
+				"representation should be the Empty");
 		
 	}
 	

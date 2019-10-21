@@ -1,13 +1,12 @@
 package project;
 
+public class ElevatedBoardItem extends ContainerItem {
 
-public class Hole extends ContainerItem {
-
-    public Hole(Coordinate coordinate) {
-        super(coordinate, ItemUIRepresentation.HOLE_EMPTY);
+    public ElevatedBoardItem(Coordinate coordinate) {
+        super(coordinate, ItemUIRepresentation.ELEVATED);
     }
 
-    public Hole(int row, int column) {
+    public ElevatedBoardItem(int row, int column) {
         this(new Coordinate(row, column));
     }
 
@@ -15,7 +14,7 @@ public class Hole extends ContainerItem {
     public Containable removeContainingItem() throws HoleIsEmptyException {
         Containable containable = super.removeContainingItem();
 
-        this.UIRepresentation = ItemUIRepresentation.HOLE_EMPTY;
+        this.UIRepresentation = ItemUIRepresentation.ELEVATED;
 
         return containable;
     }
@@ -25,9 +24,9 @@ public class Hole extends ContainerItem {
         super.contain(containable);
 
         if (containable.getClass() == Rabbit.class) {
-            this.UIRepresentation = ItemUIRepresentation.HOLE_OCCUPIED_RABBIT;
+            this.UIRepresentation = ItemUIRepresentation.ELEVATED_RABBIT;
         } else if (containable.getClass() == Mushroom.class) {
-            this.UIRepresentation = ItemUIRepresentation.HOLE_MUSHROOM;
+            this.UIRepresentation = ItemUIRepresentation.ELEVATED_MUSHROOM;
         }
     }
 }

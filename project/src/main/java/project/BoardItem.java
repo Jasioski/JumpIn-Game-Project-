@@ -6,12 +6,12 @@ import java.util.List;
 public abstract class BoardItem {
 
 	protected List<Coordinate> coordinates;
-	private Character displayCharacter;
+	protected ItemUIRepresentation UIRepresentation;
 	
-	public BoardItem(Character displayCharacter) {
+	public BoardItem(ItemUIRepresentation UIRepresentation) {
 		this.coordinates = new ArrayList<Coordinate>();
 		
-		this.displayCharacter = displayCharacter;
+		this.UIRepresentation = UIRepresentation;
 	}
 	
 	/**	
@@ -22,13 +22,13 @@ public abstract class BoardItem {
 		return new ArrayList<Coordinate>(this.coordinates);
 	}
 	
-	public Character getDisplayCharacter() {
-		return displayCharacter;
+	public ItemUIRepresentation getUIRepresentation() {
+		return UIRepresentation;
 	}
 	
 	@Override
 	public String toString() {
-		return "" + getDisplayCharacter();
+		return this.UIRepresentation.getRepresentation();
 	}
 	
 	public abstract void setCoordinates(List<Coordinate> coordinates);
@@ -45,7 +45,7 @@ public abstract class BoardItem {
 
 		BoardItem boardItem = (BoardItem) o;
 
-		return (this.displayCharacter.equals(boardItem.displayCharacter) &&
+		return (this.UIRepresentation.equals(boardItem.UIRepresentation) &&
 			this.coordinates.equals(boardItem.coordinates)
 		);
 	}
