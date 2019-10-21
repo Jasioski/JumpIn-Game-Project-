@@ -9,22 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
-	private static Direction StringToEnum(String directon) {
-
-		switch (directon) {
-		case "Right":
-			return Direction.RIGHT;
-		case "Left":
-			return Direction.LEFT;
-		case "Up":
-			return Direction.UP;
-		case "Down":
-			return Direction.DOWN;
-		default:
-			// TODO: remove this part of the enum, it is not neede
-			return Direction.NONSPECIFIED;
-		}
-
+	private static Direction StringToEnum(String direction) {	
+		return Direction.valueOf(direction);
 	}
 
 
@@ -88,11 +74,9 @@ public class Main {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("printing board");
-			// logger.debug("\n" + board.toString());
 		}
 
 		// JumpIn client
-
 		Scanner scanner = new Scanner(System.in);
 		Coordinate coordinates = null;
 		Direction direction = null;
@@ -103,15 +87,14 @@ public class Main {
           print("\n" + board.toString());
           print("Please type one of the following commands");
           print(
-                      "1) Jump Rabbit row(e.g., 1),colums e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
-          print("2) Slide Fox row(e.g., 1), colums e.g., 2 Number of boad " +
+                      "1) Jump Rabbit row(e.g., 1),columns e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
+          print("2) Slide Fox row(e.g., 1), columns e.g., 2 Number of boad " +
                   "uints/ spaces (e.g., 2)");
           print("Sample command: \n Jump Rabbit 0,0 Right");
           print("Sample command: \n Slide Fox 0,2 2 Left");
 
           print("Please enter command: ");
           String userInput = scanner.nextLine();
-          //logger.info("dsfhdfsuhf:  " + userInput);
           String[] commands = userInput.toString().split(" ");
 
 
@@ -145,13 +128,17 @@ public class Main {
                   unitsToMove = Integer.parseInt(commands[3]);
 
               } catch (Exception e) {
-                  if (!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
+            	  if (commands.length == 4) {
+            		commands[3] = commands[3].toUpperCase();  
+            	  }
+                  if (!commands[3].equals("UP") || !commands[3].equals("DOWN") || !commands[3].equals("RIGHT") || !commands[3].equals("LEFT")) {
                       userEnteredDirection = commands[3];
                   }
               }
               // if String assign it to direction
               if (commands.length > 4) {
-                  if (!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
+            	  commands[4] = commands[4].toUpperCase();
+                  if (!commands[4].equals("UP") || !commands[4].equals("DOWN") || !commands[4].equals("RIGHT") || !commands[4].equals("LEFT")) {
                       userEnteredDirection = commands[4];
                   }
               }
@@ -189,15 +176,13 @@ public class Main {
                              + " valid coordinates.");
       } catch (JumpFailedNoObstacleException e) {
           print(
-                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please eneter command with "
+                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please enter command with "
                              + " different coordinates.");
       } catch (BoardItemNotEmptyException e) {
           print(
                              "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
                              + " different coordinates.");
       } catch (NonSlideableException e) {
-          // TODO rename slidable to slideable in all places
-          // TODO CHANGE TO NOT SLIDEABLE
           print(
                              "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
       } catch (SlideOutOfBoundsException e) {
@@ -217,9 +202,6 @@ public class Main {
                 "Warning: Action coud not be performed. the hole does not " +
                         "have a rabbit "
                         + " Please enteer the command with different coordinates.");
-            }
-			catch (Exception e) {
-			    print("Invalid input, please try again");
             }
 
         } while (board.currentGameState == GameState.IN_PROGRESS);
