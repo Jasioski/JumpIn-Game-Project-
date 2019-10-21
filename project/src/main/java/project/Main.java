@@ -103,8 +103,8 @@ public class Main {
           print("\n" + board.toString());
           print("Please type one of the following commands");
           print(
-                      "1) Jump Rabbit row(e.g., 1),colums e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
-          print("2) Slide Fox row(e.g., 1), colums e.g., 2 Number of boad " +
+                      "1) Jump Rabbit row(e.g., 1),columns e.g., 2 (current coordinates) Direction(Right, Left, Up, Down)");
+          print("2) Slide Fox row(e.g., 1), columns e.g., 2 Number of boad " +
                   "uints/ spaces (e.g., 2)");
           print("Sample command: \n Jump Rabbit 0,0 Right");
           print("Sample command: \n Slide Fox 0,2 2 Left");
