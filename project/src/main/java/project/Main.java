@@ -74,11 +74,9 @@ public class Main {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("printing board");
-			// logger.debug("\n" + board.toString());
 		}
 
 		// JumpIn client
-
 		Scanner scanner = new Scanner(System.in);
 		Coordinate coordinates = null;
 		Direction direction = null;
