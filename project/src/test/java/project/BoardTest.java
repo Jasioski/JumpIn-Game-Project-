@@ -830,9 +830,6 @@ public class BoardTest {
 			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
 			board.jump(Direction.RIGHT, rabbitJumping.getCoordinate());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-
 			fail("Exception was thrown");
 		}
 		assertTrue(hole.getContainingItem().isPresent(), "the hole should" +
