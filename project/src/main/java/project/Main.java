@@ -77,7 +77,6 @@ public class Main {
 
 				System.out.println("Please enter command: ");
 				String userInput = scanner.nextLine();
-				//System.out.println("dsfhdfsuhf:  " + userInput);
 				String[] commands = userInput.toString().split(" ");
 				
 				
@@ -95,8 +94,6 @@ public class Main {
 					
 				moveType = commands[0];
 				
-				
-				//TODO string to lowercase
 				if(!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
 				itemType = commands[1];
 				}
@@ -167,7 +164,6 @@ public class Main {
 						"Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
 								+ " different coordinates.");
 			} catch (NonSlideableException e) {
-				// TODO CHANGE TO NOT SLIDEABLE
 				System.out.println(
 						"Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
 			} catch (SlideOutOfBoundsException e) {
