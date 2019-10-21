@@ -21,7 +21,7 @@ public class Main {
 		case "Down":
 			return Direction.DOWN;
 		default:
-			return Direction.NONSPECIFIED;
+			return null;
 		}
 
 	}
@@ -35,18 +35,17 @@ public class Main {
 
 		Coordinate head = new Coordinate(0, 2);
 		Coordinate tail = new Coordinate(0, 3);
-		
+
 		Rabbit rabbitJumping = new Rabbit(0, 0);
 		Rabbit rabbitObstacle = new Rabbit(0, 1);
 
-		//Fox fox = new Fox(head, tail);
+		// Fox fox = new Fox(head, tail);
 
 		try {
-			//board.setItem(fox.getCoordinates(), fox);
+			// board.setItem(fox.getCoordinates(), fox);
 			board.setItem(rabbitJumping.getCoordinates(), rabbitJumping);
 			board.setItem(rabbitObstacle.getCoordinates(), rabbitObstacle);
 
-			
 		} catch (BoardItemNotEmptyException e) {
 			if (logger.isErrorEnabled()) {
 				logger.catching(Level.ERROR, e);
@@ -77,10 +76,8 @@ public class Main {
 
 				System.out.println("Please enter command: ");
 				String userInput = scanner.nextLine();
-				//System.out.println("dsfhdfsuhf:  " + userInput);
 				String[] commands = userInput.toString().split(" ");
-				
-				
+
 				int unitsToMove = -1;
 				String userEnteredDirection = "";
 				String[] rowColumn;
@@ -90,46 +87,45 @@ public class Main {
 				String itemType = "";
 				String moveType = "";
 
-				if(!commands[0].equals("")) {
-					
-					
-				moveType = commands[0];
-				
-				
-				//TODO string to lowercase
-				if(!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
-				itemType = commands[1];
-				}
-				
-				if(!commands[2].equals("")) {
-				userEnteredCoordinates = commands[2];
-				}
+				if (!commands[0].equals("")) {
 
-				// Checking if the last part of the command is an Integer or a string
-				try {
-					// if integer, assign it to unitsToMove else; will get default value -1
-					unitsToMove = Integer.parseInt(commands[3]);
+					moveType = commands[0];
 
-				} catch (Exception e) {
-					if(!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
-						userEnteredDirection = commands[3];
+					// TODO string to lowercase
+					if (!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
+						itemType = commands[1];
+					}
+
+					if (!commands[2].equals("")) {
+						userEnteredCoordinates = commands[2];
+					}
+
+					// Checking if the last part of the command is an Integer or a string
+					try {
+						// if integer, assign it to unitsToMove else; will get default value -1
+						unitsToMove = Integer.parseInt(commands[3]);
+
+					} catch (Exception e) {
+						if (!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right")
+								|| !commands[3].equals("Left")) {
+							userEnteredDirection = commands[3];
 						}
-				}
-				// if String assign it to direction
-				if(commands.length > 4) {
-				if(!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
-				userEnteredDirection = commands[4];
-				}
-				}
-				
+					}
+					// if String assign it to direction
+					if (commands.length > 4) {
+						if (!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right")
+								|| !commands[4].equals("Left")) {
+							userEnteredDirection = commands[4];
+						}
+					}
 
-				System.out.println(
-						"moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
-								+ " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
-				rowColumn = userEnteredCoordinates.split(",", 2);
-				row = Integer.parseInt(rowColumn[0]);
-				
-				column = Integer.parseInt(rowColumn[1]);
+					System.out.println("moveType: " + moveType + " itemType: " + itemType + " coordinates: "
+							+ userEnteredCoordinates + " unitsToMove: " + unitsToMove + " direction: "
+							+ userEnteredDirection);
+					rowColumn = userEnteredCoordinates.split(",", 2);
+					row = Integer.parseInt(rowColumn[0]);
+
+					column = Integer.parseInt(rowColumn[1]);
 				}
 				if (row == -1 || column == -1) {
 					System.out.println("Please enter correct coordinates in format e.g., row,column i.e., 2,3");
@@ -177,12 +173,12 @@ public class Main {
 								+ " Please enteer the command with different coordinates.");
 
 			}
-			
+
 		} while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
 		board.getCurrentGameState();
 		System.out.println("Game has been solved successfully!");
-		
+
 	}
 
 }
