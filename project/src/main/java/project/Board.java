@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * The main board class that contains and controls all objects on the board.
  */
-public class Board{
+public class Board {
 
 	/**
 	 * This is the 2D array that contains all the items in the board.

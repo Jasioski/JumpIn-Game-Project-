@@ -9,22 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
-	private static Direction StringToEnum(String directon) {
-
-		switch (directon) {
-		case "Right":
-			return Direction.RIGHT;
-		case "Left":
-			return Direction.LEFT;
-		case "Up":
-			return Direction.UP;
-		case "Down":
-			return Direction.DOWN;
-		default:
-			// TODO: remove this part of the enum, it is not neede
-			return Direction.NONSPECIFIED;
-		}
-
+	private static Direction StringToEnum(String direction) {	
+		return Direction.valueOf(direction);
 	}
 
 
@@ -111,7 +97,6 @@ public class Main {
 
           print("Please enter command: ");
           String userInput = scanner.nextLine();
-          //logger.info("dsfhdfsuhf:  " + userInput);
           String[] commands = userInput.toString().split(" ");
 
 
@@ -126,12 +111,11 @@ public class Main {
 
           if (!commands[0].equals("")) {
 
+        	  
+              moveType = commands[0].toUpperCase();
 
-              moveType = commands[0];
-
-
-              //TODO string to lowercase
-              if (!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
+              commands[1] = commands[1].toUpperCase();
+              if (!commands[1].toString().equals("FOX") || !commands[1].toString().equals("RABBIT")) {
                   itemType = commands[1];
               }
 
@@ -145,13 +129,17 @@ public class Main {
                   unitsToMove = Integer.parseInt(commands[3]);
 
               } catch (Exception e) {
-                  if (!commands[3].equals("Up") || !commands[3].equals("Down") || !commands[3].equals("Right") || !commands[3].equals("Left")) {
+            	  if (commands.length == 4) {
+            		commands[3] = commands[3].toUpperCase();  
+            	  }
+                  if (!commands[3].equals("UP") || !commands[3].equals("DOWN") || !commands[3].equals("RIGHT") || !commands[3].equals("LEFT")) {
                       userEnteredDirection = commands[3];
                   }
               }
               // if String assign it to direction
               if (commands.length > 4) {
-                  if (!commands[4].equals("Up") || !commands[4].equals("Down") || !commands[4].equals("Right") || !commands[4].equals("Left")) {
+            	  commands[4] = commands[4].toUpperCase();
+                  if (!commands[4].equals("UP") || !commands[4].equals("DOWN") || !commands[4].equals("RIGHT") || !commands[4].equals("LEFT")) {
                       userEnteredDirection = commands[4];
                   }
               }
@@ -171,12 +159,12 @@ public class Main {
           }
           coordinates = new Coordinate(row, column);
           direction = StringToEnum(userEnteredDirection);
-          if ("Jump".equals(moveType)) {
+          if ("JUMP".equals(moveType)) {
               // the input deals with the Rabbits
 
               board.jump(direction, coordinates);
 
-          } else if ("Slide".equals(moveType)) {
+          } else if ("SLIDE".equals(moveType)) {
               // deals with the Foxes
               if (unitsToMove != -1) {
                   board.slide(direction, unitsToMove, coordinates);
@@ -189,15 +177,13 @@ public class Main {
                              + " valid coordinates.");
       } catch (JumpFailedNoObstacleException e) {
           print(
-                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please eneter command with "
+                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please enter command with "
                              + " different coordinates.");
       } catch (BoardItemNotEmptyException e) {
           print(
                              "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
                              + " different coordinates.");
       } catch (NonSlideableException e) {
-          // TODO rename slidable to slideable in all places
-          // TODO CHANGE TO NOT SLIDEABLE
           print(
                              "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
       } catch (SlideOutOfBoundsException e) {
