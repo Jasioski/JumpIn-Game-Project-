@@ -106,9 +106,12 @@ public class Main {
           String moveType = "";
 
           if (!commands[0].equals("")) {
-              moveType = commands[0];
 
-              if (!commands[1].toString().equals("Fox") || !commands[1].toString().equals("Rabbit")) {
+        	  
+              moveType = commands[0].toUpperCase();
+
+              commands[1] = commands[1].toUpperCase();
+              if (!commands[1].toString().equals("FOX") || !commands[1].toString().equals("RABBIT")) {
                   itemType = commands[1];
               }
 
@@ -152,12 +155,12 @@ public class Main {
           }
           coordinates = new Coordinate(row, column);
           direction = StringToEnum(userEnteredDirection);
-          if ("Jump".equals(moveType)) {
+          if ("JUMP".equals(moveType)) {
               // the input deals with the Rabbits
 
               board.jump(direction, coordinates);
 
-          } else if ("Slide".equals(moveType)) {
+          } else if ("SLIDE".equals(moveType)) {
               // deals with the Foxes
               if (unitsToMove != -1) {
                   board.slide(direction, unitsToMove, coordinates);
