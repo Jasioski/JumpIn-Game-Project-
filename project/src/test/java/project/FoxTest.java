@@ -841,7 +841,7 @@ class FoxTest {
 
 		// Setup slice
 		// index:  0 1 2 3
-		// Layout: F F E! E
+		// Layout: F F U E
 		List<BoardItem> slice = new ArrayList<BoardItem>();
 		slice.add(fox);
 		slice.add(fox);

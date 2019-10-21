@@ -189,7 +189,39 @@ class RabbitTest {
 		List<BoardItem> slice = new ArrayList<BoardItem>();
 		slice.add(rabbitJumping);
 		slice.add(new EmptyBoardItem(0, 1));
-		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(0, 2));
+		slice.add(new EmptyBoardItem(0, 3));
+
+		// Jump Rabbit
+		Direction moveDirection = Direction.RIGHT;
+
+		// Store original coordinates
+		List<Coordinate> originalCoordinates = rabbitJumping.getCoordinates();
+
+		assertThrows(JumpFailedNoObstacleException.class, () -> {
+			rabbitJumping.jump(moveDirection, slice);
+		}, "An error should have been thrown because the rabbit should" +
+				"not be able to jump over an empty item");
+
+		// the rabbit should not have moved
+		assertEquals(originalCoordinates, rabbitJumping.getCoordinates());
+	}
+
+
+	@Test
+	/**
+	 * Jump right should not do anything if there is only an elevated item
+	 */
+	void testJumpRightOneElevated() {
+		Rabbit rabbitJumping = new Rabbit(0, 0);
+
+		// Setup slice
+		// index:  0  1  2 3
+		// Layout: RJ UE E E
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(rabbitJumping);
+		slice.add(new ElevatedBoardItem(0, 1));
+		slice.add(new EmptyBoardItem(0, 2));
 		slice.add(new EmptyBoardItem(0, 3));
 
 		// Jump Rabbit

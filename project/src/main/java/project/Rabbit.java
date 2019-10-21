@@ -93,16 +93,26 @@ public class Rabbit extends BoardItem implements Jumpable {
 		// Check if we are hitting an obstacle
 		// loop over all the items in the slice
 		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
+
+			// do not match if not an empty elevated
+			if (sliceItem.getClass() == ElevatedBoardItem.class) {
+				ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) sliceItem;
+				if (elevatedBoardItem.getContainingItem().isEmpty()) {
+					return false;
+				}
+			}
+
 			// check if is at the same coordinate as one of the new coordinates
 			if (sliceItem.getCoordinates().contains(newCoordinate)) {
-				// match if the item is not empty
-				// and not the current item
+				// not empty
 				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
+					// not current item
 					if (!(sliceItem.equals(this))) {
 						return true;
 					}
 				}
 			}
+
 			// do not match if the item is empty or the current item
 			return false;
 		});
