@@ -223,8 +223,8 @@ public class Main {
         } while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
 		board.getCurrentGameState();
-		logger.info(board.toString());
-		logger.info(ANSIColor.GREEN + "Game has been solved " +
+		print(board.toString());
+		print(ANSIColor.GREEN + "Game has been solved " +
                        "successfully!" + ANSIColor.RESET);
 		
 	}
