@@ -134,19 +134,34 @@ public class Board {
 		String str = "";
 
 		String rowLine = "";
+
 		for (int i = 0; i < rows; i++) {
-			rowLine += "-------";
+			rowLine += "--------";
 		}
+
+		String columnLine = "" ;
+
+		// column header
+		for (int i = 0; i < rows; i++) {
+			columnLine += "     " + (i + 1 ) + " ";
+		}
+
+		columnLine += "\n";
 
 		for (int row = 0; row < rows; row ++) {
 
-		str += rowLine;
+			if (row == 0) {
+				str += columnLine;
+			}
+
+			str += rowLine;
 			str += "\n";
 
+			str += ""+ (row+1);
 			for (int column = 0; column < columns; column++) {
 				BoardItem item = items[row][column];
-				str += "| ";
 
+				str += " | ";
 				//test code
 				if (item.toString().length() == 10) {
 					str += " " + item.toString() + " ";
@@ -163,6 +178,8 @@ public class Board {
 
 			str += " |\n";
 		}
+
+		str += rowLine;
 
 		return str;
 	}
