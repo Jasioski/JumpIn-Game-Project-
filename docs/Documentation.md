@@ -1,5 +1,7 @@
 # Documentation
 
+![Game screenshot](./game.png "Game screenshot")
+
 ## Usage
 
 ### Linux / macOS
@@ -15,6 +17,30 @@ reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
 ```
 
 Alternatively you may use the ConEmu console bundled with this deliverable.
+```sh
+java -jar project.main.jar
+```
+
+## Game Instructions
+- To play the game, the syntax of the commands to be typed in are as follows:
+- For Rabbit:
+-- "Command Item Item_Current_Location_Coordinates Direction"
+-- Example:
+-- Jump Rabbit 0,0 Right 
+- For Fox: 
+-- "Command Item Item_Current_Location_Coordinates Boxes_On_The_Board_To_Be_Displaced Direction"
+-- Example:
+-- Slide Fox 0,2 2 Left
+- Note: Board coordinates are:
+--  1,1 at the top left
+--  5,1 at the bottom left
+--  1,5 at the top right
+--  5,5 at the bottom right
+
+## JavaDocs
+Our source code has been commented using the JavaDocs convention.
+
+Feel free to open docs/javadoc/index.html to view the generated documentation inside a browser.
 
 ## Git
 Throughout our development process, we used git for version control, creating branches with our individual work and pushing completed changes to the master branch.
@@ -109,7 +135,7 @@ Extends BoardItem and represents an empty tile on the board. Does not have any s
 
 ## Contributions
 
-Source code development: Rafi, Kamran, John, Anton, Christopher
-
-Documentation: Anton, Christopher, John
+- Source Code Development: Rafi, Kamran, John, Anton, Christopher
+- Documentation: Anton, Christopher, John
+- Project Management / CI: Rafi
 
