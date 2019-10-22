@@ -125,8 +125,6 @@ public class Main {
           String moveType = "";
 
           if (!commands[0].equals("")) {
-
-        	  
               moveType = commands[0].toUpperCase();
 
               commands[1] = commands[1].toUpperCase();
@@ -142,7 +140,6 @@ public class Main {
               try {
                   // if integer, assign it to unitsToMove else; will get default value -1
                   unitsToMove = Integer.parseInt(commands[3]);
-
               } catch (Exception e) {
             	  if (commands.length == 4) {
             		commands[3] = commands[3].toUpperCase();  
@@ -164,9 +161,9 @@ public class Main {
                                  "moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
                                  + " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
               rowColumn = userEnteredCoordinates.split(",", 2);
-              row = Integer.parseInt(rowColumn[0]);
+              row = Integer.parseInt(rowColumn[0]) - 1;
 
-              column = Integer.parseInt(rowColumn[1]);
+              column = Integer.parseInt(rowColumn[1]) - 1;
           }
           if (row == -1 || column == -1) {
               warn("Please enter correct coordinates in format e.g., row," +
@@ -217,7 +214,7 @@ public class Main {
 			    warn(
                 "Warning: Action coud not be performed. the hole does not " +
                         "have a rabbit "
-                        + " Please enteer the command with different coordinates.");
+                        + " Please enter the command with different coordinates.");
             }
 			catch(Exception e) {
 			    warn("Invalid input, please try again");
