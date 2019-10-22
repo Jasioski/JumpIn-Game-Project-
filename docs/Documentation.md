@@ -1,10 +1,27 @@
-**Documentation**
+# Documentation
 
-## Use of git 
+## Usage
 
+### Linux / macOS
+The game can be launched on Linux or macOS by running
+```sh
+java -jar project.main.jar
+```
+
+### Windows
+Windows Powershell and Command Prompt require a command to be run to enable ANSI Sequences
+```
+reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
+```
+
+Alternatively you may use the ConEmu console bundled with this deliverable.
+
+## Git
 Throughout our development process, we used git for version control, creating branches with our individual work and pushing completed changes to the master branch.
 
 By using git's pull requests to check all of our work before each merge, we ensured that the proper changes were being added without any merge conflicts.
+
+We used short-lived branches for feature development and bug fixes. We adopted a trunk based branch style where we were always focusing on making small, testable changes which could be quickly merged into master.
 
 ## Test Driven Development
 
@@ -15,7 +32,7 @@ Was recieved. This made it easy to develop the class while using the tests as a 
 cases for the class to pass. We would repeat this process until we were satisfied with the capabilities of the class.
 
 ## Continuous Integration
-//TODO RAFI
+Early on, we setup a CI process using Gradle and GitHub Actions. Our project is managed using the gradle build system which allows automated testing, building and analysis. We are using PMD for static code analysis as well as test coverage tools to monitor our tests.
 
 ## Class Descriptions
 
@@ -90,7 +107,7 @@ Extends ContainerItem and represents the tiles on the board that are elevated. L
 Extends BoardItem and represents an empty tile on the board. Does not have any special properties, but is used by the Board to determine if an item can be placed into that location, and by Rabbit and Fox for their sliding logic.
 
 
-##Contributions
+## Contributions
 
 Source code development: Rafi, Kamran, John, Anton, Christopher
 
