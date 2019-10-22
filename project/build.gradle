@@ -23,16 +23,26 @@ repositories {
 }
 version = '0.1'
 
+jar {
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': 'project.Main'
+    )
+  }
+}
+
 //create a single Jar with all dependencies
 task uberJar(type: Jar) {
 	manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',  
+        attributes 'Implementation-Title': 'Jump In By Group',  
         	'Implementation-Version': version,
         	'Main-Class': 'project.Main'
     }
-    baseName = project.name + '-uberjar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+  baseName = project.name + '-uberjar'
+  from sourceSets.main.output,
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  with jar
 }
 
 
