@@ -104,11 +104,11 @@ public class Main {
                   "Number of " +
                   "board " +
                   "units / spaces (e.g., 2)" + ANSIColor.RESET);
-          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 0,0 Right" +
+          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 1,1 Right" +
                   " \n " +
                   "Slide" +
                   " Fox " +
-                  "0,2 2 Left" + ANSIColor.RESET);
+                  "1,2 2 Left" + ANSIColor.RESET);
 
           print(ANSIColor.CYAN + "Please enter command: " + ANSIColor.RESET);
           String userInput = scanner.nextLine();
