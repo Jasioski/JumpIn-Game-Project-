@@ -104,11 +104,11 @@ public class Main {
                   "Number of " +
                   "board " +
                   "units / spaces (e.g., 2)" + ANSIColor.RESET);
-          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 0,0 Right" +
+          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 1,1 Right" +
                   " \n " +
                   "Slide" +
                   " Fox " +
-                  "0,2 2 Left" + ANSIColor.RESET);
+                  "1,2 2 Left" + ANSIColor.RESET);
 
           print(ANSIColor.CYAN + "Please enter command: " + ANSIColor.RESET);
           String userInput = scanner.nextLine();
@@ -185,36 +185,30 @@ public class Main {
           }
       } catch (JumpFailedOutOfBoundsException e) {
                 warn(
-                        "Warning: Action could not be performed. The coordinates were invalid. Please enter command with "
-                                + " valid coordinates.");
+                        "Warning: Action could not be performed. You tried to jump out of the board. Please try again!");
             } catch (JumpFailedNoObstacleException e) {
                 warn(
-                        "Warning: Action could not be performed. There was no obstacle to jump over. Please enter command with "
-                                + " different coordinates.");
+                        "Warning: Action could not be performed. There was no obstacle to jump over. Please try again!");
             } catch (BoardItemNotEmptyException e) {
                 warn(
-                        "Warning: Action could not be performed. The coordinates have already been occupied. Please enter command with "
-                                + " different coordinates.");
+                        "Warning: Action could not be performed. The coordinates have already been occupied. Please try again!");
             } catch (NonSlideableException e) {
                 warn(
-                        "Warning: Action could not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
+                        "Warning: Action could not be performed. The item is not slideable. Please try again!");
             } catch (SlideOutOfBoundsException e) {
                 warn(
-                        "Warning: Action could not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
+                        "Warning: Action could not be performed. You tried to slide out of bound. Please try again!");
       } catch (SlideHitObstacleException e) {
                 warn(
-                        "Warning: Action could not be performed. An obstacle was encountered while sliding the fox to the new position."
-                                + " Please enteer the command with different coordinates.");
+                        "Warning: Action could not be performed. An obstacle was encountered while sliding the fox. Please try again!");
             }
 			catch (SlideHitElevatedException e) {
                 warn(
                         "Warning: Action could not be performed. An elevated item was encountered while sliding the fox to the new position."
-                                + " Please enteer the command with different coordinates.");
+                                + " Please try again!");
 			} catch (HoleIsEmptyException e) {
 			    warn(
-                "Warning: Action could not be performed. the hole does not " +
-                        "have a rabbit "
-                        + " Please enter the command with different coordinates.");
+                "Warning: Action could not be performed. The hole is empty. Please try again!");
             }
 			catch(Exception e) {
 			    warn("Invalid input, please try again");
