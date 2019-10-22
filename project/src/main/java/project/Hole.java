@@ -1,5 +1,8 @@
 package project;
 
+/**
+ * A class representing a Hole on the board
+ */
 public class Hole extends ContainerItem {
 
     
