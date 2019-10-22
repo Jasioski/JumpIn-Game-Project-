@@ -90,7 +90,7 @@ public class Main {
           print("-> Slide Fox row (e.g., 1), columns (e.g., 2) Number of board " +
                   "uints/spaces (e.g., 2)");
           print("Sample commands: \n Jump Rabbit 0,0 Right \n Slide Fox 0,2 2 Left");
-
+          print("Rows and columns start at 1.");
           print("Please enter command: ");
           String userInput = scanner.nextLine();
           String[] commands = userInput.toString().split(" ");
@@ -106,8 +106,6 @@ public class Main {
           String moveType = "";
 
           if (!commands[0].equals("")) {
-
-        	  
               moveType = commands[0].toUpperCase();
 
               commands[1] = commands[1].toUpperCase();
@@ -123,7 +121,6 @@ public class Main {
               try {
                   // if integer, assign it to unitsToMove else; will get default value -1
                   unitsToMove = Integer.parseInt(commands[3]);
-
               } catch (Exception e) {
             	  if (commands.length == 4) {
             		commands[3] = commands[3].toUpperCase();  
@@ -145,9 +142,9 @@ public class Main {
                                  "moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
                                  + " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
               rowColumn = userEnteredCoordinates.split(",", 2);
-              row = Integer.parseInt(rowColumn[0]);
+              row = Integer.parseInt(rowColumn[0]) - 1;
 
-              column = Integer.parseInt(rowColumn[1]);
+              column = Integer.parseInt(rowColumn[1]) - 1;
           }
           if (row == -1 || column == -1) {
               print("Please enter correct coordinates in format e.g., row," +
@@ -169,36 +166,36 @@ public class Main {
           }
       } catch (JumpFailedOutOfBoundsException e) {
           print(
-                             "Warning: Action coud not be performed. The coordinated were invalid. Please enter command with "
+                             "Warning: Action could not be performed. The coordinated were invalid. Please enter command with "
                              + " valid coordinates.");
       } catch (JumpFailedNoObstacleException e) {
           print(
-                             "Warning: Action coud not be performed. There was no obstacle to jump over. Please enter command with "
+                             "Warning: Action could not be performed. There was no obstacle to jump over. Please enter command with "
                              + " different coordinates.");
       } catch (BoardItemNotEmptyException e) {
           print(
-                             "Warning: Action coud not be performed. The coordinates have already been occupied. Please enter command with "
+                             "Warning: Action could not be performed. The coordinates have already been occupied. Please enter command with "
                              + " different coordinates.");
       } catch (NonSlideableException e) {
           print(
-                             "Warning: Action coud not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
+                             "Warning: Action could not be performed. The item is not slideable. Please enter the command with either Fox or Rabbit.");
       } catch (SlideOutOfBoundsException e) {
           print(
-                             "Warning: Action coud not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
+                             "Warning: Action could not be performed. The coordinates for Fox are invalid. Please enter the command with valid coordinates.");
       } catch (SlideHitObstacleException e) {
           print(
-                             "Warning: Action coud not be performed. An obstacle was encountered while sliding the fox to the new position."
-                             + " Please enteer the command with different coordinates.");
+                             "Warning: Action could not be performed. An obstacle was encountered while sliding the fox to the new position."
+                             + " Please enter the command with different coordinates.");
 			}
 			catch (SlideHitElevatedException e) {
           print(
-                             "Warning: Action coud not be performed. An elevated item was encountered while sliding the fox to the new position."
-                             + " Please enteer the command with different coordinates.");
+                             "Warning: Action could not be performed. An elevated item was encountered while sliding the fox to the new position."
+                             + " Please enter the command with different coordinates.");
 			} catch (HoleIsEmptyException e) {
 			    print(
-                "Warning: Action coud not be performed. the hole does not " +
+                "Warning: Action could not be performed. the hole does not " +
                         "have a rabbit "
-                        + " Please enteer the command with different coordinates.");
+                        + " Please enter the command with different coordinates.");
             }
 			catch(Exception e) {
 			    print("Invalid input, please try again");
