@@ -1,5 +1,22 @@
 **Documentation**
 
+## Use of git 
+
+Throughout our development process, we used git for version control, creating branches with our individual work and pushing completed changes to the master branch.
+
+By using git's pull requests to check all of our work before each merge, we ensured that the proper changes were being added without any merge conflicts.
+
+## Test Driven Development
+
+We used a test driven development methodology to drive the way we were coding our game. Before implementing each class, we created tests that could be run to ensure that each class was performing its proper functions. For example, a Rabbit test which tested each possible jump it could perform and ensured that expected output
+
+Was recieved. This made it easy to develop the class while using the tests as a reference. With each change we made to the class, we could re-run the tests to ensure that it was still implemented properly. After passing all initial tests, we would try to break the implementation by adding more tests and edge
+
+cases for the class to pass. We would repeat this process until we were satisfied with the capabilities of the class.
+
+## Continuous Integration
+//TODO RAFI
+
 ## Class Descriptions
 
 **Board**
@@ -71,3 +88,11 @@ Extends ContainerItem and represents the tiles on the board that are elevated. L
 **EmptyBoardItem**
 
 Extends BoardItem and represents an empty tile on the board. Does not have any special properties, but is used by the Board to determine if an item can be placed into that location, and by Rabbit and Fox for their sliding logic.
+
+
+##Contributions
+
+Source code development: Rafi, Kamran, John, Anton, Christopher
+
+Documentation: Anton, Christopher, John
+
