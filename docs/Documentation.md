@@ -4,6 +4,8 @@
 
 ## Usage
 
+Ensure JDK 11 is installed.
+
 ### Linux / macOS
 The game can be launched on Linux or macOS by running
 ```sh
@@ -14,6 +16,7 @@ java -jar project.main.jar
 Windows Powershell and Command Prompt require a command to be run to enable ANSI Sequences
 ```
 reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
+java -jar project.main.jar
 ```
 
 Alternatively you may use the ConEmu console bundled with this deliverable.
@@ -26,11 +29,11 @@ java -jar project.main.jar
 - For Rabbit:
 -- "Command Item Item_Current_Location_Coordinates Direction"
 -- Example:
--- Jump Rabbit 0,0 Right 
+-- Jump Rabbit 1,1 Right 
 - For Fox: 
 -- "Command Item Item_Current_Location_Coordinates Boxes_On_The_Board_To_Be_Displaced Direction"
 -- Example:
--- Slide Fox 0,2 2 Left
+-- Slide Fox 1,2 2 Left
 - Note: Board coordinates are:
 --  1,1 at the top left
 --  5,1 at the bottom left
