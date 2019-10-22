@@ -1,5 +1,7 @@
 # SYSC3110 Group project
 
+![Game Screenshot](./docs/game.png "Game Screenshot")
+
 ## Contributors
 - Rafi Khan: rafikhan3@cmail.carleton.ca
 - John Grabkowski: johngrabkowski@cmail.carleton.ca
