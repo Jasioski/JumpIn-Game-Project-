@@ -90,137 +90,65 @@ public class Main {
 		Coordinate coordinates = null;
 		Direction direction = null;
 
+	    JumpInClient client = new JumpInClient();
+
 		do {
 			try {
+				print(client.getPrompt(board));
 
-          print("\n" + board.toString());
-          print("Please type one of the following commands: ");
-          print(ANSIColor.GREEN + "-> Jump Rabbit row (current row of Rabbit)" +
-                  ", " +
-                  "column " +
-                  "(current column of Rabbit) Direction(Right, Left, Up, Down)" + ANSIColor.RESET );
-          print(ANSIColor.GREEN + "-> Slide Fox row (e.g., 1), columns (e.g.," +
-                  " 2) " +
-                  "Number of " +
-                  "board " +
-                  "units / spaces (e.g., 2)" + ANSIColor.RESET);
-          print(ANSIColor.YELLOW + "Sample commands: \n Jump Rabbit 1,1 Right" +
-                  " \n " +
-                  "Slide" +
-                  " Fox " +
-                  "1,2 2 Left" + ANSIColor.RESET);
+				String userInput = scanner.nextLine();
+				JumpInClient.Command command = client.parseInput(userInput);
 
-          print(ANSIColor.CYAN + "Please enter command: " + ANSIColor.RESET);
-          String userInput = scanner.nextLine();
-          String[] commands = userInput.toString().split(" ");
+				if (command instanceof JumpInClient.RabbitCommand) {
+					board.jump(command.direction, command.coordinate);
+				}
 
+				if (command instanceof JumpInClient.FoxCommand) {
+					JumpInClient.FoxCommand foxCommand =
+							(JumpInClient.FoxCommand) command;
 
-          int unitsToMove = -1;
-          String userEnteredDirection = "";
-          String[] rowColumn;
-          int row = -1;
-          int column = -1;
-          String userEnteredCoordinates = "";
-          String itemType = "";
-          String moveType = "";
+					board.slide(foxCommand.direction, foxCommand.moveSpaces,
+							foxCommand.coordinate);
+				}
 
-          if (!commands[0].equals("")) {
-              moveType = commands[0].toUpperCase();
-
-              commands[1] = commands[1].toUpperCase();
-              if (!commands[1].toString().equals("FOX") || !commands[1].toString().equals("RABBIT")) {
-                  itemType = commands[1];
-              }
-
-              if (!commands[2].equals("")) {
-                  userEnteredCoordinates = commands[2];
-              }
-
-              // Checking if the last part of the command is an Integer or a string
-              try {
-                  // if integer, assign it to unitsToMove else; will get default value -1
-                  unitsToMove = Integer.parseInt(commands[3]);
-              } catch (Exception e) {
-            	  if (commands.length == 4) {
-            		commands[3] = commands[3].toUpperCase();  
-            	  }
-                  if (!commands[3].equals("UP") || !commands[3].equals("DOWN") || !commands[3].equals("RIGHT") || !commands[3].equals("LEFT")) {
-                      userEnteredDirection = commands[3];
-                  }
-              }
-              // if String assign it to direction
-              if (commands.length > 4) {
-            	  commands[4] = commands[4].toUpperCase();
-                  if (!commands[4].equals("UP") || !commands[4].equals("DOWN") || !commands[4].equals("RIGHT") || !commands[4].equals("LEFT")) {
-                      userEnteredDirection = commands[4];
-                  }
-              }
-
-
-              trace(
-                                 "moveType: " + moveType + " itemType: " + itemType + " coordinates: " + userEnteredCoordinates
-                                 + " unitsToMove: " + unitsToMove + " direction: " + userEnteredDirection);
-              rowColumn = userEnteredCoordinates.split(",", 2);
-              row = Integer.parseInt(rowColumn[0]) - 1;
-
-              column = Integer.parseInt(rowColumn[1]) - 1;
-          }
-          if (row == -1 || column == -1) {
-              warn("Please enter correct coordinates in format e.g., row," +
-                      "column i.e., 2,3");
-          }
-          coordinates = new Coordinate(row, column);
-          direction = StringToEnum(userEnteredDirection);
-          if ("JUMP".equals(moveType)) {
-              // the input deals with the Rabbits
-
-              board.jump(direction, coordinates);
-
-          } else if ("SLIDE".equals(moveType)) {
-              // deals with the Foxes
-              if (unitsToMove != -1) {
-                  board.slide(direction, unitsToMove, coordinates);
-
-              }
-          }
-      } catch (JumpFailedOutOfBoundsException e) {
-                warn(
-                        "Warning: Action could not be performed. You tried to jump out of the board. Please try again!");
-            } catch (JumpFailedNoObstacleException e) {
-                warn(
-                        "Warning: Action could not be performed. There was no obstacle to jump over. Please try again!");
-            } catch (BoardItemNotEmptyException e) {
-                warn(
-                        "Warning: Action could not be performed. The coordinates have already been occupied. Please try again!");
-            } catch (NonSlideableException e) {
-                warn(
-                        "Warning: Action could not be performed. The item is not slideable. Please try again!");
-            } catch (SlideOutOfBoundsException e) {
-                warn(
-                        "Warning: Action could not be performed. You tried to slide out of bound. Please try again!");
-      } catch (SlideHitObstacleException e) {
-                warn(
-                        "Warning: Action could not be performed. An obstacle was encountered while sliding the fox. Please try again!");
-            }
+			} catch (JumpFailedOutOfBoundsException e) {
+				warn(
+						"Warning: Action could not be performed. You tried to jump out of the board. Please try again!");
+			} catch (JumpFailedNoObstacleException e) {
+				warn(
+						"Warning: Action could not be performed. There was no obstacle to jump over. Please try again!");
+			} catch (BoardItemNotEmptyException e) {
+				warn(
+						"Warning: Action could not be performed. The coordinates have already been occupied. Please try again!");
+			} catch (NonSlideableException e) {
+				warn(
+						"Warning: Action could not be performed. The item is not slideable. Please try again!");
+			} catch (SlideOutOfBoundsException e) {
+				warn(
+						"Warning: Action could not be performed. You tried to slide out of bound. Please try again!");
+			} catch (SlideHitObstacleException e) {
+				warn(
+						"Warning: Action could not be performed. An obstacle was encountered while sliding the fox. Please try again!");
+			}
 			catch (SlideHitElevatedException e) {
-                warn(
-                        "Warning: Action could not be performed. An elevated item was encountered while sliding the fox to the new position."
-                                + " Please try again!");
+				warn(
+						"Warning: Action could not be performed. An elevated item was encountered while sliding the fox to the new position."
+								+ " Please try again!");
 			} catch (HoleIsEmptyException e) {
-			    warn(
-                "Warning: Action could not be performed. The hole is empty. Please try again!");
-            }
+				warn(
+						"Warning: Action could not be performed. The hole is empty. Please try again!");
+			}
 			catch(Exception e) {
-			    warn("Invalid input, please try again");
-            }
+				warn("Invalid input, please try again");
+			}
 
-        } while (board.currentGameState == GameState.IN_PROGRESS);
+		} while (board.currentGameState == GameState.IN_PROGRESS);
 		scanner.close();
 		board.getCurrentGameState();
 		print(board.toString());
 		print(ANSIColor.GREEN + "Game has been solved " +
-                       "successfully!" + ANSIColor.RESET);
-		
+				"successfully!" + ANSIColor.RESET);
+
 	}
 
 }
