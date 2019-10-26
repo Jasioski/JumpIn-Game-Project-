@@ -6,10 +6,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Title: JumpInClient
+ * Description: Used for user input parsing 
+ */
 public class JumpInClient {
 
     public static Logger logger = LogManager.getLogger(Main.class);
-
+    
+    /**
+     * Display standard example inputs message
+     * @params Board board
+     * @returns String containing message
+     */
     public String getPrompt(Board board) {
         String prompt = "";
 
@@ -44,6 +53,11 @@ public class JumpInClient {
         return prompt;
     }
 
+    /**
+     * Parses Rabbit input 
+     * @params String line 
+     * @returns command with coordinates used to move the rabbit on the board
+     */
     public RabbitCommand parseRabbitCommand(String line) throws Exception {
         // Jump Rabbit 1,2 left
         // Capture groups
@@ -82,6 +96,11 @@ public class JumpInClient {
         }
     }
 
+    /**
+     * Parses Fox input 
+     * @params String line 
+     * @returns command with coordinates used to move the fox on the board
+     */
     public FoxCommand parseFoxCommand(String line) throws Exception {
 
         // Slide Fox 1,2 2 left
@@ -122,6 +141,11 @@ public class JumpInClient {
         }
     }
 
+    /**
+     * Checks if the command is valid
+     * @params String input 
+     * @returns Rabbit or Fox command
+     */
     public Command parseInput(String input) {
         logger.trace("User input received");
         logger.trace(input);
@@ -150,6 +174,10 @@ public class JumpInClient {
        throw new IllegalArgumentException("invalid input");
     }
 
+    /**
+     * Generic class for command containing a coordinate and a direction
+     *
+     */
     class Command {
         Coordinate coordinate;
         Direction direction;
@@ -160,6 +188,10 @@ public class JumpInClient {
         }
     }
 
+    /**
+     * Command class for the Fox, extends the generic Command class
+     * Implementation of the Command class and an additional variable for the spaces to move
+     */
     class FoxCommand extends Command {
         int moveSpaces;
 
@@ -170,6 +202,10 @@ public class JumpInClient {
         }
     }
 
+    /**
+     * Command class for the Rabbit, extends the generic Command class
+     * Implementation of the Command class with no additional variables or methods
+     */
     class RabbitCommand extends Command {
 
         public RabbitCommand(Coordinate coordinate, Direction direction) {
