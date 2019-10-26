@@ -82,7 +82,8 @@ public class Main {
 
 	    JumpInClient client = new JumpInClient();
 
-		do {
+		while (board.currentGameState == GameState.IN_PROGRESS) {
+		
 			try {
 				print(client.getPrompt(board));
 
@@ -132,7 +133,7 @@ public class Main {
 				warn("Invalid input, please try again");
 			}
 
-		} while (board.currentGameState == GameState.IN_PROGRESS);
+		} 
 		scanner.close();
 		board.getCurrentGameState();
 		print(board.toString());

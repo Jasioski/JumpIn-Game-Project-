@@ -44,10 +44,6 @@ public class JumpInClient {
         return prompt;
     }
 
-    // Coordinate
-    // Direction
-    // number of items only for fox
-
     public RabbitCommand parseRabbitCommand(String line) throws Exception {
         // Jump Rabbit 1,2 left
         // Capture groups
@@ -137,7 +133,7 @@ public class JumpInClient {
 
         // Rabbit commands
         try {
-            parseRabbitCommand(input.trim());
+           return parseRabbitCommand(input.trim());
         }
         catch (Exception e) {
             logger.trace(e.getMessage());
