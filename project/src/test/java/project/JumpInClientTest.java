@@ -29,8 +29,6 @@ public class JumpInClientTest {
                      "be same as input");
 
          } catch (Exception e) {
-             e.printStackTrace();
-             System.err.println(e);
              fail("Exception was thrown");
          }
      }
@@ -46,8 +44,6 @@ public class JumpInClientTest {
         try {
             client.parseRabbitCommand(userInput);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e);
             fail("Exception was thrown");
         }
     }
@@ -74,8 +70,6 @@ public class JumpInClientTest {
             assertEquals(foxCommand.moveSpaces, 2, "move spaces should be " +
                     "same as input");
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e);
             fail("Exception was thrown");
         }
     }

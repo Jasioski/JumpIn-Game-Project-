@@ -9,10 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
-	private static Direction StringToEnum(String direction) {	
-		return Direction.valueOf(direction);
-	}
-
     public static Logger logger = LogManager.getLogger(Main.class);
 
     @SuppressWarnings("PMD")
@@ -81,14 +77,8 @@ public class Main {
 			}
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("printing board");
-		}
-
 		// JumpIn client
 		Scanner scanner = new Scanner(System.in);
-		Coordinate coordinates = null;
-		Direction direction = null;
 
 	    JumpInClient client = new JumpInClient();
 

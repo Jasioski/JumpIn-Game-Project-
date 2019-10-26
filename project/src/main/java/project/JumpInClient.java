@@ -154,11 +154,11 @@ public class JumpInClient {
        throw new IllegalArgumentException("invalid input");
     }
 
-    abstract class Command {
+    class Command {
         Coordinate coordinate;
         Direction direction;
 
-        public Command(Coordinate coordinate, Direction direction) {
+        protected Command(Coordinate coordinate, Direction direction) {
             this.coordinate = coordinate;
             this.direction = direction;
         }
