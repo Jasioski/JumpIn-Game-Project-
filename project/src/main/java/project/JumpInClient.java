@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class JumpInClient {
 
-    public static Logger logger = LogManager.getLogger(JumpInClient.class);
+    private static Logger logger = LogManager.getLogger(JumpInClient.class);
     private static Pattern regexPatternFox = Pattern.compile("Slide\\s+Fox\\s+(\\d)," +
             "\\s*(\\d)\\s+(\\d)\\s+" +
             "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
@@ -145,8 +145,8 @@ public class JumpInClient {
 
     /**
      * Checks if the command is valid
-     * @params String input 
-     * @returns Rabbit or Fox command
+     * @param String input 
+     * @return Rabbit or Fox command
      */
     public Command parseInput(String input) {
         logger.trace("User input received");
