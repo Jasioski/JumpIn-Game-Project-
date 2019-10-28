@@ -8,16 +8,24 @@ import java.util.regex.Pattern;
 
 /**
  * Title: JumpInClient
- * Description: Used for user input parsing 
+ * Description: This class is used for string input parsing 
+ * and parses them into commands that can be applied to the board
  */
 public class JumpInClient {
 
-    public static Logger logger = LogManager.getLogger(Main.class);
+    public static Logger logger = LogManager.getLogger(JumpInClient.class);
+    private static Pattern regexPatternFox = Pattern.compile("Slide\\s+Fox\\s+(\\d)," +
+            "\\s*(\\d)\\s+(\\d)\\s+" +
+            "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
+    
+    private static Pattern regexPatternRabbit = Pattern.compile("Jump\\s+Rabbit\\s+(\\d)," +
+            "\\s*(\\d)\\s+" +
+            "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
     
     /**
      * Display standard example inputs message
-     * @params Board board
-     * @returns String containing message
+     * @param board is the object whose state is displayed at the beginning of the prompt
+     * @return String containing message with instructions to be displayed to the user 
      */
     public String getPrompt(Board board) {
         String prompt = "";
@@ -55,8 +63,8 @@ public class JumpInClient {
 
     /**
      * Parses Rabbit input 
-     * @params String line 
-     * @returns command with coordinates used to move the rabbit on the board
+     * @param String line to be parsed and used to attempt a move on a rabbit
+     * @return command with coordinates used to move the rabbit on the board
      */
     public RabbitCommand parseRabbitCommand(String line) throws Exception {
         // Jump Rabbit 1,2 left
@@ -64,11 +72,8 @@ public class JumpInClient {
         // 1: Coordinate row : 1
         // 2: Coordinate column : 2
         // 3: Direction : left
-        Pattern regexPattern = Pattern.compile("Jump\\s+Rabbit\\s+(\\d)," +
-                "\\s*(\\d)\\s+" +
-                "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
 
-        Matcher matcher = regexPattern.matcher(line);
+        Matcher matcher = regexPatternRabbit.matcher(line);
 
         logger.trace("attempting to parse rabbit command");
 
@@ -98,8 +103,8 @@ public class JumpInClient {
 
     /**
      * Parses Fox input 
-     * @params String line 
-     * @returns command with coordinates used to move the fox on the board
+     * @param String line to be parsed and used to attempt a move on a fox
+     * @return command with coordinates used to move the fox on the board
      */
     public FoxCommand parseFoxCommand(String line) throws Exception {
 
@@ -109,11 +114,8 @@ public class JumpInClient {
         // 2: Coordinate column : 2
         // 3: MoveSpaces : 2
         // 4: Direction : left
-        Pattern regexPattern = Pattern.compile("Slide\\s+Fox\\s+(\\d)," +
-                "\\s*(\\d)\\s+(\\d)\\s+" +
-                "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
 
-        Matcher matcher = regexPattern.matcher(line);
+        Matcher matcher = this.regexPatternFox.matcher(line);
 
         logger.trace("attempting to parse fox command");
         if (matcher.find()) {

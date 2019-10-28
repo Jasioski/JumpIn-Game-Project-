@@ -73,4 +73,74 @@ public class JumpInClientTest {
             fail("Exception was thrown");
         }
     }
+    
+    @Test
+	/**	
+	 * Mix up input ie. Slide Rabbit, Jump Fox.
+	 */
+	void testParserWithMixedInput () {
+        JumpInClient client = new JumpInClient();
+        
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Slide Rabbit 1,1 2 Up");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Slide Rabbit 1,1 2 Up");
+			command.toString();
+		});
+		
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Jump Fox 1,1 2 Up");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Jump Fox 1,1 2 Up");
+			command.toString();
+		});
+		
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Slide Rabbit 1,1 Left");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Slide Rabbit 1,1 Left");
+			command.toString();
+		});
+		
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Jump Fox 1,1 Right");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Jump Fox 1,1 Right");
+			command.toString();
+		});
+	}
+    
+    @Test
+	/**	
+	 * Invalid input. Not Fox or Rabbit
+	 */
+	void testParserWithWrongInput () {
+        JumpInClient client = new JumpInClient();
+        
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Slide Gorilla 1,1 2 Up");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Slide Gorilla 1,1 2 Up");
+			command.toString();
+		});
+		
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseFoxCommand("Jump Gorilla 1,1 Up");
+			command.toString();
+		});
+		assertThrows(Exception.class, () -> {
+			JumpInClient.Command command = client.parseRabbitCommand("Jump Gorilla 1,1 Up");
+			command.toString();
+		});
+    }
 }
