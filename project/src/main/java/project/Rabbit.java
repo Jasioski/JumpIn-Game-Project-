@@ -128,8 +128,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 		// Check if we are in the board
 		if (!sliceCoordinates.contains(newCoordinate)) {
-			throw new JumpFailedOutOfBoundsException("Jumping the rabbit " +
-					"caused the rabbit to go out of the slice");
+			throw new JumpFailedOutOfBoundsException("You tried to jump off the board.");
 		}
 
 		// Check if we are hitting an obstacle
@@ -203,8 +202,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 			// Rabbits cannot jump to adjacent blocks,
 			// they must jump over something
 			else {
-				throw new JumpFailedNoObstacleException("the rabbit did not " +
-						"jump over anything");
+				throw new JumpFailedNoObstacleException("there was nothing to jump over.");
 			}
 		}
 	}

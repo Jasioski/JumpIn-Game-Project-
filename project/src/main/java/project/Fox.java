@@ -160,7 +160,7 @@ public class Fox extends BoardItem implements Slidable {
 		// If all of the new coordinates are not within the slice
 		// then it must have fallen out of bounds
 		if (! sliceCoordinates.containsAll(newCoordinates)) {
-			throw new SlideOutOfBoundsException("Sliding the fox caused it to"
+			throw new SlideOutOfBoundsException("Sliding the fox caused it to "
 					+ "go out of bounds");
 		}
 		
@@ -195,8 +195,8 @@ public class Fox extends BoardItem implements Slidable {
 			}
 
 			if (hitElevated) {
-				throw new SlideHitElevatedException("fox hit an elevated tile position" +
-					"when it was trying to slide");
+				throw new SlideHitElevatedException("An elevated item was encountered while sliding the fox " +
+						"to the new position.");
 			}
 
 		}

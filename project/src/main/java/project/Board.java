@@ -106,7 +106,7 @@ public class Board {
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
 
 		if (row < 0 || column < 0) {
-			throw new IllegalArgumentException("row and column must be positive integers");
+			throw new IllegalArgumentException("row and column must be integers greater than 0");
 		}
 
 		if (row >= this.rows || column >= this.columns) {
@@ -251,8 +251,7 @@ public class Board {
 							this.logger.error(e);
 						}
 					} else {
-						throw new BoardItemNotEmptyException("trying to set a" +
-								" non containable on a container");
+						throw new BoardItemNotEmptyException("The coordinates have already been occupied.");
 					}
 				}
 			}

@@ -101,35 +101,9 @@ public class Main {
 							foxCommand.coordinate);
 				}
 
-			} catch (JumpFailedOutOfBoundsException e) {
-				warn(
-						"Warning: Action could not be performed. You tried to jump out of the board. Please try again!");
-			} catch (JumpFailedNoObstacleException e) {
-				warn(
-						"Warning: Action could not be performed. There was no obstacle to jump over. Please try again!");
-			} catch (BoardItemNotEmptyException e) {
-				warn(
-						"Warning: Action could not be performed. The coordinates have already been occupied. Please try again!");
-			} catch (NonSlideableException e) {
-				warn(
-						"Warning: Action could not be performed. The item is not slideable. Please try again!");
-			} catch (SlideOutOfBoundsException e) {
-				warn(
-						"Warning: Action could not be performed. You tried to slide out of bound. Please try again!");
-			} catch (SlideHitObstacleException e) {
-				warn(
-						"Warning: Action could not be performed. An obstacle was encountered while sliding the fox. Please try again!");
-			}
-			catch (SlideHitElevatedException e) {
-				warn(
-						"Warning: Action could not be performed. An elevated item was encountered while sliding the fox to the new position."
-								+ " Please try again!");
-			} catch (HoleIsEmptyException e) {
-				warn(
-						"Warning: Action could not be performed. The hole is empty. Please try again!");
 			}
 			catch(Exception e) {
-				warn("Invalid input, please try again");
+				warn(e.getMessage());
 			}
 
 		} 

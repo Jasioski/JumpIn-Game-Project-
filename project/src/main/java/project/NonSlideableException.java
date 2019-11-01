@@ -11,6 +11,6 @@ public class NonSlideableException extends Exception
      */
     public NonSlideableException( String s)
     {
-        super(s);
+        super("Warning: Action could not be performed. " + s + " Please try again!");
     }
 }
