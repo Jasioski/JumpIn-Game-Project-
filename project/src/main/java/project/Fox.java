@@ -161,7 +161,7 @@ public class Fox extends BoardItem implements Slidable {
 		// then it must have fallen out of bounds
 		if (! sliceCoordinates.containsAll(newCoordinates)) {
 			throw new SlideOutOfBoundsException("Sliding the fox caused it to "
-					+ "go out of bounds");
+					+ "go out of bounds.");
 		}
 		
 		// if the new coordinates are at a coordinate that is not empty
@@ -191,7 +191,7 @@ public class Fox extends BoardItem implements Slidable {
 			}
 
 			if (hitObstacle) {
-				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle");
+				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle.");
 			}
 
 			if (hitElevated) {
@@ -243,7 +243,7 @@ public class Fox extends BoardItem implements Slidable {
 				newTail = new Coordinate(tail.row, tail.column - 1);
 				break;
 			default:
-				throw new IllegalArgumentException("invalid direction");
+				throw new IllegalArgumentException("invalid direction.");
 		}
 
 		newCoordinates.add(newHead);
@@ -281,13 +281,13 @@ public class Fox extends BoardItem implements Slidable {
 		}
 
 		if (slice.isEmpty()) {
-			throw new IllegalArgumentException("cannot slide through an empty"
-					+ "slice ");
+			throw new IllegalArgumentException("Cannot slide through an empty"
+					+ "slice.");
 		}
 		
 		if (!slice.contains(this)) {
-			throw new IllegalArgumentException("cannot slide through a slice"
-					+ "that does not contain this fox");
+			throw new IllegalArgumentException("Cannot slide through a slice"
+					+ "that does not contain this fox.");
 		}
 		
 		// Store initial coordinates to rollback if an exception is thrown
