@@ -54,10 +54,10 @@ public class Fox extends BoardItem implements Slidable {
 			//Don't allow vertical slide if not oriented vertically
 			if (this.getHead().column != this.getTail().column) {
 				throw new IllegalArgumentException("Must slide in same direction "
-					+ "as oriented");
+						+ "as oriented");
 			}
 		}
-		
+
 		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
 			//Don't allow horizontal slide if not oriented horizontally
 			if (this.getHead().row != this.getTail().row) {
@@ -76,7 +76,7 @@ public class Fox extends BoardItem implements Slidable {
 	 */
 	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
 		this(new Coordinate(headRow, headColumn),
-				new Coordinate(tailRow, tailColumn));	
+				new Coordinate(tailRow, tailColumn));
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class Fox extends BoardItem implements Slidable {
 	 */
 	public Fox(Coordinate head, Coordinate tail) {
 		super(ItemUIRepresentation.FOX);
-		
+
 		validateArguments(head, tail);
-		
+
 		this.setHeadAndTail(head, tail);
 	}
 
@@ -115,12 +115,12 @@ public class Fox extends BoardItem implements Slidable {
 	 */
 	public void setHeadAndTail(Coordinate head, Coordinate tail) {
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
-		
+
 		validateArguments(head.row, head.column, tail.row, tail.column);
-		
+
 		coordinates.add(head);
 		coordinates.add(tail);
-		
+
 		this.setCoordinates(coordinates);
 	}
 
@@ -135,7 +135,7 @@ public class Fox extends BoardItem implements Slidable {
 			throw new IllegalArgumentException("can only add a coordinate " +
 					"of length 2");
 		}
-		
+
 		this.coordinates.clear();
 		this.coordinates.addAll(coordinates);
 	}
@@ -152,18 +152,18 @@ public class Fox extends BoardItem implements Slidable {
 			SlideHitElevatedException {
 		// Get all coordinates in the slice without duplicates
 		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
-		
+
 		for (BoardItem item: slice) {
 			sliceCoordinates.addAll(item.getCoordinates());
 		}
-	
+
 		// If all of the new coordinates are not within the slice
 		// then it must have fallen out of bounds
 		if (! sliceCoordinates.containsAll(newCoordinates)) {
-			throw new SlideOutOfBoundsException("Sliding the fox caused it to"
-					+ "go out of bounds");
+			throw new SlideOutOfBoundsException("Sliding the fox caused it to "
+					+ "go out of bounds.");
 		}
-		
+
 		// if the new coordinates are at a coordinate that is not empty
 		// or the current item then it must have hit an obstacle
 		for (Coordinate newCoordinate: newCoordinates) {
@@ -191,16 +191,16 @@ public class Fox extends BoardItem implements Slidable {
 			}
 
 			if (hitObstacle) {
-				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle");
+				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle.");
 			}
 
 			if (hitElevated) {
-				throw new SlideHitElevatedException("fox hit an elevated tile position" +
-					"when it was trying to slide");
+				throw new SlideHitElevatedException("An elevated item was encountered while sliding the fox " +
+						"to the new position.");
 			}
 
 		}
-		
+
 
 	}
 
@@ -243,7 +243,7 @@ public class Fox extends BoardItem implements Slidable {
 				newTail = new Coordinate(tail.row, tail.column - 1);
 				break;
 			default:
-				throw new IllegalArgumentException("invalid direction");
+				throw new IllegalArgumentException("invalid direction.");
 		}
 
 		newCoordinates.add(newHead);
@@ -281,15 +281,15 @@ public class Fox extends BoardItem implements Slidable {
 		}
 
 		if (slice.isEmpty()) {
-			throw new IllegalArgumentException("cannot slide through an empty"
-					+ "slice ");
+			throw new IllegalArgumentException("Cannot slide through an empty"
+					+ "slice.");
 		}
-		
+
 		if (!slice.contains(this)) {
-			throw new IllegalArgumentException("cannot slide through a slice"
-					+ "that does not contain this fox");
+			throw new IllegalArgumentException("Cannot slide through a slice"
+					+ "that does not contain this fox.");
 		}
-		
+
 		// Store initial coordinates to rollback if an exception is thrown
 		List<Coordinate> initialCoordinates = this.getCoordinates();
 
@@ -298,8 +298,8 @@ public class Fox extends BoardItem implements Slidable {
 		} catch (SlideOutOfBoundsException | SlideHitObstacleException e) {
 			// Restore the coordinates
 			this.setCoordinates(initialCoordinates);
-			
+
 			throw e;
-		}	
+		}
 	}
 }

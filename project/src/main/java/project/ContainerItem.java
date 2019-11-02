@@ -56,7 +56,7 @@ public abstract class ContainerItem extends BoardItem {
 			throw new IllegalArgumentException("can only add a coordinate "
 					+ "of length 1");
 		}
-		
+
 		this.setCoordinate(coordinates.get(0));
 	}
 
@@ -86,10 +86,10 @@ public abstract class ContainerItem extends BoardItem {
 		if (this.containingItem.isEmpty()) {
 			throw new HoleIsEmptyException("there is no item in the hole");
 		}
-		
+
 		Containable containable = this.containingItem.get();
 		this.containingItem = Optional.empty();
-				
+
 		return containable;
 	}
 

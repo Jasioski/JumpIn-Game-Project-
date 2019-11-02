@@ -32,8 +32,8 @@ public class Board {
 	 */
 	protected GameState currentGameState;
 
-  	private static Logger logger = LogManager.getLogger(Board.class);
-  
+	private static Logger logger = LogManager.getLogger(Board.class);
+
 	/**
 	 * This method ensures that a given row and column are not negative.
 	 * @param rows The given row.
@@ -44,7 +44,7 @@ public class Board {
 		if (rows <= 0 || columns <= 0) {
 
 			throw new IllegalArgumentException("Rows and columns must be positive"
-					+ "integers");
+					+ "integers.");
 		}
 	}
 
@@ -76,7 +76,7 @@ public class Board {
 	 *  Constructor that creates the board with the same dimension for the rows and columns.
 	 * @param dimension Amount of rows and columns for the board.
 	 */
-	public Board(int dimension) {		
+	public Board(int dimension) {
 		this(dimension, dimension);
 	}
 
@@ -106,11 +106,11 @@ public class Board {
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
 
 		if (row < 0 || column < 0) {
-			throw new IllegalArgumentException("row and column must be positive integers");
+			throw new IllegalArgumentException("row and column must be integers greater than 0.");
 		}
 
 		if (row >= this.rows || column >= this.columns) {
-			throw new IllegalArgumentException("row and column must be within the range of the board");
+			throw new IllegalArgumentException("row and column must be within the range of the board.");
 		}
 
 		return items[row][column];
@@ -124,7 +124,7 @@ public class Board {
 	public BoardItem getItem(Coordinate coordinate) {
 		return getItem(coordinate.row, coordinate.column);
 	}
-  
+
 	/**
 	 * Prints out a string representation of the board.
 	 * @return The string representation of the board.
@@ -191,37 +191,37 @@ public class Board {
 	 * @param item The item being placed into the board.
 	 * @throws BoardItemNotEmptyException If there is already an item in that location.
 	 */
-	public void setItem(int row, int column, BoardItem item) 
+	public void setItem(int row, int column, BoardItem item)
 			throws BoardItemNotEmptyException {
 		List<Coordinate> coordinates = new ArrayList<Coordinate>();
 		coordinates.add(new Coordinate(row, column));
-		
+
 		setItem(coordinates, item);
 	}
-	
+
 	/**
 	 * Used to set an item on the board
-	 * 
+	 *
 	 * It is expected that this method is used for setting up a board.
 	 * It should not be used for player moves as it does not support
 	 * cleaning up the items old position from the board or for placing
-	 * items inside holes 
-	 * 
+	 * items inside holes
+	 *
 	 * This method delegates to item.setCoordinate() to set the coordinates
 	 * of the item as well.
-	 * 
+	 *
 	 * @param coordinates where to set
 	 * @param item to set
 	 * @throws BoardItemNotEmptyException if the coordinate is not empty
 	 */
-	public void setItem(List<Coordinate> coordinates, BoardItem item) 
+	public void setItem(List<Coordinate> coordinates, BoardItem item)
 			throws BoardItemNotEmptyException {
-		
+
 		// Check that the coordinates are not empty
 		if (coordinates.isEmpty()) {
-			throw new IllegalArgumentException("coordinates cannot be empty");
+			throw new IllegalArgumentException("Coordinates cannot be empty.");
 		}
-		
+
 		// Check that the item at the coordinates are not an empty item
 		for (Coordinate coordinate: coordinates) {
 			BoardItem itemCoord = items[coordinate.row][coordinate.column];
@@ -251,8 +251,7 @@ public class Board {
 							this.logger.error(e);
 						}
 					} else {
-						throw new BoardItemNotEmptyException("trying to set a" +
-								" non containable on a container");
+						throw new BoardItemNotEmptyException("The coordinates have already been occupied.");
 					}
 				}
 			}
@@ -262,7 +261,7 @@ public class Board {
 		for (Coordinate coordinate: coordinates) {
 			items[coordinate.row][coordinate.column] = item;
 		}
-		
+
 		item.setCoordinates(coordinates);
 	}
 
@@ -270,11 +269,11 @@ public class Board {
 	 * Sets a board item that already has defined coordinates.
 	 * @param item The board item being set.
 	 * @throws BoardItemNotEmptyException if the coordinate is not empty
-	*/
+	 */
 	public void setItem(BoardItem item) throws BoardItemNotEmptyException {
 		setItem(item.getCoordinates(), item);
 	}
-	
+
 	/**
 	 * Sets an EmptyBoardItem at a specific coordinate.
 	 * @param coordinate The coordinate where the empty item is being placed.
@@ -341,24 +340,23 @@ public class Board {
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
 			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
 		BoardItem itemAtCoordinate = getItem(itemCoordinate);
-		
-		
+
+
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
-			// TODO: rename to non-slidable
-			throw new NonSlideableException("cannot slide a non-slidable item");
+			throw new NonSlideableException("Cannot slide a non-slidable item.");
 		}
 
 		// Get slice
 		List<BoardItem> slice = this.getSlice(moveDirection, itemAtCoordinate);
 
 		// Store initial coordinates
-		List<Coordinate> initialCoordinates = 
+		List<Coordinate> initialCoordinates =
 				itemAtCoordinate.getCoordinates()
-				.stream().map(coordinate -> new Coordinate(coordinate))
-				.collect(Collectors.toList());
-		
+						.stream().map(coordinate -> new Coordinate(coordinate))
+						.collect(Collectors.toList());
+
 		// Move Item
 		Slidable movableItem = (Slidable) itemAtCoordinate;
 		List<Coordinate> newCoordinates;
@@ -373,7 +371,7 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
@@ -381,7 +379,7 @@ public class Board {
 	}
 
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException {
 
 		if (itemAtCoordinate instanceof ContainerItem) {
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
@@ -389,9 +387,8 @@ public class Board {
 		}
 
 		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Slidable)) {
-			// TODO: fix this with a nonjumpable error
-//			throw new NonMovableItemException("cannot move a not movable item");
+		if (!(itemAtCoordinate instanceof Jumpable)) {
+			throw new NonJumpableException("Cannot jump a non-jumpable item.");
 		}
 
 		List<BoardItem> slice = this.getSlice(jumpDirection, itemAtCoordinate);
@@ -419,13 +416,13 @@ public class Board {
 		if (!newCoordinates.isEmpty()) {
 			setItem(newCoordinates, itemAtCoordinate);
 		}
-		
+
 		//making a call to function to check the current game state
 		updateGameState();
 	}
 
 	private void jumpOut(Direction jumpDirection,
-						   Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
+						 Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
@@ -438,12 +435,12 @@ public class Board {
 
 		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
 
-    try {
-      Optional<Containable> optionlContainable = containerItem.getContainingItem();
+		try {
+			Optional<Containable> optionlContainable = containerItem.getContainingItem();
 
 			if (optionlContainable.isPresent()) {
 				if (optionlContainable.get().getClass() != Rabbit.class) {
-					throw new IllegalArgumentException("Must be a rabbit that jumps out ");
+					throw new IllegalArgumentException("Must be a rabbit that jumps out.");
 				}
 
 				Containable containable = containerItem.removeContainingItem();
@@ -455,9 +452,9 @@ public class Board {
 					}
 					else
 					{
-						throw new IllegalArgumentException("tried to jump out a non rabbit");
+						throw new IllegalArgumentException("Tried to jump out a non rabbit.");
 					}
-				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
+				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException | NonJumpableException e){
 					try {
 						containerItem.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
@@ -468,7 +465,7 @@ public class Board {
 			}
 		}
 
-		catch(HoleIsEmptyException e)
+		catch(HoleIsEmptyException | NonJumpableException e)
 		{
 			throw e;
 		}

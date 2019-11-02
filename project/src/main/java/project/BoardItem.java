@@ -26,8 +26,8 @@ public abstract class BoardItem {
 		this.coordinates = new ArrayList<Coordinate>();
 		this.UIRepresentation = UIRepresentation;
 	}
-	
-	/**	
+
+	/**
 	 * Returns a copy of the item's coordinates, which prevents the coordinates from being written on.
 	 * @return A list containing the item's coordinates.
 	 */
@@ -76,7 +76,7 @@ public abstract class BoardItem {
 		BoardItem boardItem = (BoardItem) o;
 
 		return (this.UIRepresentation.equals(boardItem.UIRepresentation) &&
-			this.coordinates.equals(boardItem.coordinates)
+				this.coordinates.equals(boardItem.coordinates)
 		);
 	}
 }

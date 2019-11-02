@@ -40,18 +40,18 @@ public class Coordinate {
 	 * @param o The object being compared to.
 	 * @return Boolean containing the object's equality.
 	 */
-	@Override 
+	@Override
 	public boolean equals (Object o) {
 		if (this == o) return true;
-		
+
 		if (o == null) return false;
-		
+
 		if (this.getClass() != o.getClass())
 			return false;
-		
+
 		Coordinate coordinate = (Coordinate) o;
-		
-		return (this.row == coordinate.row && 
+
+		return (this.row == coordinate.row &&
 				this.column == coordinate.column);
 	}
 
@@ -60,9 +60,9 @@ public class Coordinate {
 	 * @return The coordinate's hashcode.
 	 */
 	@Override
-    public int hashCode() {
-        return Objects.hash(row, column);
-    }
+	public int hashCode() {
+		return Objects.hash(row, column);
+	}
 
 	/**
 	 * Returns a string representation of the coordinate.

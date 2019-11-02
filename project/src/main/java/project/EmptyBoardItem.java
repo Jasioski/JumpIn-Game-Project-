@@ -29,7 +29,7 @@ public class EmptyBoardItem extends BoardItem {
 	 * @param coordinate The coordinate being set.
 	 */
 	public void setCoordinate(Coordinate coordinate) {
-	
+
 		this.coordinates.clear();
 		this.coordinates.add(coordinate);
 	}
@@ -41,7 +41,7 @@ public class EmptyBoardItem extends BoardItem {
 	 */
 	@Override
 	public void setCoordinates(List<Coordinate> coordinates) throws
-	IllegalArgumentException {
+			IllegalArgumentException {
 		if (coordinates.size() != 1) {
 			if (coordinates.size() != 1) {
 				throw new IllegalArgumentException("can only add a coordinate "
