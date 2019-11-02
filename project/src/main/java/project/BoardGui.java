@@ -32,16 +32,18 @@ public class BoardGui {
 		};
 	}
 
-	private BufferedImage rabbitBrown = null;
+	//private BufferedImage rabbitBrown = null;
 	private BufferedImage rabbitWhite = null;
 	private BufferedImage rabbitGrey = null;
 	private BufferedImage mushroom = null;
 	private BufferedImage foxHead = null;
 	private BufferedImage foxTail = null;
-
+	public ImageIcon rabbitBrown = null;
 	public void loadImages() {
 		try {
-			rabbitBrown = ImageIO.read(getClass().getResource("/resources/icons/3316539-64 (1).png"));
+			rabbitBrown = new ImageIcon("project/src/main/java/icons/brownRabbit.png");
+
+			//rabbitBrown = ImageIO.read(getClass().getResource("project/src/main/java/icons/3316539-64 (1).png"));
 
 			//rabbitWhite = ImageIO.read(new File("icons/3316539-64.png"));
 			//rabbitGrey = ImageIO.read(new File("icons/iconfinder_icon_animal_coelho_3316539 (1).png"));
@@ -196,7 +198,8 @@ public class BoardGui {
 
 		//jumpInBoardSquares[0][4].setIcon(new ImageIcon( rabbitGrey));
 		//jumpInBoardSquares[0][2].setIcon(new ImageIcon(foxHead));
-		jumpInBoardSquares[2][4].setIcon(new ImageIcon( rabbitBrown));
+		//jumpInBoardSquares[2][4].setIcon(new ImageIcon(rabbitBrown));
+		jumpInBoardSquares[2][4].setIcon(rabbitBrown);
 		
 		
 
