@@ -33,23 +33,20 @@ public class BoardGui {
 	}
 
 	//private BufferedImage rabbitBrown = null;
-	private BufferedImage rabbitWhite = null;
-	private BufferedImage rabbitGrey = null;
-	private BufferedImage mushroom = null;
-	private BufferedImage foxHead = null;
-	private BufferedImage foxTail = null;
+	public ImageIcon rabbitWhite = null;
+	public ImageIcon rabbitGrey = null;
+	public ImageIcon mushroom = null;
+	public ImageIcon foxHead = null;
+	public ImageIcon foxTail = null;
 	public ImageIcon rabbitBrown = null;
 	public void loadImages() {
 		try {
 			rabbitBrown = new ImageIcon("images/brownRabbit.png");
-
-			//rabbitBrown = ImageIO.read(getClass().getResource("project/src/main/java/icons/3316539-64 (1).png"));
-
-			//rabbitWhite = ImageIO.read(new File("icons/3316539-64.png"));
-			//rabbitGrey = ImageIO.read(new File("icons/iconfinder_icon_animal_coelho_3316539 (1).png"));
-			//mushroom = ImageIO.read(new File("icons/iconfinder_mushroom_fun_addigtion_drug_Shroom_3122423.png"));
-			//foxHead = ImageIO.read(new File("icons/iconfinder_fox_4591894.png"));
-			//foxTail = ImageIO.read(new File("icons/64.png"));
+			rabbitWhite =  new ImageIcon("images/whiteRabbit.png");
+			rabbitGrey =  new ImageIcon("images/rabbitGrey.png");
+			mushroom = new ImageIcon("images/mushroom.png");
+			foxHead = new ImageIcon("images/foxHead.png");
+			foxTail =  new ImageIcon("images/foxTail64.png");
 		} catch (Exception e) {
 			System.out.println("ImageLoading failed" + e);
 			e.printStackTrace();
@@ -99,7 +96,7 @@ public class BoardGui {
 
 		gui.add(new JLabel(""), BorderLayout.LINE_START);
 
-		jumpInBoardGui = new JPanel(new GridLayout(0, 6));
+		jumpInBoardGui = new JPanel(new GridLayout(6, 6));
 		jumpInBoardGui.setBorder(new LineBorder(Color.BLACK));
 		gui.add(jumpInBoardGui);
 
@@ -122,6 +119,7 @@ public class BoardGui {
 						g.setColor(VERY_DARK_GREEN);
 						g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
 						g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
+						
 
 					}
 				};
@@ -196,10 +194,16 @@ public class BoardGui {
 	private final void setupNewGame() {
 		message.setText("Make your move!");
 
-		//jumpInBoardSquares[0][4].setIcon(new ImageIcon( rabbitGrey));
-		//jumpInBoardSquares[0][2].setIcon(new ImageIcon(foxHead));
-		//jumpInBoardSquares[2][4].setIcon(new ImageIcon(rabbitBrown));
-		jumpInBoardSquares[2][4].setIcon(rabbitBrown);
+		JButton j2=new JButton("");
+		j2.setBackground(DARK_GREEN);
+		j2.setIcon(rabbitBrown);
+		jumpInBoardSquares[2][4].add(j2);
+		
+		
+		JButton j3 =new JButton("");
+		j3.setBackground(DARK_GREEN);
+		j3.setIcon(mushroom);
+		jumpInBoardSquares[0][4].add(j3);
 		
 		
 
