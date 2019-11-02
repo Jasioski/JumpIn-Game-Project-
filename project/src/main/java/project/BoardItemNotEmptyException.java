@@ -10,6 +10,6 @@ public class BoardItemNotEmptyException extends Exception {
      */
     public BoardItemNotEmptyException( String s) 
     { 
-        super("Warning: Action could not be performed. " + s + " Please try again!");
+        super(s); 
     } 
 } 

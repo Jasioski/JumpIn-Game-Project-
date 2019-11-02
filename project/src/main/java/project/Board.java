@@ -44,7 +44,7 @@ public class Board {
 		if (rows <= 0 || columns <= 0) {
 
 			throw new IllegalArgumentException("Rows and columns must be positive"
-					+ "integers.");
+					+ "integers");
 		}
 	}
 
@@ -106,11 +106,11 @@ public class Board {
 	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
 
 		if (row < 0 || column < 0) {
-			throw new IllegalArgumentException("row and column must be integers greater than 0.");
+			throw new IllegalArgumentException("row and column must be positive integers");
 		}
 
 		if (row >= this.rows || column >= this.columns) {
-			throw new IllegalArgumentException("row and column must be within the range of the board.");
+			throw new IllegalArgumentException("row and column must be within the range of the board");
 		}
 
 		return items[row][column];
@@ -219,7 +219,7 @@ public class Board {
 		
 		// Check that the coordinates are not empty
 		if (coordinates.isEmpty()) {
-			throw new IllegalArgumentException("Coordinates cannot be empty.");
+			throw new IllegalArgumentException("coordinates cannot be empty");
 		}
 		
 		// Check that the item at the coordinates are not an empty item
@@ -251,7 +251,8 @@ public class Board {
 							this.logger.error(e);
 						}
 					} else {
-						throw new BoardItemNotEmptyException("The coordinates have already been occupied.");
+						throw new BoardItemNotEmptyException("trying to set a" +
+								" non containable on a container");
 					}
 				}
 			}
@@ -345,7 +346,8 @@ public class Board {
 
 		// Throw an error if does not implement Movable
 		if (!(itemAtCoordinate instanceof Slidable)) {
-			throw new NonSlideableException("Cannot slide a non-slidable item.");
+			// TODO: rename to non-slidable
+			throw new NonSlideableException("cannot slide a non-slidable item");
 		}
 
 		// Get slice
@@ -371,7 +373,7 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
@@ -379,7 +381,7 @@ public class Board {
 	}
 
 	// TODO: merge this method with jumpout
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException {
 
 		if (itemAtCoordinate instanceof ContainerItem) {
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
@@ -387,8 +389,9 @@ public class Board {
 		}
 
 		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Jumpable)) {
-			throw new NonJumpableException("Cannot jump a non-jumpable item.");
+		if (!(itemAtCoordinate instanceof Slidable)) {
+			// TODO: fix this with a nonjumpable error
+//			throw new NonMovableItemException("cannot move a not movable item");
 		}
 
 		List<BoardItem> slice = this.getSlice(jumpDirection, itemAtCoordinate);
@@ -422,7 +425,7 @@ public class Board {
 	}
 
 	private void jumpOut(Direction jumpDirection,
-						   Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
+						   Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
@@ -440,7 +443,7 @@ public class Board {
 
 			if (optionlContainable.isPresent()) {
 				if (optionlContainable.get().getClass() != Rabbit.class) {
-					throw new IllegalArgumentException("Must be a rabbit that jumps out.");
+					throw new IllegalArgumentException("Must be a rabbit that jumps out ");
 				}
 
 				Containable containable = containerItem.removeContainingItem();
@@ -452,9 +455,9 @@ public class Board {
 					}
 					else
 					{
-						throw new IllegalArgumentException("Tried to jump out a non rabbit.");
+						throw new IllegalArgumentException("tried to jump out a non rabbit");
 					}
-				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException | NonJumpableException e){
+				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException e){
 					try {
 						containerItem.contain(containable);
 					} catch (HoleAlreadyHasRabbitException ex) {
@@ -465,7 +468,7 @@ public class Board {
 			}
 		}
 
-		catch(HoleIsEmptyException | NonJumpableException e)
+		catch(HoleIsEmptyException e)
 		{
 			throw e;
 		}
