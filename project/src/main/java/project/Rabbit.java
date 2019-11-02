@@ -56,8 +56,8 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 	public void setCoordinates(List<Coordinate> coordinates) {
 		if (coordinates.size() != 1) {
 			if (coordinates.size() != 1) {
-				throw new IllegalArgumentException("Can only add a coordinate "
-						+ "of length 1.");
+				throw new IllegalArgumentException("can only add a coordinate "
+						+ "of length 1");
 			}
 		}
 
@@ -116,7 +116,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 				newCoordinate = new Coordinate(currentCoordinate.row - 1, currentCoordinate.column);
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid Direction.");
+				throw new IllegalArgumentException("Invalid Direction");
 		}
 
 		// Get all coordinates in the slice without duplicates
@@ -128,7 +128,8 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 
 		// Check if we are in the board
 		if (!sliceCoordinates.contains(newCoordinate)) {
-			throw new JumpFailedOutOfBoundsException("You tried to jump off the board.");
+			throw new JumpFailedOutOfBoundsException("Jumping the rabbit " +
+					"caused the rabbit to go out of the slice");
 		}
 
 		// Check if we are hitting an obstacle
@@ -202,7 +203,8 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 			// Rabbits cannot jump to adjacent blocks,
 			// they must jump over something
 			else {
-				throw new JumpFailedNoObstacleException("There was nothing to jump over.");
+				throw new JumpFailedNoObstacleException("the rabbit did not " +
+						"jump over anything");
 			}
 		}
 	}
