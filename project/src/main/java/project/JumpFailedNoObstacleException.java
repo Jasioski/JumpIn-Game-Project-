@@ -9,6 +9,6 @@ public class JumpFailedNoObstacleException extends Exception {
      * @param s The message for the exception.
      */
     JumpFailedNoObstacleException (String s) {
-        super(s);
+        super("Warning: Action could not be performed. " + s + " Please try again!");
     }
 }
