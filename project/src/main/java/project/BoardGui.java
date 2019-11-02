@@ -41,7 +41,7 @@ public class BoardGui {
 	public ImageIcon rabbitBrown = null;
 	public void loadImages() {
 		try {
-			rabbitBrown = new ImageIcon("project/src/main/java/icons/brownRabbit.png");
+			rabbitBrown = new ImageIcon("images/brownRabbit.png");
 
 			//rabbitBrown = ImageIO.read(getClass().getResource("project/src/main/java/icons/3316539-64 (1).png"));
 
