@@ -514,46 +514,49 @@ public class Board {
 		return currentGameState;
 	}
 
+	private Coordinate computeDelta (Coordinate initial,
+									 Coordinate destination) {
+		int row = destination.row - initial.row;
+		int column = destination.column - initial.column;
+
+		return new Coordinate(row, column);
+	}
+
+	private Direction getDirectionFromDestination(Coordinate deltaDistance) {
+
+		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
+			throw new IllegalArgumentException("Cannot move to the same " +
+					"position");
+		}
+
+		else if(!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
+			if (deltaDistance.row > 0) { //destination is below
+				return  Direction.DOWN;
+			}
+			else if (deltaDistance.row < 0) { //destination is above
+				return Direction.UP;
+			}
+			else if (deltaDistance.column > 0) { //destination is to the right
+				return Direction.RIGHT;
+			}
+			else { //destination is the the left
+				return Direction.LEFT;
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid direction");
+	}
+
 	public void move(Coordinate itemSelected, Coordinate itemDestination) throws JumpFailedOutOfBoundsException,
 			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
 			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException {
 
 		//todo - implement logic for other movements
-		int rowDistanceMoved = itemDestination.row - itemSelected.row;
-		int colDistanceMoved = itemDestination.column - itemSelected.column;
-		Direction direction;
-
-
-		System.out.println(rowDistanceMoved);
-		System.out.println(colDistanceMoved);
-
-		// todo extract into private method
-		if (rowDistanceMoved == 0 && colDistanceMoved == 0) {
-			//deselect item logic
-			System.out.println("test");
-			return;
-		}
-
-		else if(!(rowDistanceMoved != 0 && colDistanceMoved != 0)) {
-			if (rowDistanceMoved > 0) { //destination is below
-				direction = Direction.DOWN;
-			}
-			else if (rowDistanceMoved < 0) { //destination is above
-				direction = Direction.UP;
-			}
-			else if (colDistanceMoved > 0) { //destination is to the right
-				direction = Direction.RIGHT;
-			}
-			else { //destination is the the left
-				direction = Direction.LEFT;
-			}
-		}
-		else {
-			return;
-		}
+		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
+				itemDestination);
+		Direction direction = this.getDirectionFromDestination(deltaCoordinate);
 
 		BoardItem item = this.getItem(itemSelected);
-
 
 		if (item instanceof Rabbit || item instanceof ContainerItem)  {
 			logger.trace("try jumping in direction:" + direction.toString());
@@ -561,11 +564,11 @@ public class Board {
 		}
 		if (item instanceof Fox) {
 			logger.trace("try sliding fox in direction: " + direction.toString());
-			int moveSpaces = rowDistanceMoved;
-			if (rowDistanceMoved == 0) {
-				moveSpaces = colDistanceMoved;
+			int moveSpaces = deltaCoordinate.row ;
+			if (deltaCoordinate.row == 0) {
+				moveSpaces = deltaCoordinate.column;
 			}
+
 			this.slide(direction, Math.abs(moveSpaces), itemSelected);
-		}
-	}
+		} }
 }
