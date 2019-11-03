@@ -13,20 +13,21 @@ public class ImageResources {
     private static Map<String, BufferedImage> imagesBank;
 
     private ImageResources() {
+        imagesBank = new HashMap<>();
         try {
             imagesBank.put("brownRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
                     "/brownRabbit.png")));
-//            imagesBank.put("whiteRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
-//                    "/whiteRabbit.png")));
-//            imagesBank.put("greyRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
-//                    "/greyRabbit.png")));
-//
-//            imagesBank.put("mushroom", ImageIO.read(this.getClass().getResourceAsStream("/images" +
-//                    "/mushroom.png")));
-//            imagesBank.put("foxHead", ImageIO.read(this.getClass().getResourceAsStream("/images" +
-//                    "/foxHead.png")));
-//            imagesBank.put("foxTail", ImageIO.read(this.getClass().getResourceAsStream("/images" +
-//                    "/foxTail.png")));
+            imagesBank.put("whiteRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/whiteRabbit.png")));
+            imagesBank.put("greyRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/greyRabbit.png")));
+
+            imagesBank.put("mushroom", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/mushroom.png")));
+            imagesBank.put("foxHead", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/foxHead.png")));
+            imagesBank.put("foxTail", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/foxTail.png")));
         }
 
         catch(Exception e) {

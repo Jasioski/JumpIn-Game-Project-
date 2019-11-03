@@ -34,23 +34,26 @@ public class GUIBoardItem extends JButton implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) { //this is adding green circle at center of button
-        int nGap = 10;
-        int nXPosition = nGap;
-        int nYPosition = nGap;
-        int nWidth = getWidth() - nGap * 2;
-        int nHeight = getHeight() - nGap * 2;
+//        int nGap = 10;
+//        int nXPosition = nGap;
+//        int nYPosition = nGap;
+//        int nWidth = getWidth() - nGap * 2;
+//        int nHeight = getHeight() - nGap * 2;
 
-        g.setColor(VERY_DARK_GREEN);
-        g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
-        g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
-        super.paintComponent(g);
+//        g.setColor(VERY_DARK_GREEN);
+//        g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
+//        g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
+//        super.paintComponent(g);
 
-        g.drawImage(image, 0, 0, this);
+
+//        g.drawImage(image, 0, 0,   null);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        System.out.println("clicked a button mofo");
+        //todo - implement action based on what type of boardItem this is
+        System.out.println("button press test");
+     //   if (this instanceof )
     }
 
 }
