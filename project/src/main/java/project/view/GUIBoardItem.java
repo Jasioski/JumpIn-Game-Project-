@@ -76,6 +76,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         this.setSize(100,100);
     }
 
+    //todo - fix these duplications
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         ItemClickEvent event = new ItemClickEvent(this.item);

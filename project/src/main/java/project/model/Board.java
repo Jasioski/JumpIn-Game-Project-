@@ -514,7 +514,21 @@ public class Board {
 	}
 
 	public void move(BoardItem itemSelected, BoardItem itemDestination) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException {
-	    if (itemSelected instanceof Rabbit)  {
+	    //todo - implement logic for other movements
+		int rowDistanceMoved = itemDestination.getCoordinates().get(0).row - itemSelected.getCoordinates().get(0).row;
+		int colDistanceMoved = itemDestination.getCoordinates().get(0).column - itemSelected.getCoordinates().get(0).column;
+		System.out.println(rowDistanceMoved);
+		System.out.println(itemDestination.getCoordinates().get(0).column - itemSelected.getCoordinates().get(0).column);
+		if ((rowDistanceMoved == 0) &&
+				(colDistanceMoved == 0)) {
+			//deselect item logic
+			System.out.println("test");
+		}
+		else if(!(rowDistanceMoved != 0 && colDistanceMoved != 0)) {
+			//do logic in here.
+
+		}
+		if (itemSelected instanceof Rabbit)  {
 	    	this.jump(Direction.DOWN, itemSelected);
 		}
 	}

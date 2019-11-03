@@ -97,10 +97,13 @@ public class BoardGUI implements ItemClickListener {
 
 	// update method
 	private void updateBoard() {
+
+	    //todo - add checks on gamestate to see if solved or not
 		boardPanel.removeAll();
 
 		for (int row = 0; row < this.board.getRows(); row++) {
 			for (int column = 0; column < this.board.getColumns(); column++) {
+			    //todo - make this more efficient (dont change everything on the board, just the tiles that need to be change)
 				BoardItem modelItem = this.board.getItem(row, column);
 				JComponent viewItem =
 						new GUIBoardItem(modelItem, this);
@@ -110,7 +113,7 @@ public class BoardGUI implements ItemClickListener {
 		}
 
 		boardPanel.repaint();
-		boardPanel.revalidate();
+		boardPanel.revalidate(); //updates the visuals
 	}
 
 	/**
@@ -125,6 +128,7 @@ public class BoardGUI implements ItemClickListener {
 	}
 
 	public void onItemClick(ItemClickEvent event) {
+	    //todo - change prints to logger
 		System.out.println(event.item);
 		if(selectedItem == null) {
 			selectedItem = event.item;
@@ -136,12 +140,12 @@ public class BoardGUI implements ItemClickListener {
 			System.out.println("set destination");
 			try {
 				System.out.println("attempting");
-				board.move(selectedItem, destinationItem);
+				board.move(selectedItem, destinationItem); //try moving the selected item to destination
 				System.out.println("successful");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			finally {
+			finally { //clear the selections and update board
 				selectedItem = null;
 				destinationItem = null;
 				this.updateBoard();
