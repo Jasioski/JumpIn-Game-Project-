@@ -183,9 +183,17 @@ public class JumpInClient {
      * Generic class for command containing a coordinate and a direction
      *
      */
-    class Command {
+    public class Command {
         Coordinate coordinate;
         Direction direction;
+
+        public Direction getDirection() {
+            return direction;
+        }
+
+        public Coordinate getCoordinate() {
+            return coordinate;
+        }
 
         protected Command(Coordinate coordinate, Direction direction) {
             this.coordinate = coordinate;
@@ -197,8 +205,16 @@ public class JumpInClient {
      * Command class for the Fox, extends the generic Command class
      * Implementation of the Command class and an additional variable for the spaces to move
      */
-    class FoxCommand extends Command {
+    public class FoxCommand extends Command {
         int moveSpaces;
+
+        public int getMoveSpaces() {
+            return moveSpaces;
+        }
+
+        public void setMoveSpaces(int moveSpaces) {
+            this.moveSpaces = moveSpaces;
+        }
 
         public FoxCommand(Coordinate coordinate, Direction direction,
                           int moveSpaces) {
@@ -211,7 +227,7 @@ public class JumpInClient {
      * Command class for the Rabbit, extends the generic Command class
      * Implementation of the Command class with no additional variables or methods
      */
-    class RabbitCommand extends Command {
+    public class RabbitCommand extends Command {
 
         public RabbitCommand(Coordinate coordinate, Direction direction) {
             super(coordinate, direction);

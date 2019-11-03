@@ -26,9 +26,9 @@ public class JumpInClientTest {
             JumpInClient.RabbitCommand rabbitCommand =
                     (JumpInClient.RabbitCommand) command;
 
-            assertEquals(rabbitCommand.coordinate, new Coordinate(0,0),
+            assertEquals(rabbitCommand.getCoordinate(), new Coordinate(0,0),
                     "coordinate should be same as input");
-            assertEquals(rabbitCommand.direction, Direction.UP, "direction should" +
+            assertEquals(rabbitCommand.getDirection(), Direction.UP, "direction should" +
                     "be same as input");
 
         } catch (Exception e) {
@@ -66,11 +66,11 @@ public class JumpInClientTest {
 
             JumpInClient.FoxCommand foxCommand = (JumpInClient.FoxCommand) command;
 
-            assertEquals(foxCommand.coordinate, new Coordinate(0,0),
+            assertEquals(foxCommand.getCoordinate(), new Coordinate(0,0),
                     "coordinate should be same as input");
-            assertEquals(foxCommand.direction, Direction.UP, "direction should" +
+            assertEquals(foxCommand.getDirection(), Direction.UP, "direction should" +
                     "be same as input");
-            assertEquals(foxCommand.moveSpaces, 2, "move spaces should be " +
+            assertEquals(foxCommand.getMoveSpaces(), 2, "move spaces should be " +
                     "same as input");
         } catch (Exception e) {
             fail("Exception was thrown");
