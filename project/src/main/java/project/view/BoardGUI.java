@@ -3,6 +3,7 @@ package project.view;
 import project.DefaultBoard;
 import project.model.Board;
 import project.model.BoardItem;
+import project.model.GameState;
 import project.model.exceptions.*;
 
 import java.awt.*;
@@ -114,6 +115,9 @@ public class BoardGUI implements ItemClickListener {
 
 		boardPanel.repaint();
 		boardPanel.revalidate(); //updates the visuals
+        if (board.getCurrentGameState() == GameState.SOLVED) {
+            System.out.println("YOU WON!");
+        }
 	}
 
 	/**
@@ -128,6 +132,14 @@ public class BoardGUI implements ItemClickListener {
 	}
 
 	public void onItemClick(ItemClickEvent event) {
+
+//	    try {
+//            Thread.sleep(500);
+//        }
+//	    catch(InterruptedException e) {
+//	        System.out.println(e);
+//        }
+
 	    //todo - change prints to logger
 		System.out.println(event.item);
 		if(selectedItem == null) {
@@ -135,6 +147,10 @@ public class BoardGUI implements ItemClickListener {
 			System.out.println("set selected");
 		}
 		else {
+		    if (event.item.equals(selectedItem)) {
+		        System.out.println("= == == = ");
+		        return;
+		    }
 			destinationItem = event.item;
 
 			System.out.println("set destination");
@@ -151,7 +167,6 @@ public class BoardGUI implements ItemClickListener {
 				this.updateBoard();
 			}
 		}
-
 	}
 
 	public JComponent getGui() {

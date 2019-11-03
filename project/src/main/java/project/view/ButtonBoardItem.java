@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 public abstract class ButtonBoardItem extends JPanel {
     protected JButton iconButton;
     public ButtonBoardItem(boolean renderItem, ActionListener listener) {
-        System.out.println("Abstract class");
         this.setLayout(new OverlayLayout(this));
         iconButton = new JButton();
         this.iconButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);

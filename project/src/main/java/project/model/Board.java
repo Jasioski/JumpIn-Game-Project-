@@ -381,8 +381,9 @@ public class Board {
 
 	// TODO: merge this method with jumpout
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException {
-
+		System.out.println("JUMP OUT OF HOLE!" + itemAtCoordinate);
 		if (itemAtCoordinate instanceof ContainerItem) {
+			System.out.println("JUMP OUT OF HOLE!");
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
 			return;
 		}
@@ -513,8 +514,11 @@ public class Board {
 		return currentGameState;
 	}
 
-	public void move(BoardItem itemSelected, BoardItem itemDestination) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException {
-	    //todo - implement logic for other movements
+	public void move(BoardItem itemSelected, BoardItem itemDestination) throws JumpFailedOutOfBoundsException,
+			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
+			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException {
+
+		//todo - implement logic for other movements
 		int rowDistanceMoved = itemDestination.getCoordinates().get(0).row - itemSelected.getCoordinates().get(0).row;
 		int colDistanceMoved = itemDestination.getCoordinates().get(0).column - itemSelected.getCoordinates().get(0).column;
 		Direction direction;
@@ -547,9 +551,17 @@ public class Board {
 		else {
 			return;
 		}
-		if (itemSelected instanceof Rabbit)  {
+		if (itemSelected instanceof Rabbit || itemSelected instanceof ContainerItem)  {
 			logger.trace("try jumping in direction:" + direction.toString());
 	    	this.jump(direction, itemSelected);
+		}
+		if (itemSelected instanceof Fox) {
+			logger.trace("try sliding fox in direction: " + direction.toString());
+			int moveSpaces = rowDistanceMoved;
+			if (rowDistanceMoved == 0) {
+				moveSpaces = colDistanceMoved;
+			}
+			this.slide(direction, Math.abs(moveSpaces), itemSelected.getCoordinates().get(0));
 		}
 	}
 }

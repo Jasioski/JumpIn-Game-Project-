@@ -36,9 +36,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         // TODO: maybe do colored rabbits
 
         if (item instanceof project.model.Rabbit) {
-            System.out.println("We found a rabbit");
             this.add(new Rabbit(this));
-
         }
         else if (item instanceof project.model.Mushroom) {
             this.add(new Mushroom());
@@ -63,7 +61,6 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         }
         else if (item instanceof project.model.Fox)  {
-            System.out.println("found a fox");
             this.add(new Fox());
         }
 
@@ -74,7 +71,22 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         //todo - figure out optimal BG color
         this.setBackground(GuiColor.DARK_GREEN);
         this.setSize(100,100);
-        this.addMouseListener(this);
+        //this.addMouseListener(this);
+        this.setListeners(this);
+
+    }
+
+    public void setListeners(JComponent parent) {
+        Component children[] = parent.getComponents();
+
+        if (!(children.length == 0)) {
+            for (Component child : children) {
+                if (child instanceof JComponent) {
+                    child.addMouseListener(this);
+                    this.setListeners((JComponent) child);
+                }
+            }
+        }
     }
 
     //todo - fix these duplications
@@ -82,6 +94,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
     public void actionPerformed(ActionEvent actionEvent) {
         ItemClickEvent event = new ItemClickEvent(this.item);
         System.out.println("click event generated");
+        System.out.println(item);
         this.listener.onItemClick(event);
     }
 
@@ -89,6 +102,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
     public void mouseClicked(MouseEvent mouseEvent) {
         ItemClickEvent event = new ItemClickEvent(this.item);
         System.out.println("click event generated");
+        System.out.println(item);
         this.listener.onItemClick(event);
     }
 
@@ -96,6 +110,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
     public void mousePressed(MouseEvent mouseEvent) {
         ItemClickEvent event = new ItemClickEvent(this.item);
         System.out.println("click event generated");
+        System.out.println(item);
         this.listener.onItemClick(event);
 
     }
