@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class BoardGui {
+public class BoardGUI {
 
 	public static final Color BROWN = new Color(153, 102, 0);
 	public static final Color DARK_GREEN = new Color(0, 153, 0);
@@ -21,7 +21,7 @@ public class BoardGui {
 	private final JLabel message = new JLabel("Ready to play?");
 	private static final String COLS = "ABCDEFGH";
 
-	BoardGui() {
+	public BoardGUI() {
 		initializeGui();
 		Action newGameAction = new AbstractAction("New") {
 
@@ -215,28 +215,5 @@ public class BoardGui {
 
 	public final JComponent getGui() {
 		return gui;
-	}
-
-	public static void main(String[] args) {
-		Runnable r = new Runnable() {
-
-			@Override
-			public void run() {
-				BoardGui cb = new BoardGui();
-
-				JFrame f = new JFrame("JumpIn'");
-				f.add(cb.getGui());
-				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				f.setLocationByPlatform(true);
-
-				// ensures the frame is the minimum size it needs to be
-				// in order display the components within it
-				f.pack();
-				// ensures the minimum size is enforced.
-				f.setMinimumSize(f.getSize());
-				f.setVisible(true);
-			}
-		};
-		SwingUtilities.invokeLater(r);
 	}
 }
