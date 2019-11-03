@@ -3,26 +3,45 @@ package project;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.*;
 
 public class BoardGUI {
 
-	public static final Color BROWN = new Color(153, 102, 0);
-	public static final Color DARK_GREEN = new Color(0, 153, 0);
-	public static final Color VERY_DARK_GREEN = new Color(0, 102, 0);
+	// Used to set colors for layout
+	private static final Color BROWN = new Color(153, 102, 0);
+	private static final Color DARK_GREEN = new Color(0, 153, 0);
+	private static final Color VERY_DARK_GREEN = new Color(0, 102, 0);
 
-	private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-	private JButton[][] jumpInBoardSquares = new JButton[5][5];
-	private JPanel jumpInBoardGui;
-	private final JLabel message = new JLabel("Ready to play?");
+	// TODO: does this need to be a jpanel
+	// TODO: separate into different class
+	private JPanel outerFrame;
+	private JPanel boardPanel;
+
+	private JButton[][] jumpInBoardSquares;
+	private JLabel message;
 	private static final String COLS = "ABCDEFGH";
 
-	public BoardGUI() {
+	private Map<String,ImageIcon> imageResources;
+
+	public BoardGUI (int width, int height) {
+		imageResources = new HashMap<String,ImageIcon>();
+
+		// TODO: pass in a board as argument
+		jumpInBoardSquares = new JButton[height][width];
+
+		// todo: extract
+		int padding = 3;
+		outerFrame = new JPanel(new BorderLayout(padding, padding));
+
+		message = new JLabel();
+
+
 		initializeGui();
+
+		// Reset board
 		Action newGameAction = new AbstractAction("New") {
 
 			@Override
@@ -32,52 +51,45 @@ public class BoardGUI {
 		};
 	}
 
-	//private BufferedImage rabbitBrown = null;
-	public ImageIcon rabbitWhite = null;
-	public ImageIcon rabbitGrey = null;
-	public ImageIcon mushroom = null;
-	public ImageIcon foxHead = null;
-	public ImageIcon foxTail = null;
-	public ImageIcon rabbitBrown = null;
 	public void loadImages() {
 		try {
-			rabbitBrown = new ImageIcon("images/brownRabbit.png");
-			rabbitWhite =  new ImageIcon("images/whiteRabbit.png");
-			rabbitGrey =  new ImageIcon("images/rabbitGrey.png");
-			mushroom = new ImageIcon("images/mushroom.png");
-			foxHead = new ImageIcon("images/foxHead.png");
-			foxTail =  new ImageIcon("images/foxTail64.png");
+			imageResources.put("brownRabbit", new ImageIcon("images" +
+					"/brownRabbit.png"));
+			imageResources.put("whiteRabbit", new ImageIcon("images" +
+					"/whiteRabbit.png"));
+			imageResources.put("greyRabbit", new ImageIcon("images" +
+					"/greyRabbit.png"));
+
+			imageResources.put("mushroom", new ImageIcon("images" +
+					"/mushroom.png"));
+			imageResources.put("foxHead", new ImageIcon("images" +
+					"/foxHead.png"));
+			imageResources.put("foxTail", new ImageIcon("images" +
+					"/foxTail.png"));
 		} catch (Exception e) {
-			System.out.println("ImageLoading failed" + e);
+			// todo: use logger
+			System.out.println("Image Loading failed" + e);
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * public ImageIcon rabbitBrown = new
-	 * ImageIcon("project/src/main/java/icons/3316539-64 (1).png");
-	 * 
-	 * public ImageIcon rabbitWhite = new
-	 * ImageIcon("project/src/main/java/icons/icons/3316539-64.png"); public
-	 * ImageIcon rabbitGrey = new
-	 * ImageIcon("project/src/main/java/icons/icons/iconfinder_icon_animal_coelho_3316539 (1).png"
-	 * ); public ImageIcon mushroom = new ImageIcon(
-	 * "project/src/main/java/icons/icons/iconfinder_mushroom_fun_addigtion_drug_Shroom_3122423.png"
-	 * ); public ImageIcon foxHead = new
-	 * ImageIcon("project/src/main/java/icons/icons/iconfinder_fox_4591894.png");
-	 * public ImageIcon foxTail = new
-	 * ImageIcon("project/src/main/java/icons/icons/64.png");
-	 * 
-	 */
-
-	public final void initializeGui() {
-		 // create the images for the pieces
+	public void initializeGui() {
+		// create the images for the pieces
         loadImages();
+
 		// set up the main GUI
-		gui.setBorder(new EmptyBorder(5, 5, 5, 5));
+		int padding = 5;
+		EmptyBorder border = new EmptyBorder(padding, padding, padding,
+				padding);
+		outerFrame.setBorder(border);
+
+		// TODO: move the toolbar code into its own class
 		JToolBar tools = new JToolBar();
 		tools.setFloatable(false);
-		gui.add(tools, BorderLayout.PAGE_START);
+
+		// Add the tools dialog to the beginning of the frame
+		outerFrame.add(tools, BorderLayout.PAGE_START);
+
 		Action newGameAction = new AbstractAction("New") {
 
 			@Override
@@ -86,19 +98,18 @@ public class BoardGUI {
 			}
 		};
 		tools.add(newGameAction);
-		// tools.add(new JButton("New")); // TODO - add functionality!
-		tools.add(new JButton("Save")); // TODO - add functionality!
-		tools.add(new JButton("Restore")); // TODO - add functionality!
+
 		tools.addSeparator();
-		tools.add(new JButton("Resign")); // TODO - add functionality!
-		tools.addSeparator();
+
+		message.setText("Ready to play?");
+
 		tools.add(message);
 
-		gui.add(new JLabel(""), BorderLayout.LINE_START);
+		outerFrame.add(new JLabel(""), BorderLayout.LINE_START);
 
-		jumpInBoardGui = new JPanel(new GridLayout(6, 6));
-		jumpInBoardGui.setBorder(new LineBorder(Color.BLACK));
-		gui.add(jumpInBoardGui);
+		boardPanel = new JPanel(new GridLayout(6, 6));
+		boardPanel.setBorder(new LineBorder(Color.BLACK));
+		outerFrame.add(boardPanel);
 
 		// create the JumpIn board squares
 		Insets buttonMargin = new Insets(0, 0, 0, 0);
@@ -170,19 +181,19 @@ public class BoardGUI {
 		}
 
 		// fill the board
-		jumpInBoardGui.add(new JLabel(""));
+		boardPanel.add(new JLabel(""));
 		// fill the top row
 		for (int ii = 0; ii < 5; ii++) {
-			jumpInBoardGui.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
+			boardPanel.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
 		}
 		// fill the bottom row
 		for (int ii = 0; ii < 5; ii++) {
 			for (int jj = 0; jj < 5; jj++) {
 				switch (jj) {
 				case 0:
-					jumpInBoardGui.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+					boardPanel.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
 				default:
-					jumpInBoardGui.add(jumpInBoardSquares[jj][ii]);
+					boardPanel.add(jumpInBoardSquares[jj][ii]);
 				}
 			}
 		}
@@ -191,29 +202,27 @@ public class BoardGUI {
 	/**
 	 * Initializes the pieces on the board
 	 */
-	private final void setupNewGame() {
+	private void setupNewGame() {
+		// TODO: all of this should be rewritten based on a model
 		message.setText("Make your move!");
 
 		JButton j2=new JButton("");
 		j2.setBackground(DARK_GREEN);
-		j2.setIcon(rabbitBrown);
+		j2.setIcon(imageResources.get("rabbitBrown"));
 		jumpInBoardSquares[2][4].add(j2);
 		
 		
 		JButton j3 =new JButton("");
 		j3.setBackground(DARK_GREEN);
-		j3.setIcon(mushroom);
+		j3.setIcon(imageResources.get("mushroom"));
 		jumpInBoardSquares[0][4].add(j3);
-		
-		
-
 	}
 
-	public final JComponent getJumpInBoard() {
-		return jumpInBoardGui;
+	public JComponent getJumpInBoard() {
+		return boardPanel;
 	}
 
-	public final JComponent getGui() {
-		return gui;
+	public JComponent getGui() {
+		return outerFrame;
 	}
 }

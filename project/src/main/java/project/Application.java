@@ -3,8 +3,14 @@ package project;
 import javax.swing.*;
 
 public class Application {
+
+    //todo: private static int
+    static int WIDTH = 5;
+    static int HEIGHT = 5;
+
     public static void main(String[] args) {
-        BoardGUI boardGUI = new BoardGUI();
+
+        BoardGUI boardGUI = new BoardGUI(WIDTH,HEIGHT);
 
         // Create the baord
         JFrame frame = new JFrame("JumpIn'");
