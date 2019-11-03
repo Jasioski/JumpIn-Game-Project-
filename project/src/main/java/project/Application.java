@@ -7,6 +7,7 @@ import javax.swing.*;
 
 public class Application {
 
+    @SuppressWarnings("PMD")
     public static void main(String[] args) {
 
         ImageResources.getInstance();
@@ -25,7 +26,7 @@ public class Application {
         frame.pack();
 
         // Don't allow resizing
-//        frame.setResizable(false);
+       frame.setResizable(false);
 
         // Show the application
         frame.setVisible(true);

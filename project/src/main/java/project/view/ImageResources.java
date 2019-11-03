@@ -1,5 +1,8 @@
 package project.view;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 public class ImageResources {
 
+    private static Logger logger = LogManager.getLogger(ImageResources.class);
     private static ImageResources imageResources;
     private static Map<String, BufferedImage> imagesBank;
 
@@ -29,9 +33,7 @@ public class ImageResources {
         }
 
         catch(Exception e) {
-            // todo: use logger
-            System.out.println("Image Loading failed" + e);
-            e.printStackTrace();
+            logger.error("Image Loading failed" + e);
         }
     }
 

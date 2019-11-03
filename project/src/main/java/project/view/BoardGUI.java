@@ -42,15 +42,6 @@ public class BoardGUI implements ItemClickListener {
 		initializeGui();
 
 		this.setupNewGame();
-
-		// Reset board
-		Action newGameAction = new AbstractAction("New") {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setupNewGame();
-			}
-		};
 	}
 
 	public void loadImages() {
@@ -127,15 +118,16 @@ public class BoardGUI implements ItemClickListener {
 		this.updateBoard();
 	}
 
+	@Override
 	public void onItemClick(ItemClickEvent event) {
 		logger.info(event.coordinate);
 		if(selectedItem == null) {
 			selectedItem = event.coordinate;
-			logger.info("set selected");
+			logger.trace("set selected");
 		}
 		else {
 		    if (event.coordinate.equals(selectedItem)) {
-		        logger.info("selected same as destination");
+		        logger.trace("selected same as destination");
 		        return;
 		    }
 			destinationItem = event.coordinate;

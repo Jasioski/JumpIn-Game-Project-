@@ -11,7 +11,7 @@ public class Circle extends JComponent {
         this.color = color;
     }
 
-
+    @Override
     protected void paintComponent(Graphics g) { //this is adding green circle at center of button
 
         super.paintComponent(g);

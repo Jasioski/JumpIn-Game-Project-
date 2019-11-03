@@ -1,6 +1,4 @@
 package project.view;
-
-import project.model.BoardItem;
 import project.model.Coordinate;
 
 public class ItemClickEvent {

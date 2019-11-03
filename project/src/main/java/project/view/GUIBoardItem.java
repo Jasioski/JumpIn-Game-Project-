@@ -11,16 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-//todo - rename this class
 public class GUIBoardItem extends JPanel implements ActionListener, MouseListener{
     public static Logger logger = LogManager.getLogger(GUIBoardItem.class);
 
     private project.model.BoardItem item;
-
-    //todo - figure out this one
-    private static final Color BROWN = new Color(153, 102, 0);
-    private static final Color DARK_GREEN = new Color(0, 153, 0);
-    private static final Color VERY_DARK_GREEN = new Color(0, 102, 0);
 
     ItemClickListener listener;
     private Coordinate coordinate;
@@ -29,11 +23,9 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
                         ItemClickListener listener) {
         this.listener = listener;
         this.item = item;
-        this.setBackground(DARK_GREEN);
+        this.setBackground(GuiColor.DARK_GREEN);
 
         this.setLayout(new OverlayLayout(this));
-
-        // TODO: maybe do colored rabbits
 
         if (item instanceof project.model.Rabbit) {
             this.coordinate = coordinate;
@@ -58,7 +50,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         }
         else if (item instanceof EmptyBoardItem) {
             this.coordinate = coordinate;
-            Circle circle = new Circle(VERY_DARK_GREEN);
+            Circle circle = new Circle(GuiColor.VERY_DARK_GREEN);
             this.add(circle);
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         }
@@ -71,10 +63,8 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
             logger.error("Unsupported type" + item);
         }
 
-        //todo - figure out optimal BG color
         this.setBackground(GuiColor.DARK_GREEN);
         this.setSize(100,100);
-        //this.addMouseListener(this);
         this.setListeners(this);
     }
 
@@ -91,27 +81,25 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         }
     }
 
-    //todo - fix these duplications
+    public void sendEvent() {
+        ItemClickEvent event = new ItemClickEvent(this.coordinate);
+        logger.trace("click event generated" + item);
+        this.listener.onItemClick(event);
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        logger.info("click event generated" + item);
-        this.listener.onItemClick(event);
+        this.sendEvent();
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        logger.info("click event generated" + item);
-        this.listener.onItemClick(event);
+        this.sendEvent();
     }
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-        ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        logger.info("click event generated" + item);
-        this.listener.onItemClick(event);
-
+        this.sendEvent();
     }
 
     //methods below required because of implementing MouseListener

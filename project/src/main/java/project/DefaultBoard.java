@@ -1,10 +1,12 @@
 package project;
 
 import project.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DefaultBoard extends Board {
 
-    //todo - add logger
+    private static Logger logger = LogManager.getLogger(DefaultBoard.class);
     public DefaultBoard() {
         super(5);
 
@@ -53,7 +55,7 @@ public class DefaultBoard extends Board {
             hole2.contain(rabbit4);
 
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error("Default Board Issue: " + e);
         }
     }
 }

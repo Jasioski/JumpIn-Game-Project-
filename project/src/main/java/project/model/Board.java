@@ -379,11 +379,9 @@ public class Board {
 
 	}
 
-	// TODO: merge this method with jumpout
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException {
-		System.out.println("JUMP OUT OF HOLE!" + itemAtCoordinate);
 		if (itemAtCoordinate instanceof ContainerItem) {
-			System.out.println("JUMP OUT OF HOLE!");
+			logger.info("JUMP OUT OF HOLE!");
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
 			return;
 		}
