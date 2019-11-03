@@ -30,51 +30,53 @@ public class Main {
 
         print("Starting JumpIn");
 
-        Board board = new Board(5);
+  //      Board board = new Board(5);
 
-        Hole hole1 = new Hole(0, 0);
-        Hole hole2 = new Hole(0, 4);
-        Hole hole3 = new Hole(4, 0);
-        Hole hole4 = new Hole(4, 4);
-        Hole hole5 = new Hole(2, 2);
+//        Hole hole1 = new Hole(0, 0);
+//        Hole hole2 = new Hole(0, 4);
+//        Hole hole3 = new Hole(4, 0);
+//        Hole hole4 = new Hole(4, 4);
+//        Hole hole5 = new Hole(2, 2);
+//
+//        Fox fox1 = new Fox(3,2,3,3);
+//        Fox fox2 = new Fox(0,1,1,1);
+//
+//        Rabbit rabbit1 = new Rabbit(4, 2);
+//        Rabbit rabbit2 = new Rabbit(2, 0);
+//
+//        Mushroom mushroom2 = new Mushroom(0, 0);
+//
+//        ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
+//        ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
+//        ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(4,2);
+//        ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(4,3);
+//
+//        try {
+//            board.setItem(hole1);
+//            board.setItem(hole2);
+//            board.setItem(hole3);
+//            board.setItem(hole4);
+//            board.setItem(hole5);
+//
+//            board.setItem(fox1);
+//            board.setItem(fox2);
+//
+//            board.setItem(elevatedBoardItem1);
+//            board.setItem(elevatedBoardItem2);
+//            board.setItem(elevatedBoardItem3);
+//            board.setItem(elevatedBoardItem4);
+//            board.setItem(rabbit1);
+//            board.setItem(rabbit2);
+//
+//            board.setItem(mushroom2);
+//
+//        } catch (Exception e) {
+//            if (logger.isErrorEnabled()) {
+//                logger.catching(Level.ERROR, e);
+//            }
+//        }
 
-        Fox fox1 = new Fox(3,2,3,3);
-        Fox fox2 = new Fox(0,1,1,1);
-
-        Rabbit rabbit1 = new Rabbit(4, 2);
-        Rabbit rabbit2 = new Rabbit(2, 0);
-
-        Mushroom mushroom2 = new Mushroom(0, 0);
-
-        ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
-        ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
-        ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(4,2);
-        ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(4,3);
-
-        try {
-            board.setItem(hole1);
-            board.setItem(hole2);
-            board.setItem(hole3);
-            board.setItem(hole4);
-            board.setItem(hole5);
-
-            board.setItem(fox1);
-            board.setItem(fox2);
-
-            board.setItem(elevatedBoardItem1);
-            board.setItem(elevatedBoardItem2);
-            board.setItem(elevatedBoardItem3);
-            board.setItem(elevatedBoardItem4);
-            board.setItem(rabbit1);
-            board.setItem(rabbit2);
-
-            board.setItem(mushroom2);
-
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.catching(Level.ERROR, e);
-            }
-        }
+        DefaultBoard board = new DefaultBoard();
 
         // JumpIn client
         Scanner scanner = new Scanner(System.in);

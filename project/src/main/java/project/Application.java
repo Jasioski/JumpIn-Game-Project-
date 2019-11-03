@@ -4,14 +4,10 @@ import javax.swing.*;
 
 public class Application {
 
-    //todo: private static int
-    static int WIDTH = 5;
-    static int HEIGHT = 5;
-
     public static void main(String[] args) {
 
-        ImageResources.getResources();
-        BoardGUI boardGUI = new BoardGUI(WIDTH,HEIGHT);
+        ImageResources.getInstance();
+        BoardGUI boardGUI = new BoardGUI(new DefaultBoard());
 
         // Create the baord
         JFrame frame = new JFrame("JumpIn'");

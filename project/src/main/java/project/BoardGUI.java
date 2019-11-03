@@ -29,9 +29,9 @@ public class BoardGUI {
 	private Board board;
 
 
-	public BoardGUI (int width, int height, Board board) {
+	public BoardGUI (Board board) {
 		// TODO: pass in a board as argument
-		jumpInBoardSquares = new JButton[height][width];
+		jumpInBoardSquares = new JButton[board.getRows()][board.getColumns()];
 
 		this.board = board;
 
@@ -94,6 +94,7 @@ public class BoardGUI {
 
 		outerFrame.add(new JLabel(""), BorderLayout.LINE_START);
 
+		//todo - Figure out what is going on here...
 		boardPanel = new JPanel(new GridLayout(6, 6));
 		boardPanel.setBorder(new LineBorder(Color.BLACK));
 		outerFrame.add(boardPanel);
@@ -106,7 +107,7 @@ public class BoardGUI {
 				// adding green circle at the centre of the button
 				JButton b = new JButton() {
 					@Override
-					protected void paintComponent(Graphics g) {
+					protected void paintComponent(Graphics g) { //this is adding green circle at center of button
 						super.paintComponent(g);
 						int nGap = 10;
 						int nXPosition = nGap;
@@ -188,7 +189,14 @@ public class BoardGUI {
 
 	// update method
 	private void updateBoard() {
+		jumpInBoardSquares = new JButton[board.getRows()][board.getColumns()];
 
+		for (int row = 0; row < this.board.getRows(); row++) {
+			for (int column = 0; column < this.board.getColumns(); column++) {
+				jumpInBoardSquares[row][column] = new GUIBoardItem(this.board.getItem(row, column));
+			}
+
+		}
 	}
 
 
@@ -201,16 +209,16 @@ public class BoardGUI {
 		// TODO: all of this should be rewritten based on a model
 		message.setText("Make your move!");
 
-		JButton j2=new JButton("");
-		j2.setBackground(DARK_GREEN);
-		j2.setIcon((Icon) ImageResources.getResources().get("rabbitBrown"));
-		jumpInBoardSquares[2][4].add(j2);
+//		JButton j2=new JButton("");
+//		j2.setBackground(DARK_GREEN);
+//		j2.setIcon((Icon) ImageResources.getInstance().getResources().get("brownRabbit")); //todo - change these to enums ("brownRabbit")
+//		jumpInBoardSquares[2][4].add(j2);
 
-
-		JButton j3 =new JButton("");
-		j3.setBackground(DARK_GREEN);
-		j3.setIcon((Icon) ImageResources.getResources().get("mushroom"));
-		jumpInBoardSquares[0][4].add(j3);
+//
+//		JButton j3 =new JButton("");
+//		j3.setBackground(DARK_GREEN);
+//		j3.setIcon((Icon) ImageResources.getInstance().getResources().get("mushroom"));
+//		jumpInBoardSquares[0][4].add(j3);
 
 		Rabbit rabbit = new Rabbit(0,2);
 		jumpInBoardSquares[0][2].add(new GUIBoardItem(rabbit));
