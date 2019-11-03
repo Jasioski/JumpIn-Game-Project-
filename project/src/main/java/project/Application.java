@@ -10,6 +10,7 @@ public class Application {
 
     public static void main(String[] args) {
 
+        ImageResources.getResources();
         BoardGUI boardGUI = new BoardGUI(WIDTH,HEIGHT);
 
         // Create the baord

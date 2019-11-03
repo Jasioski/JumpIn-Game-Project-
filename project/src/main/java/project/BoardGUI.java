@@ -10,6 +10,7 @@ import javax.swing.border.*;
 
 public class BoardGUI {
 
+	// View Layer
 	// Used to set colors for layout
 	private static final Color BROWN = new Color(153, 102, 0);
 	private static final Color DARK_GREEN = new Color(0, 153, 0);
@@ -24,13 +25,15 @@ public class BoardGUI {
 	private JLabel message;
 	private static final String COLS = "ABCDEFGH";
 
-	private Map<String,ImageIcon> imageResources;
+	// Model Layer
+	private Board board;
 
-	public BoardGUI (int width, int height) {
-		imageResources = new HashMap<String,ImageIcon>();
 
+	public BoardGUI (int width, int height, Board board) {
 		// TODO: pass in a board as argument
 		jumpInBoardSquares = new JButton[height][width];
+
+		this.board = board;
 
 		// todo: extract
 		int padding = 3;
@@ -53,23 +56,7 @@ public class BoardGUI {
 
 	public void loadImages() {
 		try {
-			imageResources.put("brownRabbit", new ImageIcon("images" +
-					"/brownRabbit.png"));
-			imageResources.put("whiteRabbit", new ImageIcon("images" +
-					"/whiteRabbit.png"));
-			imageResources.put("greyRabbit", new ImageIcon("images" +
-					"/greyRabbit.png"));
-
-			imageResources.put("mushroom", new ImageIcon("images" +
-					"/mushroom.png"));
-			imageResources.put("foxHead", new ImageIcon("images" +
-					"/foxHead.png"));
-			imageResources.put("foxTail", new ImageIcon("images" +
-					"/foxTail.png"));
 		} catch (Exception e) {
-			// todo: use logger
-			System.out.println("Image Loading failed" + e);
-			e.printStackTrace();
 		}
 	}
 
@@ -199,6 +186,14 @@ public class BoardGUI {
 		}
 	}
 
+	// update method
+	private void updateBoard() {
+
+	}
+
+
+	// l
+
 	/**
 	 * Initializes the pieces on the board
 	 */
@@ -208,14 +203,17 @@ public class BoardGUI {
 
 		JButton j2=new JButton("");
 		j2.setBackground(DARK_GREEN);
-		j2.setIcon(imageResources.get("rabbitBrown"));
+		j2.setIcon((Icon) ImageResources.getResources().get("rabbitBrown"));
 		jumpInBoardSquares[2][4].add(j2);
-		
-		
+
+
 		JButton j3 =new JButton("");
 		j3.setBackground(DARK_GREEN);
-		j3.setIcon(imageResources.get("mushroom"));
+		j3.setIcon((Icon) ImageResources.getResources().get("mushroom"));
 		jumpInBoardSquares[0][4].add(j3);
+
+		Rabbit rabbit = new Rabbit(0,2);
+		jumpInBoardSquares[0][2].add(new GUIBoardItem(rabbit));
 	}
 
 	public JComponent getJumpInBoard() {
