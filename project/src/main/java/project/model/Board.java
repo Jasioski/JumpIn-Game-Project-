@@ -517,19 +517,36 @@ public class Board {
 	    //todo - implement logic for other movements
 		int rowDistanceMoved = itemDestination.getCoordinates().get(0).row - itemSelected.getCoordinates().get(0).row;
 		int colDistanceMoved = itemDestination.getCoordinates().get(0).column - itemSelected.getCoordinates().get(0).column;
+		Direction direction;
+
+
 		System.out.println(rowDistanceMoved);
-		System.out.println(itemDestination.getCoordinates().get(0).column - itemSelected.getCoordinates().get(0).column);
-		if ((rowDistanceMoved == 0) &&
-				(colDistanceMoved == 0)) {
+		System.out.println(colDistanceMoved);
+
+		if (rowDistanceMoved == 0 && colDistanceMoved == 0) {
 			//deselect item logic
 			System.out.println("test");
+			return;
 		}
 		else if(!(rowDistanceMoved != 0 && colDistanceMoved != 0)) {
-			//do logic in here.
-
+			if (rowDistanceMoved > 0) { //destination is below
+				direction = Direction.DOWN;
+			}
+			else if (rowDistanceMoved < 0) { //destination is above
+				direction = Direction.UP;
+			}
+			else if (colDistanceMoved > 0) { //destination is to the right
+				direction = Direction.RIGHT;
+			}
+			else { //destination is the the left
+				direction = Direction.LEFT;
+			}
+		}
+		else {
+			return;
 		}
 		if (itemSelected instanceof Rabbit)  {
-	    	this.jump(Direction.DOWN, itemSelected);
+	    	this.jump(direction, itemSelected);
 		}
 	}
 }
