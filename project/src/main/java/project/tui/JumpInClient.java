@@ -1,18 +1,17 @@
-package project;
+package project.tui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.Board;
 import project.model.Coordinate;
 import project.model.Direction;
-import project.tui.ANSIColor;
+import project.model.Board;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Title: JumpInClient
- * Description: This class is used for string input parsing 
+ * Description: This class is used for string input parsing
  * and parses them into commands that can be applied to the board
  */
 public class JumpInClient {
@@ -21,15 +20,15 @@ public class JumpInClient {
     private static Pattern regexPatternFox = Pattern.compile("Slide\\s+Fox\\s+(\\d)," +
             "\\s*(\\d)\\s+(\\d)\\s+" +
             "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
-    
+
     private static Pattern regexPatternRabbit = Pattern.compile("Jump\\s+Rabbit\\s+(\\d)," +
             "\\s*(\\d)\\s+" +
             "(up|down|left|right)", Pattern.CASE_INSENSITIVE);
-    
+
     /**
      * Display standard example inputs message
      * @param board is the object whose state is displayed at the beginning of the prompt
-     * @return String containing message with instructions to be displayed to the user 
+     * @return String containing message with instructions to be displayed to the user
      */
     public String getPrompt(Board board) {
         String prompt = "";
@@ -66,8 +65,8 @@ public class JumpInClient {
     }
 
     /**
-     * Parses Rabbit input 
-     * @param line to be parsed and used to attempt a move on a rabbit
+     * Parses Rabbit input
+     * @param String line to be parsed and used to attempt a move on a rabbit
      * @return command with coordinates used to move the rabbit on the board
      */
     public RabbitCommand parseRabbitCommand(String line) throws Exception {
@@ -106,8 +105,8 @@ public class JumpInClient {
     }
 
     /**
-     * Parses Fox input 
-     * @param line to be parsed and used to attempt a move on a fox
+     * Parses Fox input
+     * @param String line to be parsed and used to attempt a move on a fox
      * @return command with coordinates used to move the fox on the board
      */
     public FoxCommand parseFoxCommand(String line) throws Exception {
@@ -126,7 +125,7 @@ public class JumpInClient {
             // Extract arguments
             Coordinate coordinate =
                     new Coordinate(Integer.parseInt(matcher.group(1)) - 1,
-                    Integer.parseInt(matcher.group(2)) - 1);
+                            Integer.parseInt(matcher.group(2)) - 1);
 
             int moveSpaces = Integer.parseInt(matcher.group(3));
             Direction direction =
@@ -149,7 +148,7 @@ public class JumpInClient {
 
     /**
      * Checks if the command is valid
-     * @param input
+     * @param String input
      * @return Rabbit or Fox command
      */
     public Command parseInput(String input) {
@@ -163,7 +162,7 @@ public class JumpInClient {
 
         // Rabbit commands
         try {
-           return parseRabbitCommand(input.trim());
+            return parseRabbitCommand(input.trim());
         }
         catch (Exception e) {
             logger.trace(e.getMessage());
@@ -177,7 +176,7 @@ public class JumpInClient {
             logger.trace(e.getMessage());
         }
 
-       throw new IllegalArgumentException("invalid input");
+        throw new IllegalArgumentException("invalid input");
     }
 
     /**

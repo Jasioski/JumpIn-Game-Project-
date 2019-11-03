@@ -3,6 +3,7 @@ package project;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import project.model.Direction;
 
 public class DirectionTest {
 

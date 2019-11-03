@@ -1,6 +1,10 @@
 package project;
 
 import org.junit.jupiter.api.Test;
+import project.model.Coordinate;
+import project.model.ElevatedBoardItem;
+import project.model.Mushroom;
+import project.tui.ItemUIRepresentation;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

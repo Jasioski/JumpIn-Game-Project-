@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.*;
+import project.tui.ItemUIRepresentation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
