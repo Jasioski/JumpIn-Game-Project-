@@ -59,7 +59,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         {
             Circle circle = new Circle(VERY_DARK_GREEN);
             this.add(circle);
-            circle.addMouseListener(this);
+//            circle.addMouseListener(this);
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         }
         else if (item instanceof project.model.Fox)  {
@@ -74,6 +74,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         //todo - figure out optimal BG color
         this.setBackground(GuiColor.DARK_GREEN);
         this.setSize(100,100);
+        this.addMouseListener(this);
     }
 
     //todo - fix these duplications

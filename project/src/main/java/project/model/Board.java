@@ -523,11 +523,13 @@ public class Board {
 		System.out.println(rowDistanceMoved);
 		System.out.println(colDistanceMoved);
 
+		// todo extract into private method
 		if (rowDistanceMoved == 0 && colDistanceMoved == 0) {
 			//deselect item logic
 			System.out.println("test");
 			return;
 		}
+
 		else if(!(rowDistanceMoved != 0 && colDistanceMoved != 0)) {
 			if (rowDistanceMoved > 0) { //destination is below
 				direction = Direction.DOWN;
@@ -546,6 +548,7 @@ public class Board {
 			return;
 		}
 		if (itemSelected instanceof Rabbit)  {
+			logger.trace("try jumping in direction:" + direction.toString());
 	    	this.jump(direction, itemSelected);
 		}
 	}
