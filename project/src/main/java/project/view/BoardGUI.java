@@ -3,6 +3,7 @@ package project.view;
 import project.DefaultBoard;
 import project.model.Board;
 import project.model.BoardItem;
+import project.model.Coordinate;
 import project.model.GameState;
 import project.model.exceptions.*;
 
@@ -23,8 +24,8 @@ public class BoardGUI implements ItemClickListener {
 	// Model Layer
 	private Board board;
 
-	private BoardItem selectedItem;
-	private BoardItem destinationItem;
+	private Coordinate selectedItem;
+	private Coordinate destinationItem;
 
 	public BoardGUI (Board board) {
 		this.board = board;
@@ -107,7 +108,8 @@ public class BoardGUI implements ItemClickListener {
 			    //todo - make this more efficient (dont change everything on the board, just the tiles that need to be change)
 				BoardItem modelItem = this.board.getItem(row, column);
 				JComponent viewItem =
-						new GUIBoardItem(modelItem, this);
+						new GUIBoardItem(new Coordinate(row, column), modelItem,
+								this);
 
 				this.boardPanel.add(viewItem);
 			}
@@ -141,17 +143,17 @@ public class BoardGUI implements ItemClickListener {
 //        }
 
 	    //todo - change prints to logger
-		System.out.println(event.item);
+		System.out.println(event.coordinate);
 		if(selectedItem == null) {
-			selectedItem = event.item;
+			selectedItem = event.coordinate;
 			System.out.println("set selected");
 		}
 		else {
-		    if (event.item.equals(selectedItem)) {
+		    if (event.coordinate.equals(selectedItem)) {
 		        System.out.println("= == == = ");
 		        return;
 		    }
-			destinationItem = event.item;
+			destinationItem = event.coordinate;
 
 			System.out.println("set destination");
 			try {

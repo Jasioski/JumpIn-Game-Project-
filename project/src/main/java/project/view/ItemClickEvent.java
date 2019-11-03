@@ -1,12 +1,13 @@
 package project.view;
 
 import project.model.BoardItem;
+import project.model.Coordinate;
 
 public class ItemClickEvent {
-    public BoardItem item;
+    public Coordinate coordinate;
 
-    public ItemClickEvent(BoardItem item) {
-        this.item = item;
+    public ItemClickEvent(Coordinate itemCoordinate) {
+        this.coordinate = itemCoordinate;
     }
 
 }
