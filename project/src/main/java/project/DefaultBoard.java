@@ -1,6 +1,6 @@
 package project;
 
-import java.awt.*;
+import project.model.*;
 
 public class DefaultBoard extends Board {
 

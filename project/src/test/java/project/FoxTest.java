@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.SlideHitElevatedException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideOutOfBoundsException;
+import project.tui.ItemUIRepresentation;
 
 class FoxTest {
 

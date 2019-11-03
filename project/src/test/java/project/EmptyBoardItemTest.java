@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.Coordinate;
+import project.model.EmptyBoardItem;
+import project.tui.ItemUIRepresentation;
 
 public class EmptyBoardItemTest {
 

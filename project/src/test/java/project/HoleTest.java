@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.HoleAlreadyHasRabbitException;
+import project.model.exceptions.HoleIsEmptyException;
+import project.tui.ItemUIRepresentation;
 
 class HoleTest {
 

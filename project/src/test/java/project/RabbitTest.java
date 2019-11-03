@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.JumpFailedNoObstacleException;
+import project.model.exceptions.JumpFailedOutOfBoundsException;
+import project.tui.ItemUIRepresentation;
 
 class RabbitTest {
 

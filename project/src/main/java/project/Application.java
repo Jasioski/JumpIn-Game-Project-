@@ -1,5 +1,8 @@
 package project;
 
+import project.view.BoardGUI;
+import project.view.ImageResources;
+
 import javax.swing.*;
 
 public class Application {
