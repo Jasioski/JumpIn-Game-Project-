@@ -18,7 +18,10 @@ public class Application {
         // Removes padding of the frame
         frame.pack();
 
-        // ensures the minimum size is enforced.
+        // Don't allow resizing
+        frame.setResizable(false);
+
+        // Show the application
         frame.setVisible(true);
     }
 };
