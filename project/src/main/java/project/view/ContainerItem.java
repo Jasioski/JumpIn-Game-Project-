@@ -16,7 +16,8 @@ public abstract class ContainerItem extends JPanel {
         if (model.getContainingItem().isPresent()) {
             project.model.Containable containable = model.getContainingItem().get();
             if (containable instanceof Rabbit) {
-                this.add(new project.view.Rabbit(false));
+                // todo fix the null
+                this.add(new project.view.Rabbit(false, null));
             }
             if (containable instanceof Mushroom) {
                 this.add(new project.view.Mushroom(false));

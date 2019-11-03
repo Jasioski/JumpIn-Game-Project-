@@ -3,13 +3,14 @@ package project.view;
 import project.DefaultBoard;
 import project.model.Board;
 import project.model.BoardItem;
+import project.model.exceptions.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class BoardGUI {
+public class BoardGUI implements ItemClickListener {
 
 	// View Layer
 	// TODO: separate into different class
@@ -21,6 +22,8 @@ public class BoardGUI {
 	// Model Layer
 	private Board board;
 
+	private BoardItem selectedItem;
+	private BoardItem destinationItem;
 
 	public BoardGUI (Board board) {
 		this.board = board;
@@ -100,11 +103,14 @@ public class BoardGUI {
 			for (int column = 0; column < this.board.getColumns(); column++) {
 				BoardItem modelItem = this.board.getItem(row, column);
 				JComponent viewItem =
-						new GUIBoardItem(modelItem);
+						new GUIBoardItem(modelItem, this);
 
 				this.boardPanel.add(viewItem);
 			}
 		}
+
+		boardPanel.repaint();
+		boardPanel.revalidate();
 	}
 
 	/**
@@ -116,6 +122,32 @@ public class BoardGUI {
 		this.board = new DefaultBoard();
 
 		this.updateBoard();
+	}
+
+	public void onItemClick(ItemClickEvent event) {
+		System.out.println(event.item);
+		if(selectedItem == null) {
+			selectedItem = event.item;
+			System.out.println("set selected");
+		}
+		else {
+			destinationItem = event.item;
+
+			System.out.println("set destination");
+			try {
+				System.out.println("attempting");
+				board.move(selectedItem, destinationItem);
+				System.out.println("successful");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				selectedItem = null;
+				destinationItem = null;
+				this.updateBoard();
+			}
+		}
+
 	}
 
 	public JComponent getGui() {

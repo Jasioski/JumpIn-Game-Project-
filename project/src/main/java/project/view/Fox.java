@@ -7,7 +7,8 @@ public class Fox extends ButtonBoardItem {
 
     public Fox() {
         //todo - switch images back to image icon in map??
-        super(false);
+        // todo fix  null
+        super(false,null);
         BufferedImage image = ImageResources.getInstance().getResources().get("foxHead");
         ImageIcon icon = new ImageIcon(image);
         this.iconButton.setIcon(icon);

@@ -1,10 +1,11 @@
 package project.view;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public abstract class ButtonBoardItem extends JPanel {
     protected JButton iconButton;
-    public ButtonBoardItem(boolean renderItem) {
+    public ButtonBoardItem(boolean renderItem, ActionListener listener) {
         System.out.println("Abstract class");
         this.setLayout(new OverlayLayout(this));
         iconButton = new JButton();
@@ -20,5 +21,6 @@ public abstract class ButtonBoardItem extends JPanel {
             this.add(circle);
         }
         this.setOpaque(false);
+        this.iconButton.addActionListener(listener);
     }
 }

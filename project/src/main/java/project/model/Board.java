@@ -512,4 +512,10 @@ public class Board {
 	public GameState getCurrentGameState() {
 		return currentGameState;
 	}
+
+	public void move(BoardItem itemSelected, BoardItem itemDestination) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException {
+	    if (itemSelected instanceof Rabbit)  {
+	    	this.jump(Direction.DOWN, itemSelected);
+		}
+	}
 }

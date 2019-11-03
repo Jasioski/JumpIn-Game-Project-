@@ -23,6 +23,7 @@ public class DefaultBoard extends Board {
         Rabbit rabbit4 = new Rabbit(0, 0);
 
         Mushroom mushroom2 = new Mushroom(0, 0);
+        Mushroom mushroom3 = new Mushroom(1, 3);
 
         ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
         ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
@@ -48,6 +49,7 @@ public class DefaultBoard extends Board {
             this.setItem(rabbit3);
 
             this.setItem(mushroom2);
+            this.setItem(mushroom3);
             hole2.contain(rabbit4);
 
         } catch (Exception e) {
