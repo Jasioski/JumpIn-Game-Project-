@@ -5,15 +5,17 @@ import project.model.Board;
 import project.model.BoardItem;
 import project.model.Coordinate;
 import project.model.GameState;
-import project.model.exceptions.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 
 public class BoardGUI implements ItemClickListener {
 
+	public static Logger logger = LogManager.getLogger(BoardGUI.class);
 	// View Layer
 	// TODO: separate into different class
 	private JPanel outerFrame;
@@ -66,8 +68,6 @@ public class BoardGUI implements ItemClickListener {
 		EmptyBorder border = new EmptyBorder(padding, padding, padding,
 				padding);
 		outerFrame.setBorder(border);
-
-		// TODO: move the toolbar code into its own class
 		JToolBar tools = new JToolBar();
 		tools.setFloatable(false);
 
@@ -89,7 +89,6 @@ public class BoardGUI implements ItemClickListener {
 
 		outerFrame.add(new JLabel(""), BorderLayout.LINE_START);
 
-		//todo - Figure out what is going on here...
 		boardPanel = new JPanel(new GridLayout(6, 6));
 		boardPanel.setBorder(new LineBorder(Color.BLACK));
 		outerFrame.add(boardPanel);
@@ -99,18 +98,14 @@ public class BoardGUI implements ItemClickListener {
 
 	// update method
 	private void updateBoard() {
-
-	    //todo - add checks on gamestate to see if solved or not
 		boardPanel.removeAll();
 
 		for (int row = 0; row < this.board.getRows(); row++) {
 			for (int column = 0; column < this.board.getColumns(); column++) {
-			    //todo - make this more efficient (dont change everything on the board, just the tiles that need to be change)
 				BoardItem modelItem = this.board.getItem(row, column);
 				JComponent viewItem =
 						new GUIBoardItem(new Coordinate(row, column), modelItem,
 								this);
-
 				this.boardPanel.add(viewItem);
 			}
 		}
@@ -118,7 +113,7 @@ public class BoardGUI implements ItemClickListener {
 		boardPanel.repaint();
 		boardPanel.revalidate(); //updates the visuals
         if (board.getCurrentGameState() == GameState.SOLVED) {
-            System.out.println("YOU WON!");
+            JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!");
         }
 	}
 
@@ -127,41 +122,32 @@ public class BoardGUI implements ItemClickListener {
 	 */
 	private void setupNewGame() {
 		message.setText("Make your move!");
-
 		this.board = new DefaultBoard();
 
 		this.updateBoard();
 	}
 
 	public void onItemClick(ItemClickEvent event) {
-
-//	    try {
-//            Thread.sleep(500);
-//        }
-//	    catch(InterruptedException e) {
-//	        System.out.println(e);
-//        }
-
-	    //todo - change prints to logger
-		System.out.println(event.coordinate);
+		logger.info(event.coordinate);
 		if(selectedItem == null) {
 			selectedItem = event.coordinate;
-			System.out.println("set selected");
+			logger.info("set selected");
 		}
 		else {
 		    if (event.coordinate.equals(selectedItem)) {
-		        System.out.println("= == == = ");
+		        logger.info("selected same as destination");
 		        return;
 		    }
 			destinationItem = event.coordinate;
 
-			System.out.println("set destination");
+			logger.trace("set destination");
 			try {
-				System.out.println("attempting");
+				logger.info("attempting");
 				board.move(selectedItem, destinationItem); //try moving the selected item to destination
-				System.out.println("successful");
+				logger.info("successful");
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e);
+				JOptionPane.showMessageDialog(boardPanel, e.getMessage(), "Exception!", 0);
 			}
 			finally { //clear the selections and update board
 				selectedItem = null;

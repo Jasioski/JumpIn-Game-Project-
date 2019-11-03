@@ -1,5 +1,7 @@
 package project.view;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.model.*;
 
 import javax.swing.*;
@@ -8,10 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 
 //todo - rename this class
 public class GUIBoardItem extends JPanel implements ActionListener, MouseListener{
+    public static Logger logger = LogManager.getLogger(GUIBoardItem.class);
+
     private project.model.BoardItem item;
 
     //todo - figure out this one
@@ -30,9 +33,6 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
 
         this.setLayout(new OverlayLayout(this));
 
-        // todo add borders
-
-        // TODO: do all the other items
         // TODO: maybe do colored rabbits
 
         if (item instanceof project.model.Rabbit) {
@@ -68,7 +68,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         }
 
         else {
-            System.out.println("Unsupported type" + item);
+            logger.error("Unsupported type" + item);
         }
 
         //todo - figure out optimal BG color
@@ -95,28 +95,26 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        System.out.println("click event generated");
-        System.out.println(item);
+        logger.info("click event generated" + item);
         this.listener.onItemClick(event);
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        System.out.println("click event generated");
-        System.out.println(item);
+        logger.info("click event generated" + item);
         this.listener.onItemClick(event);
     }
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
         ItemClickEvent event = new ItemClickEvent(this.coordinate);
-        System.out.println("click event generated");
-        System.out.println(item);
+        logger.info("click event generated" + item);
         this.listener.onItemClick(event);
 
     }
 
+    //methods below required because of implementing MouseListener
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
 
