@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 //todo - rename this class
 public class GUIBoardItem extends JPanel implements ActionListener {
-    private BoardItem item;
+    private project.model.BoardItem item;
 
     //todo - figure out this one
     private static final Color BROWN = new Color(153, 102, 0);
@@ -31,135 +31,38 @@ public class GUIBoardItem extends JPanel implements ActionListener {
         // TODO: do all the other items
         // TODO: maybe do colored rabbits
 
-        if (item instanceof Rabbit) {
-           // ImageIcon icon = (ImageIcon) ImageResources.getResources().get("brownRabbit");
-            this.iconButton = new JButton();
-            image = ImageResources.getInstance().getResources().get("brownRabbit");
+        if (item instanceof project.model.Rabbit) {
+            System.out.println("We found a rabbit");
+            this.add(new Rabbit());
 
-            this.iconButton.setIcon(new ImageIcon(image));
-            this.iconButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-            this.iconButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-            this.iconButton.setOpaque(false);
-            this.iconButton.setContentAreaFilled(false);
-            this.iconButton.setBorderPainted(false);
-            this.iconButton.setBackground(VERY_DARK_GREEN);
-
-            this.add(iconButton);
-            Circle circle = new Circle(VERY_DARK_GREEN);
-            this.add(circle);
         }
-        else if (item instanceof Hole) {
+        else if (item instanceof project.model.Hole) {
             Circle circle = new Circle(BROWN);
-            Hole hole = (Hole) item;
-
-            if (hole.getContainingItem().isPresent()) {
-                System.out.println("found a rabbit in a hole");
-                if (hole.getContainingItem().get() instanceof Rabbit) {
-                    image = ImageResources.getInstance().getResources().get("brownRabbit");
-
-                    JButton button = new JButton();
-                    button.setIcon(new ImageIcon(image));
-
-                    button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-                    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-                    button.setOpaque(false);
-                    button.setContentAreaFilled(false);
-                    button.setBorderPainted(false);
-                    button.setBackground(VERY_DARK_GREEN);
-
-                    this.add(button);
-                }
-
-                if (hole.getContainingItem().get() instanceof Mushroom) {
-                    image = ImageResources.getInstance().getResources().get(
-                            "mushroom");
-
-                    JButton button = new JButton();
-                    button.setIcon(new ImageIcon(image));
-
-                    button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-                    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-                    button.setOpaque(false);
-                    button.setContentAreaFilled(false);
-                    button.setBorderPainted(false);
-                    button.setBackground(VERY_DARK_GREEN);
-
-                    this.add(button);
-                }
-            }
-
-            this.add(circle);
+            project.model.Hole hole = (project.model.Hole) item;
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
+            this.add(new Hole(hole));
         }
 
         else if (item instanceof EmptyBoardItem) {
             Circle circle = new Circle(VERY_DARK_GREEN);
             this.add(circle);
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        } else if (item instanceof ElevatedBoardItem) {
+        } else if (item instanceof project.model.ElevatedBoardItem) {
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
-
             ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) item;
-
-            if (elevatedBoardItem.getContainingItem().isPresent()) {
-                System.out.println("found a rabbit in a hole");
-                if (elevatedBoardItem.getContainingItem().get() instanceof Rabbit) {
-                    image = ImageResources.getInstance().getResources().get("brownRabbit");
-
-                    JButton button = new JButton();
-                    button.setIcon(new ImageIcon(image));
-
-                    button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-                    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-                    button.setOpaque(false);
-                    button.setContentAreaFilled(false);
-                    button.setBorderPainted(false);
-                    button.setBackground(VERY_DARK_GREEN);
-
-                    this.add(button);
-                }
-
-                if (elevatedBoardItem.getContainingItem().get() instanceof Mushroom) {
-                    image = ImageResources.getInstance().getResources().get(
-                            "mushroom");
-
-                    JButton button = new JButton();
-                    button.setIcon(new ImageIcon(image));
-
-                    button.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-                    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-                    button.setOpaque(false);
-                    button.setContentAreaFilled(false);
-                    button.setBorderPainted(false);
-                    button.setBackground(VERY_DARK_GREEN);
-
-                    this.add(button);
-                }
-            }
+            this.add(new Elevated(elevatedBoardItem));
         }
-        else if (item instanceof Fox)  {
+        else if (item instanceof project.model.Fox)  {
             System.out.println("found a fox");
-            this.iconButton = new JButton();
-            image = ImageResources.getInstance().getResources().get(
-                    "foxHead");
-
-            this.iconButton.setIcon(new ImageIcon(image));
-            this.iconButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-            this.iconButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-            this.iconButton.setOpaque(false);
-            this.iconButton.setContentAreaFilled(false);
-            this.iconButton.setBorderPainted(false);
-            this.iconButton.setBackground(VERY_DARK_GREEN);
-
-            this.add(iconButton);
+            this.add(new Fox());
         }
 
         else {
             System.out.println("Unsupported type" + item);
         }
 
-
-        this.setBackground(Color.GREEN);
+        //todo - figure out optimal BG color
+        this.setBackground(GuiColor.DARK_GREEN);
         this.setSize(100,100);
     }
 
