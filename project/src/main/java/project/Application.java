@@ -22,7 +22,7 @@ public class Application {
         frame.pack();
 
         // Don't allow resizing
-        frame.setResizable(false);
+//        frame.setResizable(false);
 
         // Show the application
         frame.setVisible(true);

@@ -21,7 +21,7 @@ public class BoardGUI {
 	private JPanel outerFrame;
 	private JPanel boardPanel;
 
-	private JButton[][] jumpInBoardSquares;
+	private JComponent[][] jumpInBoardSquares;
 	private JLabel message;
 	private static final String COLS = "ABCDEFGH";
 
@@ -43,6 +43,7 @@ public class BoardGUI {
 
 
 		initializeGui();
+		this.updateBoard();
 
 		// Reset board
 		Action newGameAction = new AbstractAction("New") {
@@ -101,99 +102,106 @@ public class BoardGUI {
 
 		// create the JumpIn board squares
 		Insets buttonMargin = new Insets(0, 0, 0, 0);
-		for (int ii = 0; ii < jumpInBoardSquares.length; ii++) {
-			for (int jj = 0; jj < jumpInBoardSquares[ii].length; jj++) {
-
-				// adding green circle at the centre of the button
-				JButton b = new JButton() {
-					@Override
-					protected void paintComponent(Graphics g) { //this is adding green circle at center of button
-						super.paintComponent(g);
-						int nGap = 10;
-						int nXPosition = nGap;
-						int nYPosition = nGap;
-						int nWidth = getWidth() - nGap * 2;
-						int nHeight = getHeight() - nGap * 2;
-
-						g.setColor(VERY_DARK_GREEN);
-						g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
-						g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
-						
-
-					}
-				};
-
-				b.setHorizontalAlignment(JLabel.CENTER);
-				b.setVerticalAlignment(JLabel.CENTER);
-				b.setMargin(buttonMargin);
-
-				// Add 64x64 px in size, so we'll
-				// 'fill this in' using icon..
-				ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-				b.setIcon(icon);
-				// Sets the elevated green block
-				if (jj % 2 == 0 && ii % 2 == 0) {
-
-					b.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
-					b.setBackground(DARK_GREEN);
-					// sets the holes
-					if (jj == ii || ((jj == jumpInBoardSquares[ii].length - 1) && (ii == 0))
-							|| ((ii == jumpInBoardSquares.length - 1) && (jj == 0))) {
-
-						// adding brown color at the centre of the button
-						b = new JButton() {
-							@Override
-							protected void paintComponent(Graphics g) {
-								super.paintComponent(g);
-								int nGap = 10;
-								int nXPosition = nGap;
-								int nYPosition = nGap;
-								int nWidth = getWidth() - nGap * 2;
-								int nHeight = getHeight() - nGap * 2;
-
-								g.setColor(BROWN);
-								g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
-								g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
-
-							}
-						};
-						b.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
-						b.setBackground(DARK_GREEN);
-					}
-				} else {
-					// sets all non-elevated blocks
-					b.setBackground(DARK_GREEN);
-				}
-				jumpInBoardSquares[jj][ii] = b;
-			}
-		}
+//		for (int ii = 0; ii < jumpInBoardSquares.length; ii++) {
+//			for (int jj = 0; jj < jumpInBoardSquares[ii].length; jj++) {
+//
+//				// adding green circle at the centre of the button
+//				JButton b = new JButton() {
+//					@Override
+//					protected void paintComponent(Graphics g) { //this is adding green circle at center of button
+//						super.paintComponent(g);
+//						int nGap = 10;
+//						int nXPosition = nGap;
+//						int nYPosition = nGap;
+//						int nWidth = getWidth() - nGap * 2;
+//						int nHeight = getHeight() - nGap * 2;
+//
+//						g.setColor(VERY_DARK_GREEN);
+//						g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
+//						g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
+//
+//
+//					}
+//				};
+//
+//				b.setHorizontalAlignment(JLabel.CENTER);
+//				b.setVerticalAlignment(JLabel.CENTER);
+//				b.setMargin(buttonMargin);
+//
+//				// Add 64x64 px in size, so we'll
+//				// 'fill this in' using icon..
+//				ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+//				b.setIcon(icon);
+//				// Sets the elevated green block
+//				if (jj % 2 == 0 && ii % 2 == 0) {
+//
+//					b.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
+//					b.setBackground(DARK_GREEN);
+//					// sets the holes
+//					if (jj == ii || ((jj == jumpInBoardSquares[ii].length - 1) && (ii == 0))
+//							|| ((ii == jumpInBoardSquares.length - 1) && (jj == 0))) {
+//
+//						// adding brown color at the centre of the button
+//						b = new JButton() {
+//							@Override
+//							protected void paintComponent(Graphics g) {
+//								super.paintComponent(g);
+//								int nGap = 10;
+//								int nXPosition = nGap;
+//								int nYPosition = nGap;
+//								int nWidth = getWidth() - nGap * 2;
+//								int nHeight = getHeight() - nGap * 2;
+//
+//								g.setColor(BROWN);
+//								g.drawOval(nXPosition, nYPosition, nWidth, nHeight);
+//								g.fillOval(nXPosition, nYPosition, nWidth, nHeight);
+//
+//							}
+//						};
+//						b.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
+//						b.setBackground(DARK_GREEN);
+//					}
+//				} else {
+//					// sets all non-elevated blocks
+//					b.setBackground(DARK_GREEN);
+//				}
+//				jumpInBoardSquares[jj][ii] = b;
+//			}
+//		}
 
 		// fill the board
-		boardPanel.add(new JLabel(""));
+//		boardPanel.add(new JLabel(""));
+		boardPanel.setLayout(new GridLayout(5, 5));
 		// fill the top row
-		for (int ii = 0; ii < 5; ii++) {
-			boardPanel.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
-		}
+//		for (int ii = 0; ii < 5; ii++) {
+//			boardPanel.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
+//		}
 		// fill the bottom row
-		for (int ii = 0; ii < 5; ii++) {
-			for (int jj = 0; jj < 5; jj++) {
-				switch (jj) {
-				case 0:
-					boardPanel.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
-				default:
-					boardPanel.add(jumpInBoardSquares[jj][ii]);
-				}
-			}
-		}
+//		for (int ii = 0; ii < 5; ii++) {
+//			for (int jj = 0; jj < 5; jj++) {
+//				switch (jj) {
+//				case 0:
+//					boardPanel.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+//				default:
+//					boardPanel.add(jumpInBoardSquares[jj][ii]);
+//				}
+//			}
+//		}
 	}
 
 	// update method
 	private void updateBoard() {
-		jumpInBoardSquares = new JButton[board.getRows()][board.getColumns()];
+//		jumpInBoardSquares = new JButton[board.getRows()][board.getColumns()];
+
+		boardPanel.removeAll();
 
 		for (int row = 0; row < this.board.getRows(); row++) {
 			for (int column = 0; column < this.board.getColumns(); column++) {
-				jumpInBoardSquares[row][column] = new GUIBoardItem(this.board.getItem(row, column));
+				BoardItem modelItem = this.board.getItem(row, column);
+				JComponent viewItem =
+						new	GUIBoardItem(modelItem);
+
+				this.boardPanel.add(viewItem);
 			}
 
 		}
@@ -220,8 +228,14 @@ public class BoardGUI {
 //		j3.setIcon((Icon) ImageResources.getInstance().getResources().get("mushroom"));
 //		jumpInBoardSquares[0][4].add(j3);
 
+		System.out.println("new gui board");
 		Rabbit rabbit = new Rabbit(0,2);
-		jumpInBoardSquares[0][2].add(new GUIBoardItem(rabbit));
+
+//		boardPanel.removeAll();
+
+		this.updateBoard();
+//		JComponent rabbitGUI = new GUIBoardItem(rabbit);
+//		boardPanel.add(rabbitGUI);
 	}
 
 	public JComponent getJumpInBoard() {

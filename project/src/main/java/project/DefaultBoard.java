@@ -19,6 +19,8 @@ public class DefaultBoard extends Board {
 
         Rabbit rabbit1 = new Rabbit(4, 2);
         Rabbit rabbit2 = new Rabbit(2, 0);
+        Rabbit rabbit3 = new Rabbit(0, 3);
+        Rabbit rabbit4 = new Rabbit(0, 0);
 
         Mushroom mushroom2 = new Mushroom(0, 0);
 
@@ -43,8 +45,10 @@ public class DefaultBoard extends Board {
             this.setItem(elevatedBoardItem4);
             this.setItem(rabbit1);
             this.setItem(rabbit2);
+            this.setItem(rabbit3);
 
             this.setItem(mushroom2);
+            hole2.contain(rabbit4);
 
         } catch (Exception e) {
             System.out.println(e);
