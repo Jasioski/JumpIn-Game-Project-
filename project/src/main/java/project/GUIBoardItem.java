@@ -164,7 +164,9 @@ public class GUIBoardItem extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        System.out.println("clicked a button mofo");
+        //todo - implement action based on what type of boardItem this is
+        System.out.println("button press test");
+     //   if (this instanceof )
     }
 
 }

@@ -14,20 +14,10 @@ public class ImageResources {
     private static Map<String, BufferedImage> imagesBank;
 
     private ImageResources() {
-
         imagesBank = new HashMap<>();
-
         try {
-
-            InputStream stream = this.getClass().getResourceAsStream(
-                    "/images" +
-                "/brownRabbit" +
-                    ".png");
-
-            BufferedImage image = ImageIO.read(stream);
-
-            imagesBank.put("brownRabbit", image);
-
+            imagesBank.put("brownRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
+                    "/brownRabbit.png")));
             imagesBank.put("whiteRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
                     "/whiteRabbit.png")));
             imagesBank.put("greyRabbit", ImageIO.read(this.getClass().getResourceAsStream("/images" +
