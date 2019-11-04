@@ -29,7 +29,8 @@ public class DefaultBoard extends Board {
 
         ElevatedBoardItem elevatedBoardItem1 = new ElevatedBoardItem(0,2);
         ElevatedBoardItem elevatedBoardItem2 = new ElevatedBoardItem(2,0);
-        ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(4,2);
+        ElevatedBoardItem elevatedBoardItem3 = new ElevatedBoardItem(2,4);
+        ElevatedBoardItem elevatedBoardItem4 = new ElevatedBoardItem(4,2);
 
         try {
             this.setItem(hole1);
@@ -44,6 +45,7 @@ public class DefaultBoard extends Board {
             this.setItem(elevatedBoardItem1);
             this.setItem(elevatedBoardItem2);
             this.setItem(elevatedBoardItem3);
+            this.setItem(elevatedBoardItem4);
             this.setItem(rabbit1);
             this.setItem(rabbit2);
             this.setItem(rabbit3);
