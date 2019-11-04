@@ -160,9 +160,6 @@ public class BoardTest {
 		assertEquals(ItemUIRepresentation.HOLE_MUSHROOM, hole.getUIRepresentation());
 	}
 
-	// TODO: should fail when trying to set outside the board dimensions
-	
-	
 	@Test
 	/**
 	 * Should not be able to set an item if the coordinate already contains
@@ -177,7 +174,6 @@ public class BoardTest {
 		try {
 			board.setItem(badCoordinates, new Rabbit(badCoordinate));
 		} catch (BoardItemNotEmptyException e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		

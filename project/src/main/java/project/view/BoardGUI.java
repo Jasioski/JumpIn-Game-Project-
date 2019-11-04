@@ -21,6 +21,5 @@ public class BoardGUI {
 		this.board = board;
 		outerFrame = new GuiOuterFrame(this.board);
 	}
-
-	
 }
+

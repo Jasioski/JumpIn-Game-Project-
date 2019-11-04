@@ -149,7 +149,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -314,7 +313,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -359,7 +357,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -482,7 +479,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -533,7 +529,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -665,7 +660,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -716,7 +710,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
