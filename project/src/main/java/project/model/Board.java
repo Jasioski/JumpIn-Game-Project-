@@ -336,6 +336,17 @@ public class Board {
 		return slice;
 	}
 
+	/**
+	 * Attempts to perform a slide of an object at a specific location on the board.
+	 * @param moveDirection The direction that the object must slide in
+	 * @param moveSpaces The spaces the object must slide
+	 * @param itemCoordinate The coordinates of the object
+	 * @throws NonSlideableException If the desired object is not Slidable
+	 * @throws BoardItemNotEmptyException If the space where the object must slide is not empty
+	 * @throws SlideOutOfBoundsException If the object would slide out of bounds
+	 * @throws SlideHitObstacleException If the object would hit an obstacle
+	 * @throws SlideHitElevatedException If the object would hit an elevated space
+	 */
 	@SuppressWarnings("PMD.AvoidPrintStackTrace")
 	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
 			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
@@ -371,13 +382,35 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
-		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
+	/**
+	 * Attempts to jump an object with a specific coordinate.
+	 * @param jumpDirection The direction the item must jump
+	 * @param jumpingCoordinate The coordinate of the item that must jump
+	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
+	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
+	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
+	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
+	 * @throws NonJumpableException If the desired object is not Jumpable
+	 * @throws NonMovableItemException If the desired object is not movable
+	 */
+	public void jump(Direction jumpDirection, Coordinate jumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
+		BoardItem itemAtCoordinate = getItem(jumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
 
+	/**
+	 * Attempts to jump a specific item.
+	 * @param jumpDirection The direction the item must jump
+	 * @param itemAtCoordinate The item that must jump
+	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
+	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
+	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
+	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
+	 * @throws NonJumpableException If the desired object is not Jumpable
+	 * @throws NonMovableItemException If the desired object is not movable
+	 */
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		if (itemAtCoordinate instanceof ContainerItem) {
 			logger.info("JUMP OUT OF HOLE!");
@@ -420,6 +453,17 @@ public class Board {
 		updateGameState();
 	}
 
+	/**
+	 * Attempts to jump an object out of a hole
+	 * @param jumpDirection The direction the item must jump
+	 * @param holeCoordinate The coordinate of the hole that the object must jump out of
+	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
+	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
+	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
+	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
+	 * @throws NonJumpableException If the desired object is not Jumpable
+	 * @throws NonMovableItemException If the desired object is not movable
+	 */
 	private void jumpOut(Direction jumpDirection,
 						 Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		// Get the item
@@ -518,6 +562,12 @@ public class Board {
 		return new Coordinate(row, column);
 	}
 
+	/**
+	 * Returns the direction of a move based on a coordinate containing the destination's distance
+	 * @param deltaDistance Coordinate of the distance between the start and end point
+	 * @return The direction desired
+	 * @throws IllegalArgumentException if the direction is invalid
+	 */
 	private Direction getDirectionFromDestination(Coordinate deltaDistance) {
 
 		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
@@ -543,6 +593,21 @@ public class Board {
 		throw new IllegalArgumentException("Invalid direction");
 	}
 
+	/**
+	 * Attempts to move an object using its starting coordinate and destination.
+	 * @param itemSelected The coordinate of the item that must be moved.
+	 * @param itemDestination The coordinate of the item's destination.
+	 * @throws JumpFailedOutOfBoundsException If the item would jump out of bounds.
+	 * @throws JumpFailedNoObstacleException If the item would not jump over an obstacle.
+	 * @throws BoardItemNotEmptyException If the item would be placed in an occupied tile.
+	 * @throws NonJumpableException If a jump attempt is made on an item that isn't jumpable.
+	 * @throws HoleIsEmptyException If a move attempt is made on an empty hole.
+	 * @throws NonSlideableException If a slide attempt is made on an item that isn't slidable.
+	 * @throws SlideHitElevatedException If a slide would hit an elevated space.
+	 * @throws SlideOutOfBoundsException If a slide would send an object out of bounds.
+	 * @throws SlideHitObstacleException If a slide would hit an obstacle.
+	 * @throws NonMovableItemException If a move is attempted on an item that can't move.
+	 */
 	public void move(Coordinate itemSelected, Coordinate itemDestination) throws JumpFailedOutOfBoundsException,
 			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
 			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException, NonMovableItemException {

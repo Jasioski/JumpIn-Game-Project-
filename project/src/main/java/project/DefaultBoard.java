@@ -4,9 +4,16 @@ import project.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Sets up a default layout for the board
+ */
 public class DefaultBoard extends Board {
 
     private static Logger logger = LogManager.getLogger(DefaultBoard.class);
+
+    /**
+     * Creates a default setup for the board
+     */
     public DefaultBoard() {
         super(5);
 

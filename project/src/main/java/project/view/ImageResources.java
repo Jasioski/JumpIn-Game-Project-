@@ -8,12 +8,18 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class containing all of the images used by the GUI, with each image mapped to a string.
+ */
 public class ImageResources {
 
     private static Logger logger = LogManager.getLogger(ImageResources.class);
     private static ImageResources imageResources;
     private static Map<String, BufferedImage> imagesBank;
 
+    /**
+     * Loads all of the gui's image resources into an instance.
+     */
     private ImageResources() {
         imagesBank = new HashMap<>();
         try {
@@ -37,6 +43,10 @@ public class ImageResources {
         }
     }
 
+    /**
+     * Gets an instance of the GUI's image resources.
+     * @return The image resources.
+     */
     public static ImageResources getInstance() {
 
         if (imageResources == null) {
@@ -47,6 +57,10 @@ public class ImageResources {
         return imageResources;
     }
 
+    /**
+     * Returns the map containing the image resources.
+     * @return The map with the image resources in it.
+     */
     public Map<String, BufferedImage> getResources() {
         return imagesBank;
     }

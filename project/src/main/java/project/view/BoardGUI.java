@@ -13,6 +13,9 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 
+/**
+ * Class that implements the game's GUI.
+ */
 public class BoardGUI implements ItemClickListener {
 
 	public static Logger logger = LogManager.getLogger(BoardGUI.class);
@@ -29,6 +32,10 @@ public class BoardGUI implements ItemClickListener {
 	private Coordinate selectedItem;
 	private Coordinate destinationItem;
 
+	/**
+	 * Creates the gui for the board using a Board object.
+	 * @param board The board object that the gui is based on.
+	 */
 	public BoardGUI (Board board) {
 		this.board = board;
 
@@ -44,15 +51,10 @@ public class BoardGUI implements ItemClickListener {
 		this.setupNewGame();
 	}
 
-	public void loadImages() {
-		try {
-		} catch (Exception e) {
-		}
-	}
-
+	/**
+	 * Sets up and configures the GUI panel into the outerFrame and boardPanel Jpanels.
+	 */
 	public void initializeGui() {
-		// create the images for the pieces
-        loadImages();
 
 		// set up the main GUI
 		int padding = 5;
@@ -87,7 +89,9 @@ public class BoardGUI implements ItemClickListener {
 		boardPanel.setLayout(new GridLayout(5, 5));
 	}
 
-	// update method
+	/**
+	 * Updates the view, ensuring that it matches the model.
+	 */
 	private void updateBoard() {
 		boardPanel.removeAll();
 
@@ -109,7 +113,7 @@ public class BoardGUI implements ItemClickListener {
 	}
 
 	/**
-	 * Initializes the pieces on the board
+	 * Initializes the pieces on the board.
 	 */
 	private void setupNewGame() {
 		message.setText("Make your move!");
@@ -118,6 +122,10 @@ public class BoardGUI implements ItemClickListener {
 		this.updateBoard();
 	}
 
+	/**
+	 * Handles items on the board being clicked, and attempts to make a move.
+	 * @param event The event sent by the clicked item.
+	 */
 	@Override
 	public void onItemClick(ItemClickEvent event) {
 		logger.info(event.coordinate);
@@ -149,6 +157,10 @@ public class BoardGUI implements ItemClickListener {
 		}
 	}
 
+	/**
+	 * Returns the frame of the gui.
+	 * @return The Jpanel that makes up the gui.
+	 */
 	public JComponent getGui() {
 		return outerFrame;
 	}

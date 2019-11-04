@@ -1,5 +1,8 @@
 package project.tui;
 
+/**
+ * Class containing the colors used in the text user interface
+ */
 public class ANSIColor {
     public static final String RESET = "\u001B[0m";
     public static final String BLACK = "\u001B[30m";
