@@ -62,7 +62,12 @@ public class GuiInnerComponents implements ItemClickListener {
 		boardPanel.revalidate();
 		// updates the visuals
 		if (board.getCurrentGameState() == GameState.SOLVED) {
-			JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!");
+			int dialogButton = JOptionPane.YES_NO_OPTION;
+			JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!", "Victory!", 1);
+			int playAgain = JOptionPane.showConfirmDialog(boardPanel, "Do you want to play again?", "Reset?", dialogButton);
+			if (playAgain == JOptionPane.YES_OPTION) {
+				this.setupNewGame();
+			}
 		}
 	}
 
