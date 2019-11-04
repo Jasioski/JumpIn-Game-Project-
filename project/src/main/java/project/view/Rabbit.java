@@ -1,7 +1,6 @@
 package project.view;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class Rabbit extends ButtonBoardItem {

@@ -1,7 +1,6 @@
 package project.view;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public abstract class ButtonBoardItem extends JPanel {
     protected JButton iconButton;
