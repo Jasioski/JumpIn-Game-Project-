@@ -104,7 +104,7 @@ public class BoardGUI implements ItemClickListener {
 		boardPanel.repaint();
 		boardPanel.revalidate(); //updates the visuals
         if (board.getCurrentGameState() == GameState.SOLVED) {
-            JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!");
+            JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!", "Victory!", 1);
         }
 	}
 

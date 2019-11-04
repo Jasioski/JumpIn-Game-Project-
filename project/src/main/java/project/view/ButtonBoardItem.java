@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public abstract class ButtonBoardItem extends JPanel {
     protected JButton iconButton;
-    public ButtonBoardItem(boolean renderItem, ActionListener listener) {
+    public ButtonBoardItem(boolean renderItem) {
         this.setLayout(new OverlayLayout(this));
         iconButton = new JButton();
         this.iconButton.setAlignmentY(JComponent.CENTER_ALIGNMENT);
@@ -20,6 +20,5 @@ public abstract class ButtonBoardItem extends JPanel {
             this.add(circle);
         }
         this.setOpaque(false);
-        this.iconButton.addActionListener(listener);
     }
 }

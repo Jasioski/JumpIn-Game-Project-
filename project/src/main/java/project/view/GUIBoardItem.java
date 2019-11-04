@@ -29,7 +29,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
 
         if (item instanceof project.model.Rabbit) {
             this.coordinate = coordinate;
-            this.add(new Rabbit(this));
+            this.add(new Rabbit());
         }
         else if (item instanceof project.model.Mushroom) {
             this.coordinate = coordinate;

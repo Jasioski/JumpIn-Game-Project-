@@ -248,7 +248,6 @@ public class Board {
 							containerItem.contain(containable);
 							return;
 						} catch (HoleAlreadyHasRabbitException e) {
-							// TODO: fix error handling
 							this.logger.error(e);
 						}
 					} else {
@@ -372,14 +371,14 @@ public class Board {
 		setItem(newCoordinates, itemAtCoordinate);
 	}
 
-	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
+	public void jump(Direction jumpDirection, Coordinate rabbitJumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		BoardItem itemAtCoordinate = getItem(rabbitJumpingCoordinate);
 
 		jump(jumpDirection, itemAtCoordinate);
 
 	}
 
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException {
+	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		if (itemAtCoordinate instanceof ContainerItem) {
 			logger.info("JUMP OUT OF HOLE!");
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
@@ -422,15 +421,14 @@ public class Board {
 	}
 
 	private void jumpOut(Direction jumpDirection,
-						 Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException {
+						 Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		// Get the item
 		BoardItem itemAtCoordinate = getItem(holeCoordinate);
 
 		// Check if it is a hole
 		if (!(itemAtCoordinate instanceof ContainerItem)) {
-			// TODO: fix this with a different error
 			// throw exception if it is not a hole
-//			throw new NonMovableItemException("cannot move a not movable item");
+			throw new project.model.exceptions.NonMovableItemException();
 		}
 
 		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
@@ -547,7 +545,7 @@ public class Board {
 
 	public void move(Coordinate itemSelected, Coordinate itemDestination) throws JumpFailedOutOfBoundsException,
 			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
-			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException {
+			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException, NonMovableItemException {
 
 		//todo - implement logic for other movements
 		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
