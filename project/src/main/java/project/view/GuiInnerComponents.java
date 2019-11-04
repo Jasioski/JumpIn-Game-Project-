@@ -13,9 +13,14 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 
+/**
+ * 
+ * GuiInnerComponents initializes with the inner components of the GUI i.e., the board setup
+ *
+ */
 public class GuiInnerComponents implements ItemClickListener {
 
-	public static Logger logger = LogManager.getLogger(BoardGUI.class);
+	public static Logger logger = LogManager.getLogger(BoardGui.class);
 	// View Layer
 	JPanel boardPanel;
 
@@ -23,10 +28,11 @@ public class GuiInnerComponents implements ItemClickListener {
 
 	// Model Layer
 	private Board board;
-
+	private EmptyBorder border;
 	private Coordinate selectedItem;
 	private Coordinate destinationItem;
 
+	private int padding; 
 	public GuiInnerComponents(Board board) {
 		this.board = board;
 		message = new JLabel();
@@ -38,7 +44,6 @@ public class GuiInnerComponents implements ItemClickListener {
 		boardPanel = new JPanel(new GridLayout(6, 6));
 		boardPanel.setBorder(new LineBorder(Color.BLACK));
 		boardPanel.setLayout(new GridLayout(5, 5));
-		//this.setupNewGame();
 	}
 
 	// update method
@@ -69,6 +74,12 @@ public class GuiInnerComponents implements ItemClickListener {
 		this.board = new DefaultBoard();
 
 		this.updateBoard();
+	}
+	EmptyBorder boardBorderSetup() {
+		//padding for the board itself
+		padding = 5;
+		border = new EmptyBorder(padding, padding, padding, padding);
+		return border;
 	}
 
 	@Override
@@ -109,7 +120,4 @@ public class GuiInnerComponents implements ItemClickListener {
 		}
 	};
 
-	//public JComponent getGui() {
-		//return boardPanel;
-	//}
 }
