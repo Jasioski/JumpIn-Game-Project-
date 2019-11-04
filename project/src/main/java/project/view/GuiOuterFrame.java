@@ -1,20 +1,12 @@
 package project.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
-import project.DefaultBoard;
 import project.model.Board;
 
 /**
@@ -33,11 +25,9 @@ public class GuiOuterFrame {
 	JPanel outerFrame;
 	private JToolBar tools;
 	private JLabel message;
-	private Board board;
 	private GuiInnerComponents boardInnerComponnets;
 
 	GuiOuterFrame(Board board) {
-		this.board = board;
 		tools = new JToolBar();
 		message = new JLabel();
 		boardInnerComponnets = new GuiInnerComponents(board);
