@@ -547,7 +547,6 @@ public class Board {
 			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
 			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException, NonMovableItemException {
 
-		//todo - implement logic for other movements
 		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
 				itemDestination);
 		Direction direction = this.getDirectionFromDestination(deltaCoordinate);

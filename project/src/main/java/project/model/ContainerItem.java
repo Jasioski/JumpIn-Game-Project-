@@ -10,7 +10,6 @@ import java.util.Optional;
 /**
  * An item that can contain other items on the board.
  */
-// TODO: think of a better name for this class
 public abstract class ContainerItem extends BoardItem {
 
 	/**
@@ -85,7 +84,6 @@ public abstract class ContainerItem extends BoardItem {
 	 * @return The item being removed.
 	 * @throws HoleIsEmptyException if there is no item being contained.
 	 */
-	// todo: merge with removeRabbit maybe
 	public Containable removeContainingItem() throws HoleIsEmptyException {
 		if (this.containingItem.isEmpty()) {
 			throw new HoleIsEmptyException("there is no item in the hole");
@@ -104,7 +102,6 @@ public abstract class ContainerItem extends BoardItem {
 	 */
 	public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
 		if (this.containingItem.isPresent()) {
-			// TODO: ContainerAlreadyHasContainableException
 			throw new HoleAlreadyHasRabbitException("the hole already has a " +
 					"rabbit");
 		}

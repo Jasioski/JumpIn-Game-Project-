@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 public class Mushroom extends ButtonBoardItem {
 
     public Mushroom(boolean renderBackground) {
-        //todo - switch images back to image icon in map??
-        // todo fix null
         super(renderBackground);
         BufferedImage image = ImageResources.getInstance().getResources().get("mushroom");
         ImageIcon icon = new ImageIcon(image);
