@@ -208,28 +208,6 @@ class HoleTest {
 				"now should now be showing the occupied character");
 	}
 
-	// TODO: test when a rabbit tries to go into a hole that has a mushroom
-
-	// TODO: test when a rabbit tries to jump over a hole that has a mushroom in the rabbit test
-
-//	@Test
-//	/**
-//	 * UI Representation when it contains a mushroom
-//	 */
-//	void testGetUIRepresentationMushroom () {
-//		Hole hole = new Hole(new Coordinate(0, 0));
-//		Mushroom mushroom = new Mushroom(1, 0);
-//
-//		try {
-//			hole.containRabbit(mushroom);
-//		} catch (Exception e) {
-//			fail("Exception was thrown");
-//		}
-//
-//		assertEquals(ItemUIRepresentation.HOLE_OCCUPIED_RABBIT, hole.getUIRepresentation(), "the hole should" +
-//				"now should now be showing the occupied character");
-//	}
-
 	@Test
 	/**
 	 * UI Representation when it is empty
