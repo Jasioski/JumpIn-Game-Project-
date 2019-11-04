@@ -16,7 +16,7 @@ import javax.swing.border.*;
 /**
  * 
  * This class initializes the GUI of the JumpIn' game
- * Default component takes a Board and passes it to the class GuiOuterFrame
+ * Default constructor takes a Board and passes it to the class GuiOuterFrame
  *
  */
 public class BoardGui {
