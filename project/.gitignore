@@ -57,3 +57,5 @@ bin/
 *.iml
 *.ipr
 *.iws
+
+out/
