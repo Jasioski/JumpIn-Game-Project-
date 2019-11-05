@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Class representing the JPanel gui and associated model item for each item on the board.
+ */
 public class GUIBoardItem extends JPanel implements ActionListener, MouseListener{
     public static Logger logger = LogManager.getLogger(GUIBoardItem.class);
 
@@ -19,6 +22,12 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
     ItemClickListener listener;
     private Coordinate coordinate;
 
+    /**
+     * Creates a GUI item with its associated board object.
+     * @param coordinate The coordinate of the board item.
+     * @param item The BoardItem represented by the JPanel.
+     * @param listener That item's ItemClickListener.
+     */
     public GUIBoardItem(Coordinate coordinate, BoardItem item,
                         ItemClickListener listener) {
         this.listener = listener;
@@ -68,6 +77,10 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         this.setListeners(this);
     }
 
+    /**
+     * Sets the listeners for each item in a Jcomponent containing items.
+     * @param parent The JComponent containing items that need listeners.
+     */
     public void setListeners(JComponent parent) {
         Component children[] = parent.getComponents();
 
@@ -81,6 +94,9 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         }
     }
 
+    /**
+     * Sends a new click event at this item's coordinate.
+     */
     public void sendEvent() {
         ItemClickEvent event = new ItemClickEvent(this.coordinate);
         logger.trace("click event generated" + item);
