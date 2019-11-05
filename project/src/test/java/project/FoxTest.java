@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.SlideHitElevatedException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideOutOfBoundsException;
+import project.tui.ItemUIRepresentation;
 
 class FoxTest {
 
@@ -144,7 +149,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -309,7 +313,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -354,7 +357,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 		
@@ -477,7 +479,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -528,7 +529,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -660,7 +660,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 
@@ -711,7 +710,6 @@ class FoxTest {
 		try {
 			fox.slide(moveDirection, moveSpaces, slice);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			fail("Exception was thrown");
 		}
 

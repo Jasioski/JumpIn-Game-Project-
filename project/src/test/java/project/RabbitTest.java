@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import project.model.*;
+import project.model.exceptions.JumpFailedNoObstacleException;
+import project.model.exceptions.JumpFailedOutOfBoundsException;
+import project.tui.ItemUIRepresentation;
 
 class RabbitTest {
 
@@ -833,5 +837,54 @@ class RabbitTest {
 
 		// the rabbit should not have moved
 		assertEquals(originalCoordinates, rabbitJumping.getCoordinates());
+	}
+
+	@Test
+	/**
+	 * Jumping over a mushroom inside a hole
+	 */
+	void testJumpOverHoleContainingMushroom() {
+		Hole hole = new Hole(1, 0);
+		Mushroom mushroom = new Mushroom(1, 0);
+		Rabbit rabbit = new Rabbit(2, 0);
+
+		// Setup slice
+		// E 	0 0
+		// HM	1 0
+		// RJ	2 0
+		// E  	3 0
+		List<BoardItem> slice = new ArrayList<BoardItem>();
+		slice.add(rabbit);
+		slice.add(hole);
+		slice.add(new EmptyBoardItem(0, 0));
+		slice.add(new EmptyBoardItem(3, 0));
+
+		try {
+			hole.contain(mushroom);
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
+
+		// Jump Rabbit
+		Direction moveDirection = Direction.UP;
+
+		try {
+			List<Coordinate> newCoordinates = rabbit.jump(moveDirection, slice);
+			// Expected result
+			// RJ	0 0
+			// HM	1 0
+			// E	2 0
+			// E  	3 0
+
+			Coordinate newRabbitJumpingCoordinate = new Coordinate(0, 0);
+			assertEquals(newRabbitJumpingCoordinate ,rabbit.getCoordinate(), "the rabbit should be at"
+					+ "the new location" );
+
+			assertEquals(newRabbitJumpingCoordinate, newCoordinates.get(0), "The method should return new coordinate for"
+					+ "the rabbit");
+
+		} catch (Exception e) {
+			fail("Exception was thrown");
+		}
 	}
 }

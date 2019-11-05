@@ -3,6 +3,7 @@
 
 # Ignore Gradle build output directory
 build
+bin/
 
 # Locally stored "Eclipse launch configurations"
 *.launch
@@ -56,3 +57,5 @@ build
 *.iml
 *.ipr
 *.iws
+
+out/
