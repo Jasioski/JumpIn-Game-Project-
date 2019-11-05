@@ -413,7 +413,7 @@ public class Board {
 	 */
 	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
 		if (itemAtCoordinate instanceof ContainerItem) {
-			logger.info("JUMP OUT OF HOLE!");
+			logger.trace("JUMP OUT OF HOLE!");
 			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
 			return;
 		}

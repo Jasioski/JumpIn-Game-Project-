@@ -7,7 +7,6 @@ public class Application {
 
 	@SuppressWarnings("PMD")
 	public static void main(String[] args) {
-		ImageResources.getInstance();
-		new BoardGui(new DefaultBoard());
+		new BoardGui();
 	}
 };
