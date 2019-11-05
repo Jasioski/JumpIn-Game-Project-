@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import project.model.exceptions.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -82,6 +84,11 @@ public class GuiInnerComponents implements ItemClickListener {
 
 		this.updateBoard();
 	}
+
+	public JLabel getMessage() {
+		return this.message;
+	}
+
 	EmptyBorder boardBorderSetup() {
 		//padding for the board itself
 		padding = 5;
@@ -91,7 +98,7 @@ public class GuiInnerComponents implements ItemClickListener {
 
 	@Override
 	public void onItemClick(ItemClickEvent event) {
-		logger.info(event.coordinate);
+		logger.trace(event.coordinate);
 		if (selectedItem == null) {
 			selectedItem = event.coordinate;
 			logger.trace("set selected");
@@ -104,12 +111,15 @@ public class GuiInnerComponents implements ItemClickListener {
 
 			logger.trace("set destination");
 			try {
-				logger.info("attempting");
+				logger.trace("attempting");
 				board.move(selectedItem, destinationItem); // try moving the selected item to destination
-				logger.info("successful");
+				logger.trace("successful");
+			} catch (NonMovableItemException | BoardItemNotEmptyException |  SlideOutOfBoundsException | NonSlideableException |  SlideHitElevatedException |
+					NonJumpableException | SlideHitObstacleException | JumpFailedNoObstacleException | HoleIsEmptyException | JumpFailedOutOfBoundsException | IllegalArgumentException e) {
+				logger.debug(e);
+				JOptionPane.showMessageDialog(boardPanel, e.getMessage(), "Exception!", 0);
 			} catch (Exception e) {
 				logger.error(e);
-				JOptionPane.showMessageDialog(boardPanel, e.getMessage(), "Exception!", 0);
 			} finally { // clear the selections and update board
 				selectedItem = null;
 				destinationItem = null;

@@ -1,5 +1,6 @@
 package project.view;
 
+import project.DefaultBoard;
 import project.model.Board;
 
 /**
@@ -12,8 +13,9 @@ public class BoardGui {
 	protected Board board;
 	protected GuiOuterFrame outerFrame;
 	
-	public BoardGui(Board board){
-		this.board = board;
+	public BoardGui() {
+		ImageResources.getInstance();
+		this.board = new DefaultBoard();
 		outerFrame = new GuiOuterFrame(this.board);
 	}
 }
