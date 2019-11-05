@@ -20,7 +20,9 @@ import javax.swing.border.*;
  */
 public class GuiInnerComponents implements ItemClickListener {
 
-	public static Logger logger = LogManager.getLogger(BoardGui.class);
+	public static Logger logger =
+            LogManager.getLogger(GuiInnerComponents.class);
+
 	// View Layer
 	JPanel boardPanel;
 
