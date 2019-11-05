@@ -1,7 +1,6 @@
 package project;
 
 import project.view.BoardGui;
-import project.view.ImageResources;
 
 public class Application {
 

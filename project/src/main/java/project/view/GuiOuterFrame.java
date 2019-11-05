@@ -3,7 +3,6 @@ package project.view;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
@@ -24,31 +23,28 @@ public class GuiOuterFrame {
 	
 	JPanel outerFrame;
 	private JToolBar tools;
-	private JLabel message;
-	private GuiInnerComponents boardInnerComponnets;
+	private GuiInnerComponents boardInnerComponents;
 
 	GuiOuterFrame(Board board) {
 		tools = new JToolBar();
-		message = new JLabel();
-		boardInnerComponnets = new GuiInnerComponents(board);
+		boardInnerComponents = new GuiInnerComponents(board);
 		//padding value for the BorderLayout
 		padding = 3;
 		outerFrame = new JPanel(new BorderLayout(padding, padding));
 		
-		outerFrame.setBorder(boardInnerComponnets.boardBorderSetup());
+		outerFrame.setBorder(boardInnerComponents.boardBorderSetup());
 
 		tools.setFloatable(false);
 		// Add the tools dialog to the beginning of the frame
 		outerFrame.add(tools, BorderLayout.PAGE_START);
-		tools.add(boardInnerComponnets.newGameAction);
+		tools.add(boardInnerComponents.newGameAction);
 
 		tools.addSeparator();
 
-		tools.add(message);
-
+		tools.add(boardInnerComponents.getMessage());
 		outerFrame.add(tools, BorderLayout.NORTH);
-		outerFrame.add(boardInnerComponnets.boardPanel);
-		boardInnerComponnets.setupNewGame();
+		outerFrame.add(boardInnerComponents.boardPanel);
+		boardInnerComponents.setupNewGame();
 		createFrame();
 	}
 

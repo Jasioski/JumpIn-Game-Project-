@@ -84,6 +84,11 @@ public class GuiInnerComponents implements ItemClickListener {
 
 		this.updateBoard();
 	}
+
+	public JLabel getMessage() {
+		return this.message;
+	}
+
 	EmptyBorder boardBorderSetup() {
 		//padding for the board itself
 		padding = 5;

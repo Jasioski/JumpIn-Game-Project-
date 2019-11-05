@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * A class containing all of the images used by the GUI, with each image mapped to a string.
+ * This is created only once
  */
 public class ImageResources {
 
