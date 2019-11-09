@@ -244,17 +244,9 @@ This package has sixteen classes in total:
 
 
 
-
-
-
-
-
-
-
-
 ## Contributions
 
 - Source Code Development: Rafi, Kamran, John, Anton, Christopher
 - Documentation: Anton, Kamran, Christopher, John
-- Project Management / CI: Rafi
+- Project Management / CI: Rafi, John
 
