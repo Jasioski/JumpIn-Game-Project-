@@ -2,6 +2,8 @@ package project.tui;
 
 import project.tui.ANSIColor;
 
+import java.io.Serializable;
+
 /**
  * Enum containing a UI representation for each item, usually first character(s) of the item's name.
  */

@@ -41,7 +41,7 @@ public class ElevatedBoardItemTest {
     void tetGetDisplayRepresentationEmpty() {
         ElevatedBoardItem elevatedBoardItem = new ElevatedBoardItem(new Coordinate(0, 0));
 
-        assertTrue(elevatedBoardItem.getContainingItem().isEmpty(), "the elevated should not contain anything");
+        assertTrue(!elevatedBoardItem.getContainingItem().isPresent(), "the elevated should not contain anything");
         assertEquals(ItemUIRepresentation.ELEVATED,
                 elevatedBoardItem.getUIRepresentation(), "there should be " +
                         "nothing inside ");

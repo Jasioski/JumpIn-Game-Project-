@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.google.common.base.Optional;
 import org.junit.jupiter.api.Test;
 import project.model.*;
 import project.model.exceptions.HoleAlreadyHasRabbitException;
@@ -41,7 +41,7 @@ class HoleTest {
 		Hole hole = new Hole(coordinate);
 		
 		Optional<Containable> containingItem = hole.getContainingItem();
-		assertTrue(containingItem.isEmpty(),
+		assertTrue(!containingItem.isPresent(),
 				"the containing item should not exist");
 	}
 	
@@ -62,7 +62,7 @@ class HoleTest {
 			fail("An exception was thrown");
 		}
 
-		Optional<Containable> containingItem = hole.getContainingItem();
+		com.google.common.base.Optional<Containable> containingItem = hole.getContainingItem();
 		Rabbit rabbit = (Rabbit) containingItem.get();
 		
 		assertTrue(containingItem.isPresent(),
@@ -138,7 +138,7 @@ class HoleTest {
 		try {
 			Containable containingItem = hole.removeContainingItem();
 			assertEquals(containingItem, item, "should get the same item back");
-			assertTrue(hole.getContainingItem().isEmpty(), 
+			assertTrue(!hole.getContainingItem().isPresent(),
 					"the hole should now be empty");
 		} catch (HoleIsEmptyException e) {
 			fail("Exception was thrown");

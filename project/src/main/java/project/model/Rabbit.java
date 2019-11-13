@@ -146,7 +146,7 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 				// do not match if not an empty elevated
 				if (sliceItem instanceof ContainerItem) {
 					ContainerItem containerItem = (ContainerItem) sliceItem;
-					if (containerItem.getContainingItem().isEmpty()) {
+					if (!containerItem.getContainingItem().isPresent()) {
 						return false;
 					}
 				}

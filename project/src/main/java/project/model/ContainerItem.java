@@ -5,7 +5,7 @@ import project.model.exceptions.HoleAlreadyHasRabbitException;
 import project.model.exceptions.HoleIsEmptyException;
 
 import java.util.List;
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 /**
  * An item that can contain other items on the board.
@@ -26,7 +26,7 @@ public abstract class ContainerItem extends BoardItem {
 		super(emptyRepresentation);
 
 		this.setCoordinate(coordinate);
-		this.containingItem = Optional.empty();
+		this.containingItem = Optional.absent();
 	}
 
 	/**
@@ -75,7 +75,7 @@ public abstract class ContainerItem extends BoardItem {
 	 * Gets the item contained by this container.
 	 * @return The item contained by this one.
 	 */
-	public Optional<Containable> getContainingItem() {
+	public com.google.common.base.Optional<Containable> getContainingItem() {
 		return this.containingItem;
 	}
 
@@ -85,12 +85,12 @@ public abstract class ContainerItem extends BoardItem {
 	 * @throws HoleIsEmptyException if there is no item being contained.
 	 */
 	public Containable removeContainingItem() throws HoleIsEmptyException {
-		if (this.containingItem.isEmpty()) {
+		if (!this.containingItem.isPresent()) {
 			throw new HoleIsEmptyException("there is no item in the hole");
 		}
 
 		Containable containable = this.containingItem.get();
-		this.containingItem = Optional.empty();
+		this.containingItem = Optional.absent();
 
 		return containable;
 	}

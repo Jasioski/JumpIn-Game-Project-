@@ -878,7 +878,7 @@ public class BoardTest {
 			fail("Exception was thrown");
 		}
 
-		assertTrue(elevatedBoardItem.getContainingItem().isEmpty(),
+		assertTrue(!elevatedBoardItem.getContainingItem().isPresent(),
 		"the elevated item should now be empty");
 
 		Coordinate expectedCoordinate = new Coordinate(0, 2);
@@ -933,7 +933,7 @@ public class BoardTest {
 			fail("Exception was thrown");
 		}
 
-		assertTrue(initialElevatedBoardItem.getContainingItem().isEmpty(),
+		assertTrue(!initialElevatedBoardItem.getContainingItem().isPresent(),
 				"the initial elevated item should be empty");
 
 		assertTrue(finalElevatedBoardItem.getContainingItem().isPresent(),

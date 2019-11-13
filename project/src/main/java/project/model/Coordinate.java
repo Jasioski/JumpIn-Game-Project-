@@ -1,11 +1,12 @@
 package project.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A coordinate on the board where an item can be located, consisting of its row and column.
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
 	/**
 	 * The row of the item.
 	 */

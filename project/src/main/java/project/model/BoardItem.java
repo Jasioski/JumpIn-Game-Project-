@@ -2,13 +2,14 @@ package project.model;
 
 import project.tui.ItemUIRepresentation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * An generic BoardItem which can be extended to describe anything placed on the board.
  */
-public abstract class BoardItem {
+public abstract class BoardItem implements Serializable {
 
 	/**
 	 * The coordinates of the item on the board.
