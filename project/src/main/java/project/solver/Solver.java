@@ -113,6 +113,8 @@ public class Solver {
         List<Move> moves =  new ArrayList<>();
         if (item instanceof ElevatedBoardItem) {
 
+            //todo: add movability method for when a rabbit or a fox are on elevated tiles.
+
             //todo: separate this (Optional.empty to ~Optional.Rabbit~) to check if its a fox as well.
             if (!(((ElevatedBoardItem) item).containsItem().equals(Optional.empty()))) {
                 System.out.println("It's a Rabbit");
