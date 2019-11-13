@@ -22,16 +22,16 @@ public class Move {
     }
 
     public boolean equals(Move move) {
-        if (!(this.item != move.item)) {
+        if (!(this.item == move.item)) {
             return false;
         }
-        if (!(this.initial != move.initial)) {
+        if (!(this.initial == move.initial)) {
             return false;
         }
-        if (!(this.direction != move.direction)) {
+        if (!(this.direction == move.direction)) {
             return false;
         }
-        if (!(this.ending != move.ending)) {
+        if (!(this.ending == move.ending)) {
             return false;
         }
 
