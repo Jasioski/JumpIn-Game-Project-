@@ -140,7 +140,7 @@ public class Solver {
         Solver solver = new Solver();
         Board board = new DefaultBoard();
 
-        BoardItem item = board.getItem(0,3);
+        BoardItem item = board.getItem(4,2);
 
         List<Move> moves = solver.generateMoves(board, item);
         for (Move move : moves) {

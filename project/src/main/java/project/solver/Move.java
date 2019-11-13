@@ -20,4 +20,12 @@ public class Move {
         this.initial = initial;
         this.ending = ending;
     }
+
+//    @Override
+//    public boolean equals(Move move) {
+//        if (!(this.item != move.item)) {
+//            return false;
+//        }
+//        if (!(this.initial != move.item))
+//    }
 }
