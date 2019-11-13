@@ -21,11 +21,20 @@ public class Move {
         this.ending = ending;
     }
 
-//    @Override
-//    public boolean equals(Move move) {
-//        if (!(this.item != move.item)) {
-//            return false;
-//        }
-//        if (!(this.initial != move.item))
-//    }
+    public boolean equals(Move move) {
+        if (!(this.item != move.item)) {
+            return false;
+        }
+        if (!(this.initial != move.initial)) {
+            return false;
+        }
+        if (!(this.direction != move.direction)) {
+            return false;
+        }
+        if (!(this.ending != move.ending)) {
+            return false;
+        }
+
+        return true;
+    }
 }
