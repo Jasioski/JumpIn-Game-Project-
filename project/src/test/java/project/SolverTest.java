@@ -68,4 +68,52 @@ class SolverTest {
             assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
         }
     }
+
+    @Test
+    void testRabbitMovesRight() {
+        DefaultBoard board = new DefaultBoard();
+        BoardItem item = board.getItem(2, 0);
+        try {
+            board.slide(Direction.DOWN, 1, new Coordinate(1, 1));
+        } catch(Exception e) {
+            System.out.println("SLIDE IS BROKEN NOT THIS TESTS RESPONSIBILITY");
+            fail();
+        }
+
+        List<Move> generatedMoves;
+        List<Move> correctMoves = new ArrayList<>();
+
+        Move correctMove = new Move(item, Direction.RIGHT);
+        correctMoves.add(correctMove);
+
+        Solver solver = new Solver();
+        generatedMoves = solver.generateMoves(board, item);
+
+        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
+
+        for (int i = 0; i < generatedMoves.size(); i++) {
+            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
+        }
+    }
+
+    @Test
+    void testRabbitMovesLeft() {
+        DefaultBoard board = new DefaultBoard();
+        BoardItem item = board.getItem(0, 4);
+
+        List<Move> generatedMoves;
+        List<Move> correctMoves = new ArrayList<>();
+
+        Move correctMove = new Move(item, Direction.LEFT);
+        correctMoves.add(correctMove);
+
+        Solver solver = new Solver();
+        generatedMoves = solver.generateMoves(board, item);
+
+        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
+
+        for (int i = 0; i < generatedMoves.size(); i++) {
+            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
+        }
+    }
 }
