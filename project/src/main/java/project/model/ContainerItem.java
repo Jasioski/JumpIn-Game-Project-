@@ -109,4 +109,5 @@ public abstract class ContainerItem extends BoardItem {
 		this.containingItem = Optional.of(containable);
 		containable.setCoordinate(this.getCoordinate());
 	}
+
 }

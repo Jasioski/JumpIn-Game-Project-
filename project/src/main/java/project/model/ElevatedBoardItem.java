@@ -4,6 +4,8 @@ import project.model.exceptions.HoleAlreadyHasRabbitException;
 import project.model.exceptions.HoleIsEmptyException;
 import project.tui.ItemUIRepresentation;
 
+import java.util.Optional;
+
 /**
  * An object representing an elevated piece on the board, which can contain another object.
  */
@@ -38,6 +40,10 @@ public class ElevatedBoardItem extends ContainerItem {
         this.UIRepresentation = ItemUIRepresentation.ELEVATED;
 
         return containable;
+    }
+
+    public Optional<Containable> containsItem() {
+        return super.getContainingItem();
     }
 
     /**
