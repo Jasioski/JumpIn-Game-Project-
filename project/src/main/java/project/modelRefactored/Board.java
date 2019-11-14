@@ -1,6 +1,7 @@
 package project.modelRefactored;
 
 import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
@@ -8,66 +9,76 @@ import org.pcollections.PMap;
 
 import java.util.List;
 
-
-
 public class Board {
 
-    public final int numberOfRows;
-    public final int numberOfColumns;
-    private static Logger logger = LogManager.getLogger(Board.class);
+	public final int numberOfRows;
+	public final int numberOfColumns;
+	private static Logger logger = LogManager.getLogger(Board.class);
 
-    //todo: override and throw exception on map.get
-    private PMap<Either<Coordinate, List<Coordinate>>, BoardItem> items;
+	//todo: override and throw exception on map.get
+	private PMap<Coordinate, BoardItem> items;
 
-    public Board(int rows, int columns) {
-        items = HashTreePMap.empty();
-        this.numberOfRows = rows;
-        this.numberOfColumns = columns;
+	public Board(int rows, int columns) {
+		items = HashTreePMap.empty();
+		this.numberOfRows = rows;
+		this.numberOfColumns = columns;
 
-        // Initialize Board Items
-        for (int row = 0; row < numberOfRows; row ++) {
-            for (int column = 0; column < numberOfColumns; column++) {
-                Coordinate currentCoordinate = new Coordinate(row, column);
-                BoardItem itemToAdd = new EmptyBoardItem(currentCoordinate);
-                items = items.plus(Either.left(currentCoordinate), itemToAdd);
-            }
-        }
-    }
+		// Initialize Board Items
+		for (int row = 0; row < numberOfRows; row ++) {
+			for (int column = 0; column < numberOfColumns; column++) {
+				Coordinate currentCoordinate = new Coordinate(row, column);
+				BoardItem itemToAdd = new EmptyBoardItem(currentCoordinate);
+				items = items.plus(currentCoordinate, itemToAdd);
+			}
+		}
+	}
 
 	private Board (Board board) {
-        this.numberOfRows = board.numberOfRows;
-        this.numberOfColumns = board.numberOfColumns;
+		this.numberOfRows = board.numberOfRows;
+		this.numberOfColumns = board.numberOfColumns;
 
-        // todo: rename to items
-        this.items = board.items;
-    }
+		// todo: rename to items
+		this.items = board.items;
+	}
 
+	/**
+	 * Set an item on a board while preserving purity
+	 * @param board reference to the board state you want to apply the
+	 *                 transformation to
+	 * @param item the item you want to add to the board
+	 * @return a board which is a result of the applied transformation
+	 */
 	public static Board setItem(Board board, BoardItem item) {
-        Board thisBoard = new Board(board);
+		Board thisBoard = new Board(board);
 
-        thisBoard.items = thisBoard.items.plus(item.coordinate, item);
+		if (item.coordinate.isLeft()) {
+			logger.trace("found left item");
+			Coordinate coordinate = item.coordinate.left().get();
+			thisBoard.items = thisBoard.items.plus(coordinate, item);
+		}
 
-        return thisBoard;
-    }
+		if (item.coordinate.isRight()) {
+			logger.trace("found right type");
+			Pair<Coordinate,Coordinate> coordinate =
+					item.coordinate.right().get();
 
-    private BoardItem getItem(Either<Coordinate, List<Coordinate>> coordinate) {
-        return this.items.get(coordinate);
-    }
+			thisBoard.items = thisBoard.items.plus(coordinate.left(), item);
+			thisBoard.items = thisBoard.items.plus(coordinate.right(), item);
+		}
 
-	private BoardItem getItem(Coordinate coordinate) {
-		return getItem(Either.left(coordinate));
+		return thisBoard;
 	}
 
-	private BoardItem getItem(List<Coordinate> coordinate) {
-		return getItem(Either.right(coordinate));
+	public BoardItem getItem(Coordinate coordinate) {
+		return this.items.get(coordinate);
 	}
 
-	public PMap<Either<Coordinate, List<Coordinate>>, BoardItem> getItems() {
-        return items;
-    }
+	public PMap<Coordinate, BoardItem> getItems() {
+		return items;
+	}
 
-    //todo: rewrite the toString()
-    @Override
+	//todo: rewrite the toString()
+	@Override
 	public String toString() {
 		String str = "";
 

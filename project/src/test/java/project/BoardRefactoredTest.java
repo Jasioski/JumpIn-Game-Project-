@@ -21,7 +21,7 @@ public class BoardRefactoredTest {
     }
 
     @Test
-    void testSetGetItem() {
+    void testSetItem() {
         Board board = new Board(5, 5);
         Coordinate itemCoordinate = new Coordinate(1, 1);
         Mushroom item = new Mushroom(new Coordinate(1, 1));
@@ -29,10 +29,27 @@ public class BoardRefactoredTest {
         // todo: make sure the old board did not change
 
         Board modifiedBoard = board.setItem(board, item);
-        BoardItem modifiedItem = modifiedBoard.getItems().get(Either.left(itemCoordinate));
+        BoardItem modifiedItem = modifiedBoard.getItems().get(itemCoordinate);
 
         assertNotNull(modifiedItem);
         assertEquals(item, modifiedItem, "The items should be same");
     }
+
+    @Test
+    void testGetItem() {
+        Board board = new Board(5, 5);
+        Coordinate itemCoordinate = new Coordinate(1, 1);
+        Mushroom item = new Mushroom(new Coordinate(1, 1));
+
+        // todo: make sure the old board did not change
+
+        Board modifiedBoard = board.setItem(board, item);
+        BoardItem modifiedItem = board.getItem(itemCoordinate);
+
+        assertNotNull(modifiedItem);
+        assertEquals(item, modifiedItem, "The items should be same");
+
+    }
+
 
 }
