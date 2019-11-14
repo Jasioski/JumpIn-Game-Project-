@@ -29,9 +29,14 @@ class SolverTest {
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
 
+    // TODO: refactor tests into unit and end to end tests
+
     @Test
     void testRabbitMovesDown() {
+        // TODO: add comments explaining this test. the test is really good
+        //       but it took me a while to figure out what
         DefaultBoard board = new DefaultBoard();
+        System.out.println(board);
         BoardItem item = board.getItem(0, 3);
         List<Move> generatedMoves;
         List<Move> correctMoves = new ArrayList<>();

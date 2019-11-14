@@ -37,4 +37,12 @@ public class Move {
 
         return true;
     }
+
+    public String toString()  {
+        String str = "";
+        str += "Item: " + item.getClass() + " from: " + initial + " to: " + ending;
+
+        return str;
+    }
+
 }
