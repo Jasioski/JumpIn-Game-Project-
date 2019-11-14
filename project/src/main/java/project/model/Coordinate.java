@@ -70,6 +70,6 @@ public class Coordinate {
 	 */
 	@Override
 	public String toString() {
-		return "" + row + ":" + column;
+		return row + ":" + column;
 	}
 }

@@ -210,4 +210,11 @@ public class Rabbit extends BoardItem implements Jumpable, Containable {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		String s = "Coordinates: ";
+		s += this.getCoordinate();
+		return s;
+	}
 }

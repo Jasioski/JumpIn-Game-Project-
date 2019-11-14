@@ -53,6 +53,9 @@ dependencies {
 		compile 'org.apache.logging.log4j:log4j:2.3'
 		compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
 		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+	// persistent data structures	
+		compile 'org.pcollections:pcollections:3.1.0'
+		compile 'io.atlassian.fugue:fugue:4.7.1'	
 }
 
 test {
