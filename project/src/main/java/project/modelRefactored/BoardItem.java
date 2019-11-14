@@ -13,4 +13,5 @@ public abstract class BoardItem {
     public BoardItem(Coordinate coordinate) {
         this.coordinate = Either.left(coordinate);
     }
+
 }

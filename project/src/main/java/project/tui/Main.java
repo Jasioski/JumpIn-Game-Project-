@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.DefaultBoard;
+import project.modelRefactored.DefaultBoard;
 import project.model.GameState;
 
 public class Main {
@@ -37,6 +37,7 @@ public class Main {
 
         JumpInClient client = new JumpInClient();
 
+        /*
         while (board.getCurrentGameState() == GameState.IN_PROGRESS) {
 
             try {
@@ -63,11 +64,14 @@ public class Main {
             }
 
         }
+
+         */
         scanner.close();
-        board.getCurrentGameState();
+       // board.getCurrentGameState();
         print(board.toString());
         print(ANSIColor.GREEN + "Game has been solved " +
                 "successfully!" + ANSIColor.RESET);
+
 
     }
 
