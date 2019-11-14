@@ -2,16 +2,14 @@ package project.solverRefactored;
 
 import project.modelRefactored.BoardItem;
 import project.modelRefactored.Coordinate;
-//import project.modelRefactored.Direction;
+import project.modelRefactored.Direction;
 
 public class Move {
 
-    //todo: make direction enum class
     public BoardItem item;
     public Coordinate initial;
     public Coordinate ending;
 
-    /*
     public Direction direction;
 
     public Move(BoardItem item, Direction direction) {
@@ -25,8 +23,6 @@ public class Move {
         this.ending = ending;
     }
 
-    */
-
     public boolean equals(Move move) {
         if (!(this.item == move.item)) {
             return false;
@@ -34,15 +30,12 @@ public class Move {
         if (!(this.initial == move.initial)) {
             return false;
         }
-        /*
         if (!(this.direction == move.direction)) {
             return false;
         }
-         */
         if (!(this.ending == move.ending)) {
             return false;
         }
-
         return true;
     }
 
