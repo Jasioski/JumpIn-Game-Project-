@@ -9,13 +9,15 @@ import org.pcollections.PMap;
 import java.util.List;
 
 
+
 public class Board {
 
     public final int numberOfRows;
     public final int numberOfColumns;
     private static Logger logger = LogManager.getLogger(Board.class);
 
-    private PMap<Either<Coordinate, List<Coordinate>>, BoardItem> items; //todo: override and throw exception on map.get
+    //todo: override and throw exception on map.get
+    private PMap<Either<Coordinate, List<Coordinate>>, BoardItem> items;
 
     public Board(int rows, int columns) {
         items = HashTreePMap.empty();
@@ -32,7 +34,7 @@ public class Board {
         }
     }
 
-    private Board (Board board) {
+	private Board (Board board) {
         this.numberOfRows = board.numberOfRows;
         this.numberOfColumns = board.numberOfColumns;
 
@@ -40,7 +42,7 @@ public class Board {
         this.items = board.items;
     }
 
-    public static Board setItem(Board board, BoardItem item) {
+	public static Board setItem(Board board, BoardItem item) {
         Board thisBoard = new Board(board);
 
         thisBoard.items = thisBoard.items.plus(item.coordinate, item);
@@ -48,15 +50,21 @@ public class Board {
         return thisBoard;
     }
 
-    private BoardItem getItem(Coordinate coordinate) { //todo: make getItem for listType (Either.right)
-        return this.items.get(Either.left(coordinate));
+    private BoardItem getItem(Either<Coordinate, List<Coordinate>> coordinate) {
+        return this.items.get(coordinate);
     }
 
+	private BoardItem getItem(Coordinate coordinate) {
+		return getItem(Either.left(coordinate));
+	}
 
-    public PMap<Either<Coordinate, List<Coordinate>>, BoardItem> getItems() {
+	private BoardItem getItem(List<Coordinate> coordinate) {
+		return getItem(Either.right(coordinate));
+	}
+
+	public PMap<Either<Coordinate, List<Coordinate>>, BoardItem> getItems() {
         return items;
     }
-    //todo: get individual item;
 
     //todo: rewrite the toString()
     @Override

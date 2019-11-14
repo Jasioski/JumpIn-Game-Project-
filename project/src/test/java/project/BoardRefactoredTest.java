@@ -2,10 +2,7 @@ package project;
 
 import io.atlassian.fugue.Either;
 import org.junit.jupiter.api.Test;
-import org.pcollections.PMap;
 import project.modelRefactored.*;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,17 +21,12 @@ public class BoardRefactoredTest {
     }
 
     @Test
-    void testSetItem() {
+    void testSetGetItem() {
         Board board = new Board(5, 5);
         Coordinate itemCoordinate = new Coordinate(1, 1);
         Mushroom item = new Mushroom(new Coordinate(1, 1));
 
-        // set item
-        // get new board
-
         // todo: make sure the old board did not change
-
-        // make sure the new board is modified as expected
 
         Board modifiedBoard = board.setItem(board, item);
         BoardItem modifiedItem = modifiedBoard.getItems().get(Either.left(itemCoordinate));
@@ -42,4 +34,5 @@ public class BoardRefactoredTest {
         assertNotNull(modifiedItem);
         assertEquals(item, modifiedItem, "The items should be same");
     }
+
 }
