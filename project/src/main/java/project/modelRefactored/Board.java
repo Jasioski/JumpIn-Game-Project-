@@ -1,13 +1,10 @@
 package project.modelRefactored;
 
-import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
-
-import java.util.List;
 
 public class Board {
 
@@ -43,18 +40,17 @@ public class Board {
 
 	/**
 	 * Set an item on a board while preserving purity
-	 * @param board reference to the board state you want to apply the
-	 *                 transformation to
 	 * @param item the item you want to add to the board
 	 * @return a board which is a result of the applied transformation
 	 */
-	public static Board setItem(Board board, BoardItem item) {
-		Board thisBoard = new Board(board);
+
+	public Board setItem(BoardItem item) {
+        Board modifiedBoard = new Board(this);
 
 		if (item.coordinate.isLeft()) {
 			logger.trace("found left item");
 			Coordinate coordinate = item.coordinate.left().get();
-			thisBoard.items = thisBoard.items.plus(coordinate, item);
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
 		}
 
 		if (item.coordinate.isRight()) {
@@ -62,12 +58,12 @@ public class Board {
 			Pair<Coordinate,Coordinate> coordinate =
 					item.coordinate.right().get();
 
-			thisBoard.items = thisBoard.items.plus(coordinate.left(), item);
-			thisBoard.items = thisBoard.items.plus(coordinate.right(), item);
+        	modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate.right(), item);
 		}
 
-		return thisBoard;
-	}
+		return modifiedBoard;
+    }
 
 	public BoardItem getItem(Coordinate coordinate) {
 		return this.items.get(coordinate);
@@ -77,11 +73,33 @@ public class Board {
 		return items;
 	}
 
-	//todo: rewrite the toString()
-	@Override
-	public String toString() {
-		String str = "";
+	public PMap<Coordinate, BoardItem> getColumnSlice(int column) {
+		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
 
+		for (int row = 0; row < numberOfRows; row++) {
+			Coordinate coordinate = new Coordinate(row, column);
+			slice = slice.plus(coordinate, getItem(coordinate));
+		}
+
+		return slice;
+	}
+
+	public PMap<Coordinate, BoardItem> getRowSlice(int row) {
+		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
+
+		for (int column = 0; column < numberOfColumns; column++) {
+			Coordinate coordinate = new Coordinate(row, column);
+			slice = slice.plus(coordinate, getItem(coordinate));
+		}
+
+		return slice;
+	}
+
+
+//todo: rewrite the toString()
+	@Override
+		public String toString() {
+		String str = "";
 		String rowLine = "";
 
 		for (int i = 0; i < numberOfRows; i++) {

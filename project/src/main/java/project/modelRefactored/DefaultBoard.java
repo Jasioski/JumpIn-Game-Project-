@@ -8,8 +8,8 @@ public class DefaultBoard {
         Mushroom mush1 = new Mushroom(new Coordinate(0,0));
         Mushroom mush2 = new Mushroom(new Coordinate(1,3));
 
-        board = board.setItem(board, mush1);
-        board = board.setItem(board, mush2);
+        board = board.setItem(mush1);
+        board = board.setItem(mush2);
     }
 
     @Override

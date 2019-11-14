@@ -2,7 +2,7 @@ package project.modelRefactored;
 
 import project.tui.ItemUIRepresentation;
 
-public class Mushroom extends SingleBoardItem {
+public final class Mushroom extends SingleBoardItem {
 
     public Mushroom(Coordinate coordinate) {
         super(coordinate);
@@ -11,5 +11,10 @@ public class Mushroom extends SingleBoardItem {
     @Override
     public String toString() {
         return ItemUIRepresentation.MUSHROOM.getRepresentation();
+    }
+
+    @Override
+    public boolean isObstacle() {
+        return true;
     }
 }
