@@ -15,7 +15,8 @@ public class Board {
     public final int numberOfColumns;
     private static Logger logger = LogManager.getLogger(Board.class);
 
-    private PMap<Either<Coordinate, List<Coordinate>>, BoardItem> items; //todo: override and throw exception on map.get
+    //todo: override and throw exception on map.get
+    private PMap<Either<Coordinate, List<Coordinate>>, BoardItem> items;
 
     public Board(int rows, int columns) {
         items = HashTreePMap.empty();
@@ -48,7 +49,8 @@ public class Board {
         return thisBoard;
     }
 
-    private BoardItem getItem(Coordinate coordinate) { //todo: make getItem for listType (Either.right)
+    //todo: make getItem for listType (Either.right)
+    private BoardItem getItem(Coordinate coordinate) {
         return this.items.get(Either.left(coordinate));
     }
 
@@ -56,7 +58,6 @@ public class Board {
     public PMap<Either<Coordinate, List<Coordinate>>, BoardItem> getItems() {
         return items;
     }
-    //todo: get individual item;
 
     //todo: rewrite the toString()
     @Override
