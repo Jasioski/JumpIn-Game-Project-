@@ -12,4 +12,9 @@ public class EmptyBoardItem extends SingleBoardItem {
     public String toString() {
         return ItemUIRepresentation.EMPTY.getRepresentation();
     }
+
+    @Override
+    public boolean isObstacle() {
+        return false;
+    }
 }
