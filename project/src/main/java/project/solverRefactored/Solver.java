@@ -37,15 +37,63 @@ public class Solver {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
         BoardItem item = board.getItem(coordinate);
+        Coordinate destination = new Coordinate(coordinate.row, coordinate.column);
 
-//        if ((Fox) item.orientation == Orientation.HORIZONTAL) { //todo: should this be .equals??
-//
-//            //slide left
-//            for (int nextColumn = coordinate, nextColumn < board.numberOfColumns; )
-//        } else {
-//
-//        }
+        /* LOGIC FOR FOX MOVES
+        if ((Fox) item.orientation == Orientation.HORIZONTAL) { //todo: should this be .equals??
+            int nextColumn;
+            //check slide left
+            for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) { //todo: bug to slide right fox piece left
+                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
+                    if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
+                        Move move = new Move(item, Direction.LEFT, coordinate, destination);
+                        legalMoves.add(move);
+                    }
+                    break;
+                }
+                destination = new Coordinate(coordinate.row, nextColumn);
+            }
 
+            //check slide right
+            for (nextColumn = coordinate.column + 1; nextColumn < board.numberOfColumns; nextColumn++) { //todo: bug to slide left fox piece right
+                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
+                    if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
+                        Move move = new Move(item, Direction.RIGHT, coordinate, destination);
+                        legalMoves.add(move);
+                    }
+                    break;
+                }
+                destination = new Coordinate(coordinate.row, nextColumn);
+            }
+
+        } else {
+            int nextRow;
+            //check slide up
+            for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) { //todo: bug to slide up fox piece down
+                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
+                    if (!(destination.row == coordinate.row)) { //can't be first iteration of loop
+                        Move move = new Move(item, Direction.UP, coordinate, destination);
+                        legalMoves.add(move);
+                    }
+                    break;
+                }
+                destination = new Coordinate(coordinate.row, nextRow);
+            }
+
+            //check slide down
+            for (nextRow = coordinate.row + 1; nextRow < board.numberOfRows; nextRow++) { //todo: bug to slide down fox piece up
+                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
+                    if (!(destination.row == coordinate.row)) { //can't be first iteration of loop
+                        Move move = new Move(item, Direction.DOWN, coordinate, destination);
+                        legalMoves.add(move);
+                    }
+                    break;
+                }
+                destination = new Coordinate(coordinate.row, nextRow);
+            }
+        }
+
+        */
         return legalMoves;
     }
 
@@ -53,9 +101,10 @@ public class Solver {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
         BoardItem item = board.getItem(coordinate);
+        Coordinate nextItem;
 
         //check up jump
-        Coordinate nextItem = new Coordinate(coordinate.row - 1, coordinate.column);
+        nextItem = new Coordinate(coordinate.row - 1, coordinate.column);
         if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
             for (int row = coordinate.row - 2; row >= 0; row--) {
                 nextItem = new Coordinate(row, nextItem.column);
