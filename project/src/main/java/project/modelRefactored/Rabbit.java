@@ -2,9 +2,8 @@ package project.modelRefactored;
 
 import org.pcollections.PMap;
 import project.model.Direction;
-import project.model.MaybeObstacle;
 
-public class Rabbit extends SingleBoardItem {
+public class Rabbit extends SingleBoardItem implements Containable {
 
     public Rabbit(Coordinate coordinate) {
         super(coordinate);
