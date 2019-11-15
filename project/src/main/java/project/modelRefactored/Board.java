@@ -34,7 +34,6 @@ public class Board {
 		this.numberOfRows = board.numberOfRows;
 		this.numberOfColumns = board.numberOfColumns;
 
-		// todo: rename to items
 		this.items = board.items;
 	}
 

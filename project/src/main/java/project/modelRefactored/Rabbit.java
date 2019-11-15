@@ -22,7 +22,7 @@ public class Rabbit extends SingleBoardItem {
             case DOWN:
                 return new Coordinate(current.row + 1, current.column);
             case UP:
-                return  new Coordinate(current.row - 1, current.column);
+                return new Coordinate(current.row - 1, current.column);
             default:
                 throw new IllegalArgumentException("Invalid Direction.");
         }
