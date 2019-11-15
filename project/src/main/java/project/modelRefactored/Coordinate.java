@@ -12,6 +12,11 @@ public class Coordinate {
         this.column = column;
     }
 
+    public Coordinate(Coordinate coordinate) {
+        this.row = coordinate.row;
+        this.column = coordinate.column;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(row, column);

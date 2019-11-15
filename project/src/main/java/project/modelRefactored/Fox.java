@@ -4,6 +4,7 @@ import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
+import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
 
 /**
@@ -80,11 +81,20 @@ public class Fox extends BoardItem {
      * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
      */
     public Fox  slideHorizontal(PMap<Coordinate, BoardItem> slice, Coordinate destinationCoordinate) {
-        
-        Pair foxCoords = Pair.pair(super.coordinate, this.tail);
-        Fox slidingFox = new Fox(foxCoords, this.orientation);
-
-        return slidingFox;
+        Coordinate nextCoordinate;
+        try {
+            nextCoordinate = new Coordinate(super.coordinate.left().get());
+            while (!destinationCoordinate.equals(nextCoordinate)) {
+                if (slice.get(nextCoordinate).isObstacle()) {
+                    throw new SlideHitObstacleException("Fox hit an obstacle while sliding");
+                }
+                nextCoordinate = computeNextCoordinate(destinationCoordinate);
+            }
+            return new Fox(Pair.pair(super.coordinate.left().get(), destinationCoordinate), this.orientation);
+        } catch (Exception e) {
+            logger.debug(e);
+            return new Fox(Pair.pair(super.coordinate.left().get(), this.tail), orientation);
+        }
     }
 
     /**
