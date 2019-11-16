@@ -140,20 +140,6 @@ public class Fox extends BoardItem {
     }
 
     /**
-     * Checks if sliding the Fox vertically to the destination coordinate is valid
-     * @param slice A slice of the board used to get the item at a given coordinate
-     * @param destinationCoordinate The coordinate that the Fox wants to end up at
-     * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
-     */
-    public Fox  slideVertical(PMap<Coordinate, BoardItem> slice, Coordinate destinationCoordinate) {
-        //TODO: Add logic to check if obstacle is hit
-        Pair foxCoords = Pair.pair(super.coordinate, this.tail);
-        Fox slidingFox = new Fox(foxCoords, this.orientation);
-
-        return slidingFox;
-    }
-
-    /**
      * Returns whether this object can be treated as an obstacle
      * @return true The Fox object is an obstacle
      */
