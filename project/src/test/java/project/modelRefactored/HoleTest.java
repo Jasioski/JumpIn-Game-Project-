@@ -76,5 +76,5 @@ public class HoleTest {
                 "the hole is an obstacle when containing a rabbit");
     }
 
-    
+
 }

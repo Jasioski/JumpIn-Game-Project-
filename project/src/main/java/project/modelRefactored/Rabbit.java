@@ -1,5 +1,7 @@
 package project.modelRefactored;
 
+import com.google.common.base.Optional;
+import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
 
@@ -27,12 +29,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         }
     }
 
-    public Rabbit jump(Direction direction, PMap<Coordinate, BoardItem> slice) {
+    public Pair<Rabbit, Optional<Hole>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
        return jump(direction, slice, false);
     }
 
-    private Rabbit jump(Direction direction, PMap<Coordinate, BoardItem> slice
-            , boolean isCurrentlyJumping) {
+    private Pair<Rabbit, Optional<Hole>> jump(Direction direction,
+                                              PMap<Coordinate, BoardItem> slice
+            , boolean isCurrentlyJumping) throws InvalidMoveException {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
 
         Rabbit jumpingRabbit = new Rabbit(coordinate);
@@ -48,11 +51,25 @@ public class Rabbit extends SingleBoardItem implements Containable {
             return jumpingRabbit.jump(Direction.RIGHT, slice, true);
         }
 
+        // Could be empty hole or empty item
+
+        // R M E  ==> obstacle found, keep going,
+
+        // R E E  => error
+
+        // R M H => E M H(R)
+
         // Not found obstacle
         if (isCurrentlyJumping) {
-           return jumpingRabbit;
+
+            if (item instanceof Hole) {
+                Hole newHole = new Hole(coordinate, Optional.of(jumpingRabbit));
+                return Pair.pair(jumpingRabbit, Optional.of(newHole));
+            } else {
+                return Pair.pair(jumpingRabbit, Optional.absent());
+            }
         } else {
-            return this;
+            throw new InvalidMoveException();
         }
     }
 

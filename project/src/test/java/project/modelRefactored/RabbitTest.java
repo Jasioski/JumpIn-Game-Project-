@@ -1,7 +1,9 @@
 package project.modelRefactored;
 
 import com.google.common.base.Optional;
+import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
+import org.pcollections.Empty;
 import project.model.Direction;
 
 import java.util.ArrayList;
@@ -38,8 +40,13 @@ public final class RabbitTest {
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
         // Perform jump
-        Rabbit newRabbit = initialRabbit.jump(Direction.RIGHT,
-                board.getRowSlice(initialCoordinate.column));
+        Rabbit newRabbit = null;
+        try {
+            newRabbit = initialRabbit.jump(Direction.RIGHT,
+                    board.getRowSlice(initialCoordinate.column)).left();
+        } catch (InvalidMoveException e) {
+            fail();
+        }
 
         // Make sure the initial rabbit has not been mutated
         Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
@@ -71,8 +78,13 @@ public final class RabbitTest {
         board = board.setItem(new Mushroom(new Coordinate(0 ,2)));
 
         // Perform jump
-        Rabbit newRabbit = initialRabbit.jump(Direction.RIGHT,
-                board.getRowSlice(initialCoordinate.column));
+        Rabbit newRabbit = null;
+        try {
+            newRabbit = initialRabbit.jump(Direction.RIGHT,
+                    board.getRowSlice(initialCoordinate.column)).left();
+        } catch (InvalidMoveException e) {
+            fail();
+        }
 
         // Make sure the initial rabbit has not been mutated
         Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
@@ -112,23 +124,43 @@ public final class RabbitTest {
 
         // TODO: jump should return a list of items to be set to the board
         // Perform jump
-        Rabbit newRabbit = initialRabbit.jump(Direction.RIGHT,
-                board.getRowSlice(initialCoordinate.column));
+        Pair<Rabbit, Optional<Hole>> returnPair =
+                null;
+        try {
+            returnPair = initialRabbit.jump(Direction.RIGHT,
+            board.getRowSlice(initialCoordinate.column));
+        } catch (InvalidMoveException e) {
+            fail();
+        }
+
+        Rabbit newRabbit = returnPair.left();
+        Hole newHole = returnPair.right().get();
 
         // Make sure the initial rabbit has not been mutated
         Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
         assertEquals(initialCoordinate, initialRabbitCoordinate, "the initial" +
                 " rabbit should not have been mutated" );
 
-        // Check the new rabbit coordinates
-        assertNotNull(initialRabbit);
-        assertNotEquals(initialRabbit, newRabbit, "the new rabbit should be " +
-                "different to the old rabbit");
-        Coordinate coordinate = newRabbit.coordinate.left().get();
-        assertEquals(expectedJumpCoordinate, coordinate, "we should have " +
-                "jumped to our expected coordinates");
+        // The original hole should not have changed
+        assertFalse(hole.containingItem.isPresent(), "the hole should still " +
+                "be empty");
 
-        assertTrue(hole.containingItem.isPresent());
-        assertEquals(hole.containingItem.get(), newRabbit);
+        // The original rabbit should not have changed
+        assertEquals(initialRabbit.coordinate.left().get(), initialCoordinate,
+                "the " +
+                "original rabbit should not have changed");
+
+        // The new returned rabbit should be at the correct location
+        assertEquals(newRabbit.coordinate.left().get(), expectedJumpCoordinate,
+                "the rabbit should be at the expected coordinate");
+
+        // The new returned hole should have the rabbit
+        assertTrue(newHole.containingItem.isPresent(), "the hole should not " +
+                "be" +
+                " empty");
+        assertEquals(newHole.containingItem.get(), newRabbit, "the hole " +
+                "should contain " +
+                "the new rabbit");
+
     }
 }
