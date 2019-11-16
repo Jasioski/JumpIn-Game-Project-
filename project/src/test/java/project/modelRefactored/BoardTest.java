@@ -36,8 +36,8 @@ public class BoardTest {
         assertTrue(newBoard.getItem(new Coordinate(0,1)) instanceof
             Mushroom, "item at 0, 1 should be mushroom");
         //0, 2 new Rabbit
-        assertTrue(newBoard.getItem(new Coordinate(0,2)) instanceof
-                EmptyBoardItem, "item at 0, 2 should be rabbit");
+        assertTrue(newBoard.getItem(expectedJumpCoordinate) instanceof
+                Rabbit, "item at 0, 2 should be rabbit");
 
         //OLD BOARD SHOULDN'T CHANGE
         //0, 0 old Rabbit
