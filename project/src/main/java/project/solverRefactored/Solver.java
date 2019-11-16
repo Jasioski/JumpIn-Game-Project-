@@ -25,11 +25,11 @@ public class Solver {
 
         if (item instanceof Rabbit) {
             return generateMovesRabbit(board, coordinate);
-        } //end rabbit
+        }
 
-//        if (item instanceof Fox) { //todo: create fox class with a final variable orientation.
-//            return generateMovesFox(board, coordinate);
-//        }
+        if (item instanceof Fox) {
+            return generateMovesFox(board, coordinate);
+        }
 
         return legalMoves;
     }
@@ -40,12 +40,13 @@ public class Solver {
         Fox item = (Fox) board.getItem(coordinate);
         Coordinate destination = new Coordinate(coordinate.row, coordinate.column);
 
-        /* //CHECK THIS LOGIC
         if (item.orientation  == Orientation.HORIZONTAL) {
             // .equals??
             int nextColumn;
+
             //check slide left
-            for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) { //todo: bug to slide right fox piece left
+            //todo: bug to slide right fox piece left
+            for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) {
                 if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
                     if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
                         Move move = new Move(item, Direction.LEFT, coordinate, destination);
@@ -57,7 +58,8 @@ public class Solver {
             }
 
             //check slide right
-            for (nextColumn = coordinate.column + 1; nextColumn < board.numberOfColumns; nextColumn++) { //todo: bug to slide left fox piece right
+            //todo: bug to slide left fox piece right
+            for (nextColumn = coordinate.column + 1; nextColumn < board.numberOfColumns; nextColumn++) {
                 if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
                     if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
                         Move move = new Move(item, Direction.RIGHT, coordinate, destination);
@@ -68,7 +70,7 @@ public class Solver {
                 destination = new Coordinate(coordinate.row, nextColumn);
             }
 
-        } else {
+        } else if(item.orientation == Orientation.VERTICAL) {
             int nextRow;
             //check slide up
             for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) { //todo: bug to slide up fox piece down
@@ -95,7 +97,6 @@ public class Solver {
             }
         }
 
-*/
         return legalMoves;
     }
 

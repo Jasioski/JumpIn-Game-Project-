@@ -21,6 +21,9 @@ public class Fox extends BoardItem {
 
     private static Logger logger = LogManager.getLogger(Fox.class);
 
+    /**
+     * The orientation of the fox
+     */
     public final Orientation orientation;
 
     /**

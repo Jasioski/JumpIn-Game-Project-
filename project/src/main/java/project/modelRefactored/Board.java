@@ -45,7 +45,6 @@ public class Board {
 	 * @param item the item you want to add to the board
 	 * @return a board which is a result of the applied transformation
 	 */
-
 	public Board setItem(BoardItem item) {
         Board modifiedBoard = new Board(this);
 
@@ -98,8 +97,6 @@ public class Board {
 		return slice;
 	}
 
-
-
 	public Board jump(Direction direction, Coordinate coordinate)
 			throws NonJumpableException {
 
@@ -130,7 +127,6 @@ public class Board {
 
 		return board;
 	}
-
 
 //todo: rewrite the toString()
 	@Override
