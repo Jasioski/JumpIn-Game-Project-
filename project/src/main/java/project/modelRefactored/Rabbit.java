@@ -69,7 +69,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
                 return Pair.pair(jumpingRabbit, Optional.absent());
             }
         } else {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Cannot move without obstacles");
         }
     }
 

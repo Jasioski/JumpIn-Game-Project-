@@ -1,11 +1,17 @@
 package project.modelRefactored;
 
+import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
 import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A class that represents a fox on the board, which can slide across the board to move.
@@ -15,7 +21,6 @@ public class Fox extends BoardItem {
     private static Logger logger = LogManager.getLogger(Fox.class);
 
     public final Orientation orientation;
-    public final Coordinate tail;
 
     /**
      * Ensures that given head and tail coordinates do not conflict with each other
@@ -55,23 +60,23 @@ public class Fox extends BoardItem {
      * @param coordinates The coordinates of the head and tail.
      * @param orientation the orientation of the fox.
      */
-    public Fox(Pair<Coordinate, Coordinate> coordinates, Orientation orientation) { //TODO: calc orientation based on pair of coords
-        super(coordinates.left());
+    public Fox(Pair<Coordinate, Coordinate> coordinates, Orientation orientation) {
+        //TODO: calc orientation based on pair of coords
+        super(coordinates);
         validateArguments(coordinates);
-        this.tail = coordinates.right();
         this.orientation = orientation;
     }
 
     /**
      * Method used to determine what next coordinate should be checked when sliding the fox
-     * @param coords The coordinate of where the fox wants to end up at
      * @return nextCoordinates The next coordinates that should be checked when sliding the fox
      * @throws SlideWrongOrientationException
      */
-    private Pair<Coordinate, Coordinate> computeNextCoordinates(Pair<Coordinate, Coordinate> coords, Direction direction)
+    private Pair<Coordinate, Coordinate> computeNextCoordinates(Direction direction)
             throws SlideWrongOrientationException {
-        Coordinate head = coords.left();
-        Coordinate tail = coords.right();
+        Coordinate head = getHead();
+        Coordinate tail = getTail();
+
         if (this.orientation == Orientation.HORIZONTAL) {
             if (direction == Direction.UP || direction == Direction.DOWN) {
                 throw new SlideWrongOrientationException("Fox is oriented horizontally!");
@@ -109,7 +114,7 @@ public class Fox extends BoardItem {
      * @param moveSpaces The spaces the Fox wants to move
      * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
      */
-    public Fox slide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction) throws SlideWrongOrientationException, SlideHitObstacleException {
+    public Fox slide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction) throws SlideWrongOrientationException, SlideHitObstacleException, InvalidMoveException {
         return performSlide(slice, moveSpaces, direction);
     }
 
@@ -120,24 +125,64 @@ public class Fox extends BoardItem {
      * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
      */
     public Fox performSlide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction)
-            throws SlideHitObstacleException, SlideWrongOrientationException {
-        Pair<Coordinate, Coordinate> nextCoordinates = computeNextCoordinates(Pair.pair(this.coordinate.left().get(), this.tail), direction);
-        while(moveSpaces != 0) {
-            nextCoordinates = computeNextCoordinates(nextCoordinates, direction);
-            slice.get(nextCoordinates.left());
+            throws SlideWrongOrientationException, InvalidMoveException {
+        // Generate new coordinates
+        Pair<Coordinate, Coordinate> nextCoordinates =
+                this.computeNextCoordinates(direction);
 
-            BoardItem nextItemTail = slice.get(nextCoordinates.left());
-            BoardItem nextItemHead = slice.get(nextCoordinates.right());
-            if (nextItemTail.isObstacle() || nextItemTail instanceof Elevated || nextItemHead.isObstacle() ||
-                    nextItemHead instanceof Elevated) {
-                throw new SlideHitObstacleException("Fox hit an obstacle!");
-            }
+        // Create new Fox
+        Fox fox = new Fox(nextCoordinates, this.orientation);
 
-            moveSpaces--;
+        List<Coordinate> coordinates = new ArrayList<>();
+
+        coordinates.add(nextCoordinates.left());
+        coordinates.add(nextCoordinates.right());
+
+        if (checkIfNotOnBoard(slice, coordinates)) {
+            throw new InvalidMoveException("Move failed");
         }
 
-        return new Fox(nextCoordinates, this.orientation); //maintain same orientation
+        if (checkIfHitObstacle(slice, coordinates)) {
+            throw new InvalidMoveException("Move failed");
+        }
+
+        if (moveSpaces > 1) {
+            return fox.performSlide(slice, --moveSpaces, direction);
+        }
+
+        return fox;
     }
+
+    private boolean checkIfHitObstacle(PMap<Coordinate, BoardItem> slice,
+                                       List<Coordinate> coordinates ) {
+        for (Coordinate coordinate: coordinates) {
+
+            BoardItem item = slice.get(coordinate);
+
+            if (item.isObstacle() && !item.equals(this)) {
+                return true;
+            }
+
+            if (item instanceof Elevated) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkIfNotOnBoard(
+            PMap<Coordinate, BoardItem> slice, List<Coordinate> nextCoordinates
+    ) {
+        HashSet<Coordinate> coordinateSet = new HashSet<>(slice.keySet());
+
+        if (!coordinateSet.containsAll(nextCoordinates)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * Returns whether this object can be treated as an obstacle
@@ -147,4 +192,14 @@ public class Fox extends BoardItem {
     public boolean isObstacle() {
         return true;
     }
+
+    public Coordinate getTail() {
+       return coordinate.right().get().right();
+    }
+
+    public Coordinate getHead() {
+        return coordinate.right().get().left();
+    }
+
+
 }
