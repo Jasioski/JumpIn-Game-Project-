@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Optional;
+import project.model.Direction;
 import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
 

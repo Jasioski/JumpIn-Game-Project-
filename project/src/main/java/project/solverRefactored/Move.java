@@ -1,8 +1,8 @@
 package project.solverRefactored;
 
+import project.model.Direction;
 import project.modelRefactored.BoardItem;
 import project.modelRefactored.Coordinate;
-import project.modelRefactored.Direction;
 
 public class Move {
 

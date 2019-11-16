@@ -1,6 +1,7 @@
 package project.modelRefactored;
 
 import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
@@ -29,12 +30,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         }
     }
 
-    public Pair<Rabbit, Optional<Hole>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+    public Either<Rabbit, Hole> jump(Direction direction,
+                                          PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
        return jump(direction, slice, false);
     }
 
-    private Pair<Rabbit, Optional<Hole>> jump(Direction direction,
-                                              PMap<Coordinate, BoardItem> slice
+    private Either<Rabbit, Hole> jump(Direction direction,
+                                                PMap<Coordinate, BoardItem> slice
             , boolean isCurrentlyJumping) throws InvalidMoveException {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
 
@@ -64,9 +66,9 @@ public class Rabbit extends SingleBoardItem implements Containable {
 
             if (item instanceof Hole) {
                 Hole newHole = new Hole(coordinate, Optional.of(jumpingRabbit));
-                return Pair.pair(jumpingRabbit, Optional.of(newHole));
+                return Either.right(newHole);
             } else {
-                return Pair.pair(jumpingRabbit, Optional.absent());
+                return Either.left(jumpingRabbit);
             }
         } else {
             throw new InvalidMoveException("Cannot move without obstacles");
