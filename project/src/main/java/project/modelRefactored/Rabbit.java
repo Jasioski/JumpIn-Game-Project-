@@ -47,7 +47,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
         BoardItem item = slice.get(coordinate);
 
         // Found obstacle
-        //Jumping Right
+        //Perform Jump
         if (item.isObstacle()){
             return jumpingRabbit.jump(direction, slice, true);
         }
