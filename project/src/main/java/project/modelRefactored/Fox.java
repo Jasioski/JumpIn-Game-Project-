@@ -15,7 +15,7 @@ public class Fox extends BoardItem {
     private static Logger logger = LogManager.getLogger(Fox.class);
 
     public final Orientation orientation;
-    private final Coordinate tail;
+    public final Coordinate tail;
 
     /**
      * Ensures that given head and tail coordinates do not conflict with each other
