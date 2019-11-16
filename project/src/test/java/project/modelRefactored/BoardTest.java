@@ -49,9 +49,6 @@ public class BoardTest {
         // 0, 2 Empty
         assertTrue(board.getItem(new Coordinate(0,2)) instanceof
                 EmptyBoardItem, "item at 0, 0 should be empty");
-//
-//        //Return type of Jump. Rabbit not null
-//        assertNotNull(newRabbit, "rabbit should not be null");
 
         } catch (Exception e) {
             fail();

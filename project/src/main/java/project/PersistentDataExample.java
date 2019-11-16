@@ -1,5 +1,7 @@
 package project;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 import project.model.BoardItem;
@@ -11,18 +13,21 @@ import java.util.List;
 
 public class PersistentDataExample {
 
+    private static Logger logger = LogManager.getLogger(PersistentDataExample.class);
+
     public static <T> void PrintList(List<T> list) {
         for (T inte: list) {
-            System.out.println(inte);
+            logger.debug(inte);
         }
     }
 
 
+    @SuppressWarnings("PMD")
     public static void main(String[] args) {
         ArrayList<Integer> numbers1 = new ArrayList();
         numbers1.add(0);
 
-        System.out.println("Initial List");
+        logger.debug("Initial List");
 
 
         PrintList(numbers1);
@@ -30,14 +35,14 @@ public class PersistentDataExample {
         // in some method somewhere i want to add a number to numbers1
         numbers1.add(2);
 
-        System.out.println("List after addition");
+        logger.debug("List after addition");
 
         PrintList(numbers1);
 
         PVector<Integer> numbers2 = TreePVector.empty();
         PVector<Integer> numbers3= numbers2.plus(0);
 
-        System.out.println("Print persistent data");
+        logger.debug("Print persistent data");
         PrintList(numbers2);
         PrintList(numbers3);
 

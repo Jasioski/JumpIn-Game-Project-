@@ -37,11 +37,12 @@ public class Solver {
     public List<Move> generateMovesFox(Board board, Coordinate coordinate) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
-        BoardItem item = board.getItem(coordinate);
+        Fox item = (Fox) board.getItem(coordinate);
         Coordinate destination = new Coordinate(coordinate.row, coordinate.column);
 
-        /* LOGIC FOR FOX MOVES
-        if ((Fox) item.orientation == Orientation.HORIZONTAL) { //todo: should this be .equals??
+        /* //CHECK THIS LOGIC
+        if (item.orientation  == Orientation.HORIZONTAL) {
+            // .equals??
             int nextColumn;
             //check slide left
             for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) { //todo: bug to slide right fox piece left
@@ -94,7 +95,7 @@ public class Solver {
             }
         }
 
-        */
+*/
         return legalMoves;
     }
 
