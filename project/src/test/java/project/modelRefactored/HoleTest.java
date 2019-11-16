@@ -71,9 +71,10 @@ public class HoleTest {
                 containableRabbit);
 
         Containable item = hole.containingItem.get();
-        BoardItem boardItem = (BoardItem) item;
 
         assertTrue(hole.isObstacle(),
                 "the hole is an obstacle when containing a rabbit");
     }
+
+    
 }
