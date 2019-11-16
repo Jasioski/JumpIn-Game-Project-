@@ -2,7 +2,7 @@ package project.modelRefactored;
 
 import com.google.common.base.Optional;
 
-public final class Hole extends SingleBoardItem {
+public final class Hole extends SingleBoardItem implements Elevated {
 
     public final Optional<Containable> containingItem;
 
