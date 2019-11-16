@@ -2,6 +2,7 @@ package project.solverRefactored;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import project.model.Direction;
 import project.modelRefactored.*;
 
 import java.util.List;

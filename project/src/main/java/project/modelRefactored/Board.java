@@ -1,10 +1,13 @@
 package project.modelRefactored;
 
+import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
+import project.model.Direction;
+import project.model.exceptions.NonJumpableException;
 
 public class Board {
 
@@ -52,6 +55,7 @@ public class Board {
 			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
 		}
 
+		//TODO: clean up this code
 		if (item.coordinate.isRight()) {
 			logger.trace("found right type");
 			Pair<Coordinate,Coordinate> coordinate =
@@ -92,6 +96,39 @@ public class Board {
 		}
 
 		return slice;
+	}
+
+
+
+	public Board jump(Direction direction, Coordinate coordinate)
+			throws NonJumpableException {
+
+		Board board = new Board(this);
+		BoardItem item = this.items.get(coordinate);
+		if (!(item instanceof Rabbit)) {
+			throw new NonJumpableException("Must be a rabbit to jump!");
+		}
+
+		Rabbit rabbit = (Rabbit) item;
+		try {
+			Either<Rabbit, Hole> rabbitOrHole = rabbit.jump(direction,
+					this.getRowSlice(0));
+
+			if (rabbitOrHole.isLeft()) {
+				System.out.println("FOUND A RABBIT!");
+				board = board.setItem(rabbitOrHole.left().get());
+			} else {
+				System.out.println("FOUND A HOLE!");
+				board = board.setItem(rabbitOrHole.right().get());
+			}
+
+			EmptyBoardItem empty = new EmptyBoardItem(coordinate);
+			board = board.setItem(empty);
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+
+		return board;
 	}
 
 

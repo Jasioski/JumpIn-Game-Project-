@@ -1,6 +1,7 @@
 package project.modelRefactored;
 
 import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
 import org.pcollections.Empty;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public final class RabbitTest {
 
     @Test
-    void constructor (){
+    void constructor () {
         Coordinate coordinate = new Coordinate(0, 0);
         Rabbit rabbit = new Rabbit(coordinate);
 
@@ -46,7 +47,7 @@ public final class RabbitTest {
         Rabbit newRabbit = null;
         try {
             newRabbit = initialRabbit.jump(Direction.RIGHT,
-                    board.getRowSlice(initialCoordinate.column)).left();
+                    board.getRowSlice(initialCoordinate.column)).left().get();
         } catch (InvalidMoveException e) {
             fail();
         }
@@ -87,7 +88,7 @@ public final class RabbitTest {
         Rabbit newRabbit = null;
         try {
             newRabbit = initialRabbit.jump(Direction.RIGHT,
-                    board.getRowSlice(initialCoordinate.column)).left();
+                    board.getRowSlice(initialCoordinate.column)).left().get();
         } catch (InvalidMoveException e) {
             fail();
         }
@@ -130,7 +131,7 @@ public final class RabbitTest {
 
         // TODO: jump should return a list of items to be set to the board
         // Perform jump
-        Pair<Rabbit, Optional<Hole>> returnPair =
+        Either<Rabbit, Hole> returnPair =
                 null;
         try {
             returnPair = initialRabbit.jump(Direction.RIGHT,
@@ -139,7 +140,6 @@ public final class RabbitTest {
             fail();
         }
 
-        Rabbit newRabbit = returnPair.left();
         Hole newHole = returnPair.right().get();
 
         // Make sure the initial rabbit has not been mutated
@@ -156,17 +156,13 @@ public final class RabbitTest {
                 "the " +
                 "original rabbit should not have changed");
 
-        // The new returned rabbit should be at the correct location
-        assertEquals(newRabbit.coordinate.left().get(), expectedJumpCoordinate,
-                "the rabbit should be at the expected coordinate");
-
         // The new returned hole should have the rabbit
         assertTrue(newHole.containingItem.isPresent(), "the hole should not " +
                 "be" +
                 " empty");
-        assertEquals(newHole.containingItem.get(), newRabbit, "the hole " +
-                "should contain " +
-                "the new rabbit");
+
+        assertTrue(newHole.containingItem.get() instanceof Rabbit, "rabbit " +
+                "should be in the hole");
 
     }
 
