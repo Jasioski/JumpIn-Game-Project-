@@ -2,10 +2,11 @@ package project.modelRefactored;
 
 import project.tui.ItemUIRepresentation;
 
-public final class Mushroom extends SingleBoardItem {
+public final class Mushroom extends SingleBoardItem implements Containable {
 
     public Mushroom(Coordinate coordinate) {
         super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.MUSHROOM;
     }
 
     @Override

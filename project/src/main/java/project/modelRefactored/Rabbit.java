@@ -5,11 +5,13 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.tui.ItemUIRepresentation;
 
 public class Rabbit extends SingleBoardItem implements Containable {
 
     public Rabbit(Coordinate coordinate) {
         super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }
 
     private Coordinate computeCoordinateFromDirection(Direction direction) {

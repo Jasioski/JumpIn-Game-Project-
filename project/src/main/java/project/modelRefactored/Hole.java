@@ -5,6 +5,7 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.tui.ItemUIRepresentation;
 
 /**
  * Represents a hole object on the board.
@@ -22,6 +23,19 @@ public final class Hole extends SingleBoardItem implements Elevated {
      */
     public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate);
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof Rabbit) {
+                this.uIRepresentation =
+                        ItemUIRepresentation.HOLE_OCCUPIED_RABBIT;
+            }
+            else if (containingItem.get() instanceof Mushroom) {
+                this.uIRepresentation = ItemUIRepresentation.HOLE_MUSHROOM;
+            }
+        }
+
+        else {
+            this.uIRepresentation = ItemUIRepresentation.HOLE_EMPTY;
+        }
         this.containingItem = containingItem;
     }
 

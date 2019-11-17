@@ -6,6 +6,7 @@ public class EmptyBoardItem extends SingleBoardItem {
 
     public EmptyBoardItem(Coordinate coordinate) {
         super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.EMPTY;
     }
 
     @Override
