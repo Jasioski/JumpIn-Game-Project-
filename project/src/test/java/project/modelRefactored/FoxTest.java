@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Optional;
 import project.model.Direction;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class FoxTest {
@@ -40,7 +38,7 @@ public class FoxTest {
                 Orientation.HORIZONTAL);
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
-        board = board.setItem(new Hole(destination, Optional.absent()));
+        board = board.setItem(new ContainerItem(destination, Optional.absent()));
 
         Board finalBoard = board;
         assertThrows(Exception.class, () -> {

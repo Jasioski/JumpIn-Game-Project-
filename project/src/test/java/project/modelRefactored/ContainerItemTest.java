@@ -3,23 +3,22 @@ package project.modelRefactored;
 import com.google.common.base.Optional;
 import org.junit.jupiter.api.Test;
 import project.model.Direction;
-import project.model.exceptions.NonJumpableException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HoleTest {
+public class ContainerItemTest {
 
     @Test
     void testConstructor() {
         Optional<Containable> containable = Optional.absent();
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        Hole hole = new Hole(holeCoordinate,
+        ContainerItem containerItem = new ContainerItem(holeCoordinate,
                 containable);
 
-        assertEquals(hole.containingItem, containable,
+        assertEquals(containerItem.containingItem, containable,
                 "the hole should have the item");
 
-        Coordinate instanceCoordinate = hole.coordinate.left().get();
+        Coordinate instanceCoordinate = containerItem.coordinate.left().get();
 
         assertEquals(holeCoordinate, instanceCoordinate,
                 "the hole should have the correct coordinate");
@@ -32,15 +31,15 @@ public class HoleTest {
         Optional<Containable> containable = Optional.of(containableItem);
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        Hole hole = new Hole(holeCoordinate,
+        ContainerItem containerItem = new ContainerItem(holeCoordinate,
                 containable);
 
-        assertEquals(hole.containingItem, containable,
+        assertEquals(containerItem.containingItem, containable,
                 "the hole should have the item");
 
-        Coordinate instanceCoordinate = hole.coordinate.left().get();
+        Coordinate instanceCoordinate = containerItem.coordinate.left().get();
 
-        Containable item = hole.containingItem.get();
+        Containable item = containerItem.containingItem.get();
         BoardItem boardItem = (BoardItem) item;
 
         assertEquals(holeCoordinate, boardItem.coordinate.left().get(),
@@ -52,10 +51,10 @@ public class HoleTest {
     void testIsObstacleWithoutItem() {
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        Hole hole = new Hole(holeCoordinate,
+        ContainerItem containerItem = new ContainerItem(holeCoordinate,
                 Optional.absent());
 
-        assertFalse(hole.isObstacle(),
+        assertFalse(containerItem.isObstacle(),
                 "the hole is not an obstacle when empty");
     }
 
@@ -69,12 +68,12 @@ public class HoleTest {
         Optional<Containable>  containableRabbit = Optional.of(rabbit);
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        Hole hole = new Hole(holeCoordinate,
+        ContainerItem containerItem = new ContainerItem(holeCoordinate,
                 containableRabbit);
 
-        Containable item = hole.containingItem.get();
+        Containable item = containerItem.containingItem.get();
 
-        assertTrue(hole.isObstacle(),
+        assertTrue(containerItem.isObstacle(),
                 "the hole is an obstacle when containing a rabbit");
     }
 
@@ -87,11 +86,11 @@ public class HoleTest {
 
         Coordinate initialCoordinate = new Coordinate(0, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
-        Hole initialHole = new Hole(initialCoordinate, Optional.of(initialRabbit));
+        ContainerItem initialContainerItem = new ContainerItem(initialCoordinate, Optional.of(initialRabbit));
         Coordinate expectedJumpCoordinate = new Coordinate(0, 2);
 
         Board board = new Board(1,3);
-        board = board.setItem(initialHole);
+        board = board.setItem(initialContainerItem);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
         // Perform jump
@@ -102,7 +101,7 @@ public class HoleTest {
         }
 
         Rabbit newRabbit = (Rabbit) board.getItem(expectedJumpCoordinate);
-        Hole newHole = (Hole) board.getItem(initialCoordinate);
+        ContainerItem newContainerItem = (ContainerItem) board.getItem(initialCoordinate);
         // Make sure the initial rabbit has not been mutated
         Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
         assertEquals(initialCoordinate, initialRabbitCoordinate, "the initial" +
@@ -117,9 +116,9 @@ public class HoleTest {
                 "jumped to our expected coordinates");
 
         //Make sure the new hole is not the same as the old one
-        assertNotEquals(newHole, initialHole);
+        assertNotEquals(newContainerItem, initialContainerItem);
 
         //Ensure the new hole is empty
-        assertEquals(Optional.absent(), newHole.containingItem);
+        assertEquals(Optional.absent(), newContainerItem.containingItem);
     }
 }

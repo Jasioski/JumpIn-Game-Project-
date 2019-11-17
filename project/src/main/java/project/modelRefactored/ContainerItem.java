@@ -9,7 +9,7 @@ import project.model.Direction;
 /**
  * Represents a hole object on the board.
  */
-public final class Hole extends SingleBoardItem implements Elevated {
+public final class ContainerItem extends SingleBoardItem {
     /**
      * The item that the hole may contain.
      */
@@ -20,7 +20,7 @@ public final class Hole extends SingleBoardItem implements Elevated {
      * @param coordinate The coordinate where the hole is located.
      * @param containingItem The optional item that it can contain.
      */
-    public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
+    public ContainerItem(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate);
         this.containingItem = containingItem;
     }
@@ -46,18 +46,21 @@ public final class Hole extends SingleBoardItem implements Elevated {
      * @return A pair containing the new empty hole, and either the rabbit or the new hole it is found in.
      * @throws InvalidMoveException If the hole is empty or the rabbit cannot jump.
      */
-    public Pair<Hole, Either<Rabbit, Hole>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+    public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
         if (!containingItem.isPresent()){
-            throw new InvalidMoveException("The hole does not contain a rabbit.");
+            if (! (containingItem.get() instanceof  Rabbit)) {
+                throw new InvalidMoveException("The hole does not contain a rabbit.");
+            }
+
         }
 
         //Jump the rabbit out of the hole
         Rabbit jumpingRabbit = (Rabbit) this.containingItem.get();
-        Either<Rabbit, Hole> jumpedRabbit = jumpingRabbit.jump(direction, slice);
+        Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
 
         //Create a new empty hole in this one's place
-        Hole emptyHole = new Hole (this.coordinate.left().get(), Optional.absent());
+        ContainerItem emptyContainerItem = new ContainerItem(this.coordinate.left().get(), Optional.absent());
 
-        return new Pair(emptyHole, jumpedRabbit);
+        return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
 }

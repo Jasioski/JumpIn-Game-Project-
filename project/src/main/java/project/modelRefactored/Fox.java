@@ -167,7 +167,7 @@ public class Fox extends BoardItem {
                 return true;
             }
 
-            if (item instanceof Elevated) {
+            if (item instanceof ContainerItem) {
                 return true;
             }
         }
