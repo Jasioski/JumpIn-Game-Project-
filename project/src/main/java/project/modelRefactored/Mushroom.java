@@ -10,11 +10,6 @@ public final class Mushroom extends SingleBoardItem implements Containable {
     }
 
     @Override
-    public String toString() {
-        return ItemUIRepresentation.MUSHROOM.getRepresentation();
-    }
-
-    @Override
     public boolean isObstacle() {
         return true;
     }

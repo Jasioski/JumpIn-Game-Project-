@@ -21,4 +21,8 @@ public abstract class BoardItem implements MaybeObstacle {
         this.coordinate = Either.left(coordinate);
     }
 
+    @Override
+    public String toString() {
+        return this.uIRepresentation.getRepresentation();
+    }
 }
