@@ -8,6 +8,7 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
+import project.tui.ItemUIRepresentation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,6 +68,7 @@ public class Fox extends BoardItem {
     public Fox(Pair<Coordinate, Coordinate> coordinates, Orientation orientation) {
         //TODO: calc orientation based on pair of coords
         super(coordinates);
+        this.uIRepresentation = ItemUIRepresentation.FOX;
         validateArguments(coordinates);
         this.orientation = orientation;
     }

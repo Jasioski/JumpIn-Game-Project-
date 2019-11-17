@@ -4,11 +4,13 @@ import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.tui.ItemUIRepresentation;
 
 public class Rabbit extends SingleBoardItem implements Containable {
 
     public Rabbit(Coordinate coordinate) {
         super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }
 
     public Rabbit (int row, int column) {
@@ -52,8 +54,9 @@ public class Rabbit extends SingleBoardItem implements Containable {
         BoardItem item = slice.get(coordinate);
 
         // Found obstacle
+        //Perform Jump
         if (item.isObstacle()){
-            return jumpingRabbit.jump(Direction.RIGHT, slice, true);
+            return jumpingRabbit.jump(direction, slice, true);
         }
 
         // Could be empty hole or empty item

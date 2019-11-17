@@ -10,11 +10,7 @@ public final class Mushroom extends SingleBoardItem implements Containable {
 
     public Mushroom(Coordinate coordinate) {
         super(coordinate);
-    }
-
-    @Override
-    public String toString() {
-        return ItemUIRepresentation.MUSHROOM.getRepresentation();
+        this.uIRepresentation = ItemUIRepresentation.MUSHROOM;
     }
 
     @Override

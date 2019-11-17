@@ -5,6 +5,7 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.tui.ItemUIRepresentation;
 
 public class Hole extends ContainerItem {
     /**
@@ -15,6 +16,19 @@ public class Hole extends ContainerItem {
      */
     public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate, containingItem);
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof Rabbit) {
+                this.uIRepresentation =
+                        ItemUIRepresentation.HOLE_OCCUPIED_RABBIT;
+            }
+            else if (containingItem.get() instanceof Mushroom) {
+                this.uIRepresentation = ItemUIRepresentation.HOLE_MUSHROOM;
+            }
+        }
+
+        else {
+            this.uIRepresentation = ItemUIRepresentation.HOLE_EMPTY;
+        }
     }
 
 

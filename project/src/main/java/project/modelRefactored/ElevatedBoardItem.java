@@ -5,6 +5,7 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.tui.ItemUIRepresentation;
 
 public class ElevatedBoardItem extends ContainerItem {
     /**
@@ -15,6 +16,19 @@ public class ElevatedBoardItem extends ContainerItem {
      */
     public ElevatedBoardItem(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate, containingItem);
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof Rabbit) {
+                this.uIRepresentation =
+                        ItemUIRepresentation.ELEVATED_RABBIT;
+            }
+            else if (containingItem.get() instanceof Mushroom) {
+                this.uIRepresentation = ItemUIRepresentation.ELEVATED_MUSHROOM;
+            }
+        }
+
+        else {
+            this.uIRepresentation = ItemUIRepresentation.ELEVATED;
+        }
     }
 
 
