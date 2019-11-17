@@ -7,6 +7,10 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 import project.model.Direction;
+import project.model.GameState;
+import project.model.exceptions.NonSlideableException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideWrongOrientationException;
 
 public class Board {
 
@@ -17,7 +21,10 @@ public class Board {
 	//todo: override and throw exception on map.get
 	private PMap<Coordinate, BoardItem> items;
 
+	protected GameState currentGameState;
+
 	public Board(int rows, int columns) {
+		this.currentGameState = GameState.IN_PROGRESS;
 		items = HashTreePMap.empty();
 		this.numberOfRows = rows;
 		this.numberOfColumns = columns;
@@ -33,6 +40,7 @@ public class Board {
 	}
 
 	private Board (Board board) {
+		this.currentGameState = GameState.IN_PROGRESS;
 		this.numberOfRows = board.numberOfRows;
 		this.numberOfColumns = board.numberOfColumns;
 
@@ -96,6 +104,39 @@ public class Board {
 		return slice;
 	}
 
+	public Board slide(Direction direction, int moveSpaces,
+					   Coordinate coordinate) throws InvalidMoveException,
+			SlideHitObstacleException, SlideWrongOrientationException,
+			NonSlideableException {
+
+		Board board = new Board(this);
+		BoardItem item = this.items.get(coordinate);
+
+		//if item is a fox, perform the slide
+		if (item instanceof Fox) {
+			Fox fox = (Fox) item;
+			Pair<Coordinate, Coordinate> originalCoords =
+					Pair.pair(fox.getHead(), fox.getTail());
+
+			EmptyBoardItem emptyHead =
+					new EmptyBoardItem(originalCoords.left());
+
+			EmptyBoardItem emptyTail =
+					new EmptyBoardItem(originalCoords.right());
+
+			board = board.setItem(emptyHead);
+			board = board.setItem(emptyTail);
+
+			Fox newFox = fox.slide(board.getRowSlice(coordinate.row),
+					moveSpaces,	direction);
+
+			board = board.setItem(newFox);
+		} else {
+			throw new NonSlideableException("Must be Fox to slide");
+		}
+		return board;
+	}
+
 	public Board jump(Direction direction, Coordinate coordinate)
 			throws InvalidMoveException {
 
@@ -144,7 +185,50 @@ public class Board {
 			throw new InvalidMoveException("Must be a rabbit to jump!");
 		}
 
+		board.updateGameState();
+
 		return board;
+	}
+
+	/**
+	 * Updates the gamestate to won if there are no rabbits remaining on the board.
+	 */
+	public Board updateGameState() {
+		Board board = new Board(this);
+		for (int row = 0; row < board.numberOfRows; row++) {
+			for (int column = 0; column < board.numberOfColumns; column++) {
+				// make sure there are no top level rabbits
+				if (board.items.get(new Coordinate(row, column)) instanceof Rabbit) {
+					board.currentGameState = GameState.IN_PROGRESS;
+					return board;
+				}
+				// make sure there are no rabbits inside elevated positions
+				else if (board.items.get(new Coordinate(row, column)) instanceof ElevatedBoardItem) {
+					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
+							board.items.get(new Coordinate(row, column));
+					if (elevatedBoardItem.containingItem.isPresent()) {
+						Containable containable =
+								elevatedBoardItem.containingItem.get();
+
+						if (containable instanceof  Rabbit) {
+							board.currentGameState = GameState.IN_PROGRESS;
+							return board;
+						}
+					}
+				}
+			}
+		}
+
+		board.currentGameState = GameState.SOLVED;
+		return board;
+	}
+
+	/**
+	 * Gets the current gamestate of the board.
+	 * @return The current gamestate.
+	 */
+	public GameState getCurrentGameState() {
+		return currentGameState;
 	}
 	@Override
 		public String toString() {
