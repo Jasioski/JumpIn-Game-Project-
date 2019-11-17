@@ -1,6 +1,10 @@
 package project.modelRefactored;
 
 import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
+import org.pcollections.PMap;
+import project.model.Direction;
 
 public class Hole extends ContainerItem {
     /**
@@ -11,5 +15,23 @@ public class Hole extends ContainerItem {
      */
     public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate, containingItem);
+    }
+
+
+    public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+        if (!containingItem.isPresent()){
+            if (! (containingItem.get() instanceof  Rabbit)) {
+                throw new InvalidMoveException("The hole does not contain a rabbit.");
+            }
+        }
+
+        //Jump the rabbit out of the hole
+        Rabbit jumpingRabbit = (Rabbit) this.containingItem.get();
+        Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
+
+        //Create a new empty hole in this one's place
+        Hole emptyContainerItem = new Hole(this.coordinate.left().get(), Optional.absent());
+
+        return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
 }

@@ -38,7 +38,7 @@ public class FoxTest {
                 Orientation.HORIZONTAL);
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
-        board = board.setItem(new ContainerItem(destination, Optional.absent()));
+        board = board.setItem(new Hole(destination, Optional.absent()));
 
         Board finalBoard = board;
         assertThrows(Exception.class, () -> {

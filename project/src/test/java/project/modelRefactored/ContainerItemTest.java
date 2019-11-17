@@ -12,7 +12,7 @@ public class ContainerItemTest {
     void testConstructor() {
         Optional<Containable> containable = Optional.absent();
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        ContainerItem containerItem = new ContainerItem(holeCoordinate,
+        ContainerItem containerItem = new Hole(holeCoordinate,
                 containable);
 
         assertEquals(containerItem.containingItem, containable,
@@ -31,7 +31,7 @@ public class ContainerItemTest {
         Optional<Containable> containable = Optional.of(containableItem);
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        ContainerItem containerItem = new ContainerItem(holeCoordinate,
+        ContainerItem containerItem = new Hole(holeCoordinate,
                 containable);
 
         assertEquals(containerItem.containingItem, containable,
@@ -51,7 +51,7 @@ public class ContainerItemTest {
     void testIsObstacleWithoutItem() {
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        ContainerItem containerItem = new ContainerItem(holeCoordinate,
+        ContainerItem containerItem = new Hole(holeCoordinate,
                 Optional.absent());
 
         assertFalse(containerItem.isObstacle(),
@@ -68,7 +68,7 @@ public class ContainerItemTest {
         Optional<Containable>  containableRabbit = Optional.of(rabbit);
 
         Coordinate holeCoordinate = new Coordinate(0, 0);
-        ContainerItem containerItem = new ContainerItem(holeCoordinate,
+        ContainerItem containerItem = new Hole(holeCoordinate,
                 containableRabbit);
 
         Containable item = containerItem.containingItem.get();
@@ -86,7 +86,7 @@ public class ContainerItemTest {
 
         Coordinate initialCoordinate = new Coordinate(0, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
-        ContainerItem initialContainerItem = new ContainerItem(initialCoordinate, Optional.of(initialRabbit));
+        ContainerItem initialContainerItem = new Hole(initialCoordinate, Optional.of(initialRabbit));
         Coordinate expectedJumpCoordinate = new Coordinate(0, 2);
 
         Board board = new Board(1,3);

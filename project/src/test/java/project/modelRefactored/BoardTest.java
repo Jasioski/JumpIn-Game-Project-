@@ -76,7 +76,7 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        ContainerItem containerItem = new ContainerItem(initialCoordinate, Optional.of(initialRabbit));
+        ContainerItem containerItem = new Hole(initialCoordinate, Optional.of(initialRabbit));
 
         board = board.setItem(containerItem);
 
@@ -135,7 +135,7 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        ContainerItem destinationContainerItem = new ContainerItem(expectedJumpCoordinate,
+        ContainerItem destinationContainerItem = new Hole(expectedJumpCoordinate,
                 Optional.absent());
 
         board = board.setItem(initialRabbit);
@@ -177,9 +177,9 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        ContainerItem originalContainerItem = new ContainerItem(initialCoordinate,
+        ContainerItem originalContainerItem = new Hole(initialCoordinate,
                 Optional.of(initialRabbit));
-        ContainerItem destinationContainerItem = new ContainerItem(expectedJumpCoordinate,
+        ContainerItem destinationContainerItem = new Hole(expectedJumpCoordinate,
                 Optional.absent());
 
         board = board.setItem(originalContainerItem);

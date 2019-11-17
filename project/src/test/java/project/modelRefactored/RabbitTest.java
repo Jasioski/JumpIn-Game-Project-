@@ -109,7 +109,7 @@ public final class RabbitTest {
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
         Coordinate expectedJumpCoordinate = new Coordinate(0, 2);
 
-        ContainerItem containerItem = new ContainerItem(new Coordinate(0,2), Optional.absent());
+        ContainerItem containerItem = new Hole(new Coordinate(0,2), Optional.absent());
 
         Board board = new Board(1,3);
         board = board.setItem(initialRabbit);
