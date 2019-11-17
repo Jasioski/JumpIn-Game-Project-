@@ -98,41 +98,49 @@ public class Board {
 		return slice;
 	}
 
-
-
 	public Board jump(Direction direction, Coordinate coordinate)
-			throws NonJumpableException {
+			throws InvalidMoveException {
 
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
-		if (!(item instanceof Rabbit)) {
-			throw new NonJumpableException("Must be a rabbit to jump!");
-		}
+		Either<Rabbit, Hole> rabbitOrHole;
 
-		Rabbit rabbit = (Rabbit) item;
-		try {
-			Either<Rabbit, Hole> rabbitOrHole = rabbit.jump(direction,
-					this.getRowSlice(0));
-
-			if (rabbitOrHole.isLeft()) {
-				System.out.println("FOUND A RABBIT!");
-				board = board.setItem(rabbitOrHole.left().get());
-			} else {
-				System.out.println("FOUND A HOLE!");
-				board = board.setItem(rabbitOrHole.right().get());
-			}
+		if ((item instanceof Rabbit)) {
+			Rabbit rabbit = (Rabbit) item;
+			rabbitOrHole = rabbit.jump(direction,
+					this.getRowSlice(coordinate.row));
 
 			EmptyBoardItem empty = new EmptyBoardItem(coordinate);
 			board = board.setItem(empty);
-		} catch (Exception e) {
-			logger.debug(e);
+
+			if (rabbitOrHole.isLeft()) {
+				board = board.setItem(rabbitOrHole.left().get());
+			} else {
+				board = board.setItem(rabbitOrHole.right().get());
+			}
+		}
+		else if (item instanceof Hole){
+			Hole hole = (Hole) item;
+
+			Pair<Hole, Either<Rabbit, Hole>> holeAndJumped = hole.jump(direction,
+					this.getRowSlice(coordinate.row));
+			rabbitOrHole = holeAndJumped.right();
+			board = board.setItem(holeAndJumped.left());
+
+			if (rabbitOrHole.isLeft()) {
+				board = board.setItem(rabbitOrHole.left().get());
+			} else {
+				board = board.setItem(rabbitOrHole.right().get());
+			}
+		}
+		else{
+			throw new InvalidMoveException("Must be a rabbit to jump!");
 		}
 
 		return board;
 	}
 
-
-//todo: rewrite the toString()
+	//todo: rewrite the toString()
 	@Override
 		public String toString() {
 		String str = "";
