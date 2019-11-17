@@ -9,7 +9,7 @@ import project.model.Direction;
 /**
  * Represents a hole object on the board.
  */
-public final class ContainerItem extends SingleBoardItem {
+public abstract class ContainerItem extends SingleBoardItem {
     /**
      * The item that the hole may contain.
      */
