@@ -7,7 +7,6 @@ public class DefaultBoard {
     private Board board;
 
     public DefaultBoard() {
-
         board = new Board(5, 5);
         Mushroom mush1 = new Mushroom(new Coordinate(0,0));
         Hole holeTopLeft = new Hole(new Coordinate(0, 0),
@@ -66,6 +65,11 @@ public class DefaultBoard {
         board = board.setItem(elevatedMidRight);
         board = board.setItem(holeBottomRight);
         board = board.setItem(mush2);
+
+    }
+
+    public Board getDefaultBoard() {
+        return board;
     }
 
     @Override

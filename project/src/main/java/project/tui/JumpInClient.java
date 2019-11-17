@@ -2,9 +2,9 @@ package project.tui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.Coordinate;
+import project.modelRefactored.Coordinate;
 import project.model.Direction;
-import project.model.Board;
+import project.modelRefactored.Board;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +66,7 @@ public class JumpInClient {
 
     /**
      * Parses Rabbit input
-     * @param String line to be parsed and used to attempt a move on a rabbit
+     * @param line to be parsed and used to attempt a move on a rabbit
      * @return command with coordinates used to move the rabbit on the board
      */
     public RabbitCommand parseRabbitCommand(String line) throws Exception {
@@ -97,6 +97,7 @@ public class JumpInClient {
             logger.trace(matcher.group());
 
             RabbitCommand command = new RabbitCommand(coordinate, direction);
+            System.out.println(command.coordinate + " : " + command.direction);
             return command;
         }
         else {
@@ -106,7 +107,7 @@ public class JumpInClient {
 
     /**
      * Parses Fox input
-     * @param String line to be parsed and used to attempt a move on a fox
+     * @param line to be parsed and used to attempt a move on a fox
      * @return command with coordinates used to move the fox on the board
      */
     public FoxCommand parseFoxCommand(String line) throws Exception {
@@ -148,7 +149,7 @@ public class JumpInClient {
 
     /**
      * Checks if the command is valid
-     * @param String input
+     * @param input
      * @return Rabbit or Fox command
      */
     public Command parseInput(String input) {

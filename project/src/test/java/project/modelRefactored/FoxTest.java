@@ -82,6 +82,41 @@ public class FoxTest {
     }
 
     @Test
+    void slideLeft() {
+        //slice setup
+        // E E F F
+        // F F E E
+        Coordinate originalHead = new Coordinate(0,2);
+        Coordinate originalTail = new Coordinate(0, 3);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
+                Orientation.HORIZONTAL);
+        Board board = new Board(1, 4);
+        board = board.setItem(slidingFox);
+
+        Coordinate expectedHead = new Coordinate(0, 0);
+        Coordinate expectedTail = new Coordinate(0, 1);
+
+        int moveSpaces = 2;
+        try {
+            Fox newFox = slidingFox.slide(board.getRowSlice(0), moveSpaces,
+                    Direction.LEFT);
+            assertEquals(expectedTail, newFox.getTail(), "the tail should be at " +
+                    "the expected coordinate");
+            assertEquals(expectedHead, newFox.getHead(),
+                    "The head should have moved here");
+        } catch (Exception e) {
+            logger.debug(e);
+            fail();
+        }
+
+        // Test that the old fox head did not change
+        assertEquals(originalHead, slidingFox.getHead());
+
+        //Test that the old fox tail did not change
+        assertEquals(originalTail, slidingFox.getTail());
+    }
+
+    @Test
     void slideRightOffBoard() {
         //slice setup
         // F F E E

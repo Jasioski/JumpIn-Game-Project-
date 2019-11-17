@@ -4,8 +4,11 @@ import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import project.modelRefactored.Board;
+import project.modelRefactored.Coordinate;
 import project.modelRefactored.DefaultBoard;
 import project.model.GameState;
+import project.modelRefactored.Fox;
 
 public class Main {
 
@@ -30,14 +33,20 @@ public class Main {
     public static void main(String[] args) {
 
         print("Starting JumpIn");
-        DefaultBoard board = new DefaultBoard();
-
+        DefaultBoard defBoard = new DefaultBoard();
+        Board board = defBoard.getDefaultBoard();
+        System.out.println(board.getCurrentGameState());
+        System.out.println(board.getItem(new Coordinate(0,3)));
+        System.out.println(board.getItem(new Coordinate(4,2)));
+        System.out.println(board.getItem(new Coordinate(1,1)));
+        Fox fox = (Fox) board.getItem(new Coordinate(1,1));
+        System.out.println(fox.orientation);
+        System.out.println(board.getItem(new Coordinate(3,2)));
         // JumpIn client
         Scanner scanner = new Scanner(System.in);
 
         JumpInClient client = new JumpInClient();
 
-        /*
         while (board.getCurrentGameState() == GameState.IN_PROGRESS) {
 
             try {
@@ -47,25 +56,29 @@ public class Main {
                 JumpInClient.Command command = client.parseInput(userInput);
 
                 if (command instanceof JumpInClient.RabbitCommand) {
-                    board.jump(command.direction, command.coordinate);
+                    board = board.jump(command.direction, command.coordinate);
                 }
 
                 if (command instanceof JumpInClient.FoxCommand) {
+                    System.out.println("In Fox");
                     JumpInClient.FoxCommand foxCommand =
                             (JumpInClient.FoxCommand) command;
 
-                    board.slide(foxCommand.direction, foxCommand.moveSpaces,
+                    System.out.println("Parsed Command");
+                    board = board.slide(foxCommand.direction,
+                            foxCommand.moveSpaces,
                             foxCommand.coordinate);
+                    System.out.println("No error");
                 }
 
             }
             catch(Exception e) {
-                warn(e.getMessage());
+                System.out.println(e);
             }
 
         }
 
-         */
+
         scanner.close();
        // board.getCurrentGameState();
         print(board.toString());
