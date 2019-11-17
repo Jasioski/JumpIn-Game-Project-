@@ -106,57 +106,79 @@ public class Solver {
         BoardItem item = board.getItem(coordinate);
         Coordinate nextItem;
 
+        // TODO: make sure we don't fall off the board
+
         //check up jump
         nextItem = new Coordinate(coordinate.row - 1, coordinate.column);
-        if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
-            for (int row = coordinate.row - 2; row >= 0; row--) {
-                nextItem = new Coordinate(row, nextItem.column);
-                if (!board.getItem(nextItem).isObstacle()) {
-                    Move move = new Move(item, Direction.UP, coordinate, nextItem);
-                    legalMoves.add(move);
-                    break;
+
+        if (nextItem.isWholeNumber()) {
+            if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
+                for (int row = coordinate.row - 2; row >= 0; row--) {
+                    nextItem = new Coordinate(row, nextItem.column);
+
+                    if (!board.getItem(nextItem).isObstacle()) {
+                        Move move = new Move(item, Direction.UP, coordinate, nextItem);
+                        legalMoves.add(move);
+                        break;
+                    }
                 }
             }
         }
 
         //check down jump
         nextItem = new Coordinate(coordinate.row + 1, coordinate.column);
-        if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
-            for (int row = coordinate.row + 2; row < board.numberOfRows; row++) {
-                nextItem = new Coordinate(row, nextItem.column);
-                if (!board.getItem(nextItem).isObstacle()) {
-                    Move move = new Move(item, Direction.DOWN, coordinate, nextItem);
-                    legalMoves.add(move);
-                    break;
+
+        if (nextItem.isWholeNumber()) {
+            if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
+                for (int row = coordinate.row + 2; row < board.numberOfRows; row++) {
+                    nextItem = new Coordinate(row, nextItem.column);
+
+                    if (!board.getItem(nextItem).isObstacle()) {
+                        Move move = new Move(item, Direction.DOWN, coordinate, nextItem);
+                        legalMoves.add(move);
+                        break;
+                    }
                 }
             }
         }
 
         //check left jump
         nextItem = new Coordinate(coordinate.row, coordinate.column - 1);
-        if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
-            for (int column = coordinate.column - 2; column >= 0; column--) {
-                nextItem = new Coordinate(nextItem.row, column);
-                if (!board.getItem(nextItem).isObstacle()) {
-                    Move move = new Move(item, Direction.LEFT, coordinate, nextItem);
-                    legalMoves.add(move);
-                    break;
+
+        if (nextItem.isWholeNumber()) {
+            if (board.getItem(nextItem).isObstacle()) {
+                //rabbits must jump over obstacle to move
+                for (int column = coordinate.column - 2; column >= 0; column--) {
+                    nextItem = new Coordinate(nextItem.row, column);
+
+                    if (!board.getItem(nextItem).isObstacle()) {
+                        Move move = new Move(item, Direction.LEFT, coordinate, nextItem);
+                        legalMoves.add(move);
+                        break;
+                    }
                 }
             }
         }
 
         //check right jump
         nextItem = new Coordinate(coordinate.row, coordinate.column + 1);
-        if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
-            for (int column = coordinate.column + 2; column < board.numberOfColumns; column++) {
-                nextItem = new Coordinate(nextItem.row, column);
-                if (!board.getItem(nextItem).isObstacle()) {
-                    Move move = new Move(item, Direction.LEFT, coordinate, nextItem);
-                    legalMoves.add(move);
-                    break;
+
+        if (nextItem.isWholeNumber()) {
+            if (board.getItem(nextItem).isObstacle()) {
+                //rabbits must jump over obstacle to move
+                for (int column = coordinate.column + 2; column < board.numberOfColumns; column++) {
+                    nextItem = new Coordinate(nextItem.row, column);
+
+                    if (!board.getItem(nextItem).isObstacle()) {
+                        Move move = new Move(item, Direction.RIGHT, coordinate,
+                                nextItem);
+                        legalMoves.add(move);
+                        break;
+                    }
                 }
             }
         }
+
         return legalMoves;
     }
 
