@@ -7,6 +7,8 @@ public class DefaultBoard {
     private Board board;
 
     public DefaultBoard() {
+        //TODO: integrate elevated board item
+        
         board = new Board(5, 5);
         Mushroom mush1 = new Mushroom(new Coordinate(0,0));
         Mushroom mush2 = new Mushroom(new Coordinate(1,3));
