@@ -78,13 +78,11 @@ public class Main {
 
         }
 
-
         scanner.close();
        // board.getCurrentGameState();
         print(board.toString());
         print(ANSIColor.GREEN + "Game has been solved " +
                 "successfully!" + ANSIColor.RESET);
-
 
     }
 

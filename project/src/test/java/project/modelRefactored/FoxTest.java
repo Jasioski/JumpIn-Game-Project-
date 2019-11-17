@@ -141,7 +141,7 @@ public class FoxTest {
 
         int moveSpaces = 2;
         try {
-            Fox newFox = slidingFox.slide(board.getRowSlice(0), moveSpaces,
+            Fox newFox = slidingFox.slide(board.getColumnSlice(0), moveSpaces,
                     Direction.DOWN);
             assertEquals(expectedTail, newFox.getTail(), "the tail " +
                     "should be at the expected coordinate");
@@ -184,7 +184,7 @@ public class FoxTest {
 
         int moveSpaces = 2;
         try {
-            Fox newFox = slidingFox.slide(board.getRowSlice(0), moveSpaces,
+            Fox newFox = slidingFox.slide(board.getColumnSlice(0), moveSpaces,
                     Direction.UP);
             assertEquals(expectedTail, newFox.getTail(), "the tail " +
                     "should be at the expected coordinate");

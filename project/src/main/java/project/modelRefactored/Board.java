@@ -115,6 +115,13 @@ public class Board {
 		//if item is a fox, perform the slide
 		if (item instanceof Fox) {
 			Fox fox = (Fox) item;
+			PMap<Coordinate, BoardItem> slice;
+
+			if (fox.orientation == Orientation.HORIZONTAL) {
+				slice = board.getRowSlice(coordinate.row);
+			} else {
+				slice = board.getColumnSlice(coordinate.column);
+			}
 			Pair<Coordinate, Coordinate> originalCoords =
 					Pair.pair(fox.getHead(), fox.getTail());
 
@@ -127,7 +134,7 @@ public class Board {
 			board = board.setItem(emptyHead);
 			board = board.setItem(emptyTail);
 
-			Fox newFox = fox.slide(board.getRowSlice(coordinate.row),
+			Fox newFox = fox.slide(slice,
 					moveSpaces,	direction);
 
 			board = board.setItem(newFox);
