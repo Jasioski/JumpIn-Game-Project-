@@ -145,11 +145,14 @@ public class Fox extends BoardItem {
         coordinates.add(nextCoordinates.right());
 
         if (checkIfNotOnBoard(slice, coordinates)) {
-            throw new InvalidMoveException("Move failed");
+            //TODO: should we replace these with seperate moves?
+            throw new InvalidMoveException("Slide caused fox to fall off " +
+                    "board");
         }
 
         if (checkIfHitObstacle(slice, coordinates)) {
-            throw new InvalidMoveException("Move failed");
+            throw new InvalidMoveException("Slide caused fox to hit an " +
+                    "obstacle");
         }
 
         if (moveSpaces > 1) {
