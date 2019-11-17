@@ -6,14 +6,14 @@ import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
 
-public class Hole extends ContainerItem {
+public class ElevatedBoardItem extends ContainerItem {
     /**
      * Constructs a new hole with a coordinate and optional item.
      *
      * @param coordinate     The coordinate where the hole is located.
      * @param containingItem The optional item that it can contain.
      */
-    public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
+    public ElevatedBoardItem(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate, containingItem);
     }
 
@@ -30,7 +30,7 @@ public class Hole extends ContainerItem {
         Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
 
         //Create a new empty hole in this one's place
-        Hole emptyContainerItem = new Hole(this.coordinate.left().get(), Optional.absent());
+        ElevatedBoardItem emptyContainerItem = new ElevatedBoardItem(this.coordinate.left().get(), Optional.absent());
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }

@@ -14,7 +14,7 @@ import project.model.exceptions.HoleAlreadyHasRabbitException;
 import project.model.exceptions.HoleIsEmptyException;
 import project.tui.ItemUIRepresentation;
 
-class HoleTest {
+class ContainerItemTest {
 
 	@Test
 	void testConstructor() {

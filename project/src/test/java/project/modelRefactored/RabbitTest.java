@@ -2,14 +2,8 @@ package project.modelRefactored;
 
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
-import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
-import org.pcollections.Empty;
 import project.model.Direction;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,17 +115,17 @@ public final class RabbitTest {
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
         Coordinate expectedJumpCoordinate = new Coordinate(0, 2);
 
-        Hole hole = new Hole(new Coordinate(0,2), Optional.absent());
+        ContainerItem containerItem = new Hole(new Coordinate(0,2), Optional.absent());
 
         Board board = new Board(1,3);
         board = board.setItem(initialRabbit);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
-        board = board.setItem(hole);
+        board = board.setItem(containerItem);
 
 
         // TODO: jump should return a list of items to be set to the board
         // Perform jump
-        Either<Rabbit, Hole> returnPair =
+        Either<Rabbit, ContainerItem> returnPair =
                 null;
         try {
             returnPair = initialRabbit.jump(Direction.RIGHT,
@@ -140,7 +134,7 @@ public final class RabbitTest {
             fail();
         }
 
-        Hole newHole = returnPair.right().get();
+        ContainerItem newContainerItem = returnPair.right().get();
 
         // Make sure the initial rabbit has not been mutated
         Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
@@ -148,7 +142,7 @@ public final class RabbitTest {
                 " rabbit should not have been mutated" );
 
         // The original hole should not have changed
-        assertFalse(hole.containingItem.isPresent(), "the hole should still " +
+        assertFalse(containerItem.containingItem.isPresent(), "the hole should still " +
                 "be empty");
 
         // The original rabbit should not have changed
@@ -157,11 +151,11 @@ public final class RabbitTest {
                 "original rabbit should not have changed");
 
         // The new returned hole should have the rabbit
-        assertTrue(newHole.containingItem.isPresent(), "the hole should not " +
+        assertTrue(newContainerItem.containingItem.isPresent(), "the hole should not " +
                 "be" +
                 " empty");
 
-        assertTrue(newHole.containingItem.get() instanceof Rabbit, "rabbit " +
+        assertTrue(newContainerItem.containingItem.get() instanceof Rabbit, "rabbit " +
                 "should be in the hole");
 
     }
