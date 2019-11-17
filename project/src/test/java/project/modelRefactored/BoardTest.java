@@ -76,22 +76,22 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        Hole hole = new Hole(initialCoordinate, Optional.of(initialRabbit));
+        ContainerItem containerItem = new Hole(initialCoordinate, Optional.of(initialRabbit));
 
-        board = board.setItem(hole);
+        board = board.setItem(containerItem);
 
         Board newBoard;
         try {
             logger.debug(board.getItem(initialCoordinate).getClass());
-            Hole testHole = (Hole) board.getItem(initialCoordinate);
-            logger.debug(testHole.containingItem.get().getClass());
+            ContainerItem testContainerItem = (ContainerItem) board.getItem(initialCoordinate);
+            logger.debug(testContainerItem.containingItem.get().getClass());
 
             newBoard = board.jump(Direction.RIGHT, initialCoordinate);
 
             //NEW BOARD
             //0, 0 Hole
             assertTrue(newBoard.getItem(initialCoordinate) instanceof
-                    Hole, "item at 0, 0 should be a Hole");
+                    ContainerItem, "item at 0, 0 should be a Hole");
             //0, 1 Mushroom
             assertTrue(newBoard.getItem(new Coordinate(0,1)) instanceof
                     Mushroom, "item at 0, 1 should be mushroom");
@@ -101,11 +101,11 @@ public class BoardTest {
 
             //OLD BOARD SHOULDN'T CHANGE
             //0, 0 old Hole
-            Hole oldHole = (Hole) board.getItem(initialCoordinate);
+            ContainerItem oldContainerItem = (ContainerItem) board.getItem(initialCoordinate);
 
-            assertTrue(oldHole instanceof
-                    Hole, "item at 0, 0 should be HoleWithRabbit");
-            assertTrue(oldHole.containingItem.get() instanceof Rabbit,
+            assertTrue(oldContainerItem instanceof
+                    ContainerItem, "item at 0, 0 should be HoleWithRabbit");
+            assertTrue(oldContainerItem.containingItem.get() instanceof Rabbit,
                     "item inside old hole should be a Rabbit");
             // 0, 1 Mushroom
             assertTrue(board.getItem(new Coordinate(0,1)) instanceof
@@ -135,22 +135,22 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        Hole destinationHole = new Hole(expectedJumpCoordinate,
+        ContainerItem destinationContainerItem = new Hole(expectedJumpCoordinate,
                 Optional.absent());
 
         board = board.setItem(initialRabbit);
-        board = board.setItem(destinationHole);
+        board = board.setItem(destinationContainerItem);
 
         Board newBoard;
         try {
             newBoard = board.jump(Direction.RIGHT, initialCoordinate);
 
-            Hole newHole = (Hole) newBoard.getItem(expectedJumpCoordinate);
+            ContainerItem newContainerItem = (ContainerItem) newBoard.getItem(expectedJumpCoordinate);
 
             //new board should be updated
-            assertTrue(newHole instanceof Hole, "0, 2 should be a " +
+            assertTrue(newContainerItem instanceof ContainerItem, "0, 2 should be a " +
                     "hole");
-            assertTrue(newHole.containingItem.get() instanceof Rabbit,
+            assertTrue(newContainerItem.containingItem.get() instanceof Rabbit,
                     "0, 2 " +
                             "should have a Rabbit");
             assertTrue(newBoard.getItem(initialCoordinate) instanceof
@@ -177,45 +177,45 @@ public class BoardTest {
         Board board = new Board(1,3);
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
 
-        Hole originalHole = new Hole(initialCoordinate,
+        ContainerItem originalContainerItem = new Hole(initialCoordinate,
                 Optional.of(initialRabbit));
-        Hole destinationHole = new Hole(expectedJumpCoordinate,
+        ContainerItem destinationContainerItem = new Hole(expectedJumpCoordinate,
                 Optional.absent());
 
-        board = board.setItem(originalHole);
-        board = board.setItem(destinationHole);
+        board = board.setItem(originalContainerItem);
+        board = board.setItem(destinationContainerItem);
 
         Board newBoard;
         try {
             logger.debug(board.getItem(initialCoordinate).getClass());
-            Hole testHole = (Hole) board.getItem(initialCoordinate);
-            logger.debug(testHole.containingItem.get().getClass());
+            ContainerItem testContainerItem = (ContainerItem) board.getItem(initialCoordinate);
+            logger.debug(testContainerItem.containingItem.get().getClass());
 
             newBoard = board.jump(Direction.RIGHT, initialCoordinate);
 
-            Hole newHole = (Hole) newBoard.getItem(expectedJumpCoordinate);
+            ContainerItem newContainerItem = (ContainerItem) newBoard.getItem(expectedJumpCoordinate);
 
             //new board should be updated
-            assertTrue(newHole instanceof Hole, "0, 2 should be a " +
+            assertTrue(newContainerItem instanceof ContainerItem, "0, 2 should be a " +
                     "hole");
-            assertTrue(newHole.containingItem.get() instanceof Rabbit,
+            assertTrue(newContainerItem.containingItem.get() instanceof Rabbit,
                     "0, 2 " +
                     "should have a Rabbit");
 
-            Hole oldHole = (Hole) newBoard.getItem(initialCoordinate);
+            ContainerItem oldContainerItem = (ContainerItem) newBoard.getItem(initialCoordinate);
             //old hole should still be there
-            assertTrue(oldHole instanceof Hole, "0, 0 should be a " +
+            assertTrue(oldContainerItem instanceof ContainerItem, "0, 0 should be a " +
                     "hole");
-            assertTrue(!oldHole.containingItem.isPresent(), "0, 0 " +
+            assertTrue(!oldContainerItem.containingItem.isPresent(), "0, 0 " +
                     "should be empty Hole");
 
             //old board should remain same
-            oldHole = (Hole) board.getItem(initialCoordinate);
-            assertTrue(oldHole.containingItem.get() instanceof Rabbit,
+            oldContainerItem = (ContainerItem) board.getItem(initialCoordinate);
+            assertTrue(oldContainerItem.containingItem.get() instanceof Rabbit,
                     "0, 0 should be Hole containing Rabbit");
 
-            newHole = (Hole) board.getItem(expectedJumpCoordinate);
-            assertTrue(!newHole.containingItem.isPresent(),
+            newContainerItem = (ContainerItem) board.getItem(expectedJumpCoordinate);
+            assertTrue(!newContainerItem.containingItem.isPresent(),
                     "0, 2 should be Hole containing Rabbit");
 
         } catch (Exception e) {

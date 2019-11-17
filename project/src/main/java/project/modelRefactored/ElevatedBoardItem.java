@@ -7,27 +7,27 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
-public class Hole extends ContainerItem {
+public class ElevatedBoardItem extends ContainerItem {
     /**
      * Constructs a new hole with a coordinate and optional item.
      *
      * @param coordinate     The coordinate where the hole is located.
      * @param containingItem The optional item that it can contain.
      */
-    public Hole(Coordinate coordinate, Optional<Containable> containingItem) {
+    public ElevatedBoardItem(Coordinate coordinate, Optional<Containable> containingItem) {
         super(coordinate, containingItem);
         if (containingItem.isPresent()) {
             if (containingItem.get() instanceof Rabbit) {
                 this.uIRepresentation =
-                        ItemUIRepresentation.HOLE_OCCUPIED_RABBIT;
+                        ItemUIRepresentation.ELEVATED_RABBIT;
             }
             else if (containingItem.get() instanceof Mushroom) {
-                this.uIRepresentation = ItemUIRepresentation.HOLE_MUSHROOM;
+                this.uIRepresentation = ItemUIRepresentation.ELEVATED_MUSHROOM;
             }
         }
 
         else {
-            this.uIRepresentation = ItemUIRepresentation.HOLE_EMPTY;
+            this.uIRepresentation = ItemUIRepresentation.ELEVATED;
         }
     }
 
@@ -44,7 +44,7 @@ public class Hole extends ContainerItem {
         Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
 
         //Create a new empty hole in this one's place
-        Hole emptyContainerItem = new Hole(this.coordinate.left().get(), Optional.absent());
+        ElevatedBoardItem emptyContainerItem = new ElevatedBoardItem(this.coordinate.left().get(), Optional.absent());
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }

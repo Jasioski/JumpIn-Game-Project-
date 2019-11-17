@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 import project.model.Direction;
-import project.model.exceptions.NonJumpableException;
 
 public class Board {
 
@@ -102,9 +101,9 @@ public class Board {
 
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
-		Either<Rabbit, Hole> rabbitOrHole;
+		Either<Rabbit, ContainerItem> rabbitOrHole;
 
-		if ((item instanceof Rabbit)) {
+		if (item instanceof Rabbit) {
 			Rabbit rabbit = (Rabbit) item;
 			rabbitOrHole = rabbit.jump(direction,
 					this.getRowSlice(coordinate.row));
@@ -118,18 +117,27 @@ public class Board {
 				board = board.setItem(rabbitOrHole.right().get());
 			}
 		}
-		else if (item instanceof Hole){
-			Hole hole = (Hole) item;
+		else if (item instanceof ContainerItem){
+			ContainerItem containerItem = (ContainerItem) item;
 
-			Pair<Hole, Either<Rabbit, Hole>> holeAndJumped = hole.jump(direction,
+			Pair<ContainerItem, Either<Rabbit, ContainerItem>> holeAndJumped = containerItem.jump(direction,
 					this.getRowSlice(coordinate.row));
+
 			rabbitOrHole = holeAndJumped.right();
+
+			// sets empty hole
 			board = board.setItem(holeAndJumped.left());
 
+			// if its a rabbit
 			if (rabbitOrHole.isLeft()) {
-				board = board.setItem(rabbitOrHole.left().get());
-			} else {
-				board = board.setItem(rabbitOrHole.right().get());
+				Rabbit newRabbit = rabbitOrHole.left().get();
+				board = board.setItem(newRabbit);
+			}
+
+			// if its a hole
+			else {
+				ContainerItem newContainerItem = rabbitOrHole.right().get();
+				board = board.setItem(newContainerItem);
 			}
 		}
 		else{

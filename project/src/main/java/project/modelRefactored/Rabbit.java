@@ -2,7 +2,6 @@ package project.modelRefactored;
 
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
-import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
@@ -32,13 +31,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         }
     }
 
-    public Either<Rabbit, Hole> jump(Direction direction,
-                                          PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+    public Either<Rabbit, ContainerItem> jump(Direction direction,
+                                              PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
        return jump(direction, slice, false);
     }
 
-    private Either<Rabbit, Hole> jump(Direction direction,
-                                                PMap<Coordinate, BoardItem> slice
+    private Either<Rabbit, ContainerItem> jump(Direction direction,
+                                               PMap<Coordinate, BoardItem> slice
             , boolean isCurrentlyJumping) throws InvalidMoveException {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
 
@@ -51,8 +50,9 @@ public class Rabbit extends SingleBoardItem implements Containable {
         BoardItem item = slice.get(coordinate);
 
         // Found obstacle
+        //Perform Jump
         if (item.isObstacle()){
-            return jumpingRabbit.jump(Direction.RIGHT, slice, true);
+            return jumpingRabbit.jump(direction, slice, true);
         }
 
         // Could be empty hole or empty item
@@ -66,9 +66,9 @@ public class Rabbit extends SingleBoardItem implements Containable {
         // Not found obstacle
         if (isCurrentlyJumping) {
 
-            if (item instanceof Hole) {
-                Hole newHole = new Hole(coordinate, Optional.of(jumpingRabbit));
-                return Either.right(newHole);
+            if (item instanceof ContainerItem) {
+                ContainerItem newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                return Either.right(newContainerItem);
             } else {
                 return Either.left(jumpingRabbit);
             }

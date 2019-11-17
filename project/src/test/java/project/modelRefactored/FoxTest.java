@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Optional;
 import project.model.Direction;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class FoxTest {
