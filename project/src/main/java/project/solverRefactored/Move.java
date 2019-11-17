@@ -6,15 +6,19 @@ import project.modelRefactored.Coordinate;
 
 public class Move {
 
-    public BoardItem item;
-    public Coordinate initial;
-    public Coordinate ending;
+    public final BoardItem item;
+    public final Coordinate initial;
+    public final Coordinate ending;
 
-    public Direction direction;
+    public final Direction direction;
 
-    public Move(BoardItem item, Direction direction, Coordinate initial, Coordinate ending) { //for slideable need end coords
+    public Move(BoardItem item, Direction direction, Coordinate initial,
+                Coordinate ending) {
+
+        // Debug info
         this.item = item;
         this.direction = direction;
+
         this.initial = initial;
         this.ending = ending;
     }

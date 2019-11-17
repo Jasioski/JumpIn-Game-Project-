@@ -7,6 +7,8 @@ public class Coordinate {
     public final int row;
     public final int column;
 
+
+    // TODO: throw on negative
     public Coordinate(int row, int column) {
         this.row = row;
         this.column = column;
@@ -36,6 +38,11 @@ public class Coordinate {
         return (this.row == coordinate.row &&
                 this.column == coordinate.column);
     }
+
+    public boolean isWholeNumber() {
+        return (row > -1 ) && ( column > -1);
+    }
+
 
     @Override
     public String toString() {

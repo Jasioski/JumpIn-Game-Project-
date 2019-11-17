@@ -13,6 +13,10 @@ public class Rabbit extends SingleBoardItem implements Containable {
         this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }
 
+    public Rabbit (int row, int column) {
+        super(new Coordinate(row, column));
+    }
+
     private Coordinate computeCoordinateFromDirection(Direction direction) {
 
         Coordinate current = this.coordinate.left().get();
