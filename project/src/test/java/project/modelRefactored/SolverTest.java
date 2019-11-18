@@ -1,17 +1,12 @@
 package project.modelRefactored;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
+import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
-import project.model.*;
-import project.model.exceptions.JumpFailedNoObstacleException;
-import project.model.exceptions.JumpFailedOutOfBoundsException;
+import project.model.Direction;
 import project.solverRefactored.Move;
 import project.solverRefactored.Solver;
-import project.tui.ItemUIRepresentation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +40,7 @@ class SolverTest {
         List<Move> generatedMoves;
 
         Solver solver = new Solver();
-        generatedMoves = solver.generateMoves(board, rabbitCoordinate);
+        generatedMoves = solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
@@ -79,7 +74,7 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 1, "there should only be one move");
 
@@ -122,7 +117,7 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 1, "The list have one move");
 
@@ -164,7 +159,7 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
@@ -197,7 +192,7 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
@@ -231,7 +226,7 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
@@ -264,8 +259,113 @@ class SolverTest {
         Solver solver = new Solver();
 
         List<Move> generatedMoves =
-                solver.generateMoves(board, rabbitCoordinate);
+                solver.generateMovesRabbit(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
+    }
+
+
+    @Test
+    void testFoxSlideOneRight() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E E
+//      2    M M F F M
+//      3    E E M E E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,1));
+        board = board.setItem(new Mushroom(2,4));
+
+        Coordinate foxHead = new Coordinate(2,2);
+        Coordinate foxTail = new Coordinate(2,3);
+
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+
+        board = board.setItem(fox);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMovesFox(board, foxHead);
+
+        assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
+    }
+
+
+    @Test
+    void testFoxSlideOneRightOutOfBounds() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E E
+//      2    M M M F F
+//      3    E E M E E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,1));
+        board = board.setItem(new Mushroom(2,2));
+
+        Coordinate foxHead = new Coordinate(2,3);
+        Coordinate foxTail = new Coordinate(2,4);
+
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+
+        board = board.setItem(fox);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMovesFox(board, foxHead);
+
+        assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
+    }
+
+    @Test
+    void testFoxSlideTwoMoves() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E E
+//      2    M F F E E
+//      3    E E M E E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+
+        Coordinate foxHead = new Coordinate(2,1);
+        Coordinate foxTail = new Coordinate(2,2);
+
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+
+        board = board.setItem(fox);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMoves(board);
+
+        assertEquals(2,generatedMoves.size(), "the list should have two " +
+                "moves");
+
+        // FIXME figure out how to assert against the generated moves
     }
 }

@@ -18,17 +18,25 @@ public class Solver {
 
     }
 
-    public List<Move> generateMoves(Board board, Coordinate coordinate) {
+    public List<Move> generateMoves(Board board) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
-        BoardItem item = board.getItem(coordinate);
 
-        if (item instanceof Rabbit) {
-            return generateMovesRabbit(board, coordinate);
-        }
 
-        if (item instanceof Fox) {
-            return generateMovesFox(board, coordinate);
+        for (int row = 0; row < board.numberOfRows; row++) {
+            for (int column = 0; column < board.numberOfRows; column++) {
+
+                Coordinate coordinate = new Coordinate(row, column);
+                BoardItem item = board.getItem(coordinate);
+
+                if (item instanceof Rabbit) {
+                    legalMoves.addAll(generateMovesRabbit(board, coordinate));
+                }
+
+                else if (item instanceof Fox) {
+                    legalMoves.addAll(generateMovesFox(board, coordinate));
+                }
+            }
         }
 
         return legalMoves;
@@ -47,53 +55,60 @@ public class Solver {
             //check slide left
             //todo: bug to slide right fox piece left
             for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) {
-                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
-                    if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
-                        Move move = new Move(item, Direction.LEFT, coordinate, destination);
-                        legalMoves.add(move);
-                    }
+                destination = new Coordinate(coordinate.row, nextColumn);
+
+                // If we don't hit an obstacle
+                if (!board.getItem(destination).isObstacle()) {
+                    Move move = new Move(item, Direction.LEFT, coordinate, destination);
+                    legalMoves.add(move);
+                }
+                else {
                     break;
                 }
-                destination = new Coordinate(coordinate.row, nextColumn);
             }
 
             //check slide right
             //todo: bug to slide left fox piece right
             for (nextColumn = coordinate.column + 1; nextColumn < board.numberOfColumns; nextColumn++) {
-                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
-                    if (!(destination.column == coordinate.column)) { //can't be first iteration of loop
-                        Move move = new Move(item, Direction.RIGHT, coordinate, destination);
-                        legalMoves.add(move);
-                    }
+                destination = new Coordinate(coordinate.row, nextColumn);
+
+                // If we don't hit an obstacle
+                if (!board.getItem(destination).isObstacle()) {
+                    Move move = new Move(item, Direction.RIGHT, coordinate, destination);
+                    legalMoves.add(move);
+                } else {
                     break;
                 }
-                destination = new Coordinate(coordinate.row, nextColumn);
             }
 
         } else if(item.orientation == Orientation.VERTICAL) {
             int nextRow;
             //check slide up
-            for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) { //todo: bug to slide up fox piece down
-                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
-                    if (!(destination.row == coordinate.row)) { //can't be first iteration of loop
-                        Move move = new Move(item, Direction.UP, coordinate, destination);
-                        legalMoves.add(move);
-                    }
+            for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) {
+                //todo: bug to slide up fox piece down
+                destination = new Coordinate(coordinate.row, nextRow);
+
+                if (!board.getItem(destination).isObstacle()) {
+                    Move move = new Move(item, Direction.UP, coordinate, destination);
+                    legalMoves.add(move);
+                }
+                else {
                     break;
                 }
-                destination = new Coordinate(coordinate.row, nextRow);
             }
 
             //check slide down
-            for (nextRow = coordinate.row + 1; nextRow < board.numberOfRows; nextRow++) { //todo: bug to slide down fox piece up
+            for (nextRow = coordinate.row + 1; nextRow < board.numberOfRows; nextRow++) {
+                //todo: bug to slide down fox piece up
+                destination = new Coordinate(coordinate.row, nextRow);
+
                 if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
-                    if (!(destination.row == coordinate.row)) { //can't be first iteration of loop
-                        Move move = new Move(item, Direction.DOWN, coordinate, destination);
-                        legalMoves.add(move);
-                    }
+                    Move move = new Move(item, Direction.DOWN, coordinate, destination);
+                    legalMoves.add(move);
+                }
+                else {
                     break;
                 }
-                destination = new Coordinate(coordinate.row, nextRow);
             }
         }
 
