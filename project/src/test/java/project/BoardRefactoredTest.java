@@ -26,13 +26,6 @@ public class BoardRefactoredTest {
         Coordinate itemCoordinate = new Coordinate(1, 1);
         Mushroom item = new Mushroom(new Coordinate(1, 1));
 
-        // todo: make sure the old board did not change
-
-//        Board modifiedBoard = board.setItem(board, item);
-//        BoardItem modifiedItem = modifiedBoard.getItems().get(itemCoordinate);
-
-//        assertNotNull(modifiedItem);
-//        assertEquals(item, modifiedItem, "The items should be same");
     }
 
     @Test
@@ -40,8 +33,6 @@ public class BoardRefactoredTest {
         Board board = new Board(5, 5);
         Coordinate itemCoordinate = new Coordinate(1, 1);
         Mushroom mushroom = new Mushroom(new Coordinate(1, 1));
-
-        // todo: make sure the old board did not change
 
         // Apply set transformation
         Board modifiedBoard = board.setItem(mushroom);
