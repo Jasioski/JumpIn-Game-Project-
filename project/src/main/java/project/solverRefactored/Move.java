@@ -23,20 +23,23 @@ public class Move {
         this.ending = ending;
     }
 
-    public boolean equals(Move move) {
-        if (!(this.item == move.item)) {
+    public boolean equals(Object o) {
+        
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (this.getClass() != o.getClass())
             return false;
-        }
-        if (!(this.initial == move.initial)) {
-            return false;
-        }
-        if (!(this.direction == move.direction)) {
-            return false;
-        }
-        if (!(this.ending == move.ending)) {
-            return false;
-        }
-        return true;
+
+        Move move = (Move) o;
+
+
+        return (item.equals(move.item) &&
+                initial.equals(move.initial) &&
+                direction.equals(move.direction) &&
+                ending.equals(move.ending));
+
     }
 
     public String toString()  {

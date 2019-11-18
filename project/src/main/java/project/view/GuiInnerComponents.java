@@ -152,7 +152,7 @@ public class GuiInnerComponents implements ItemClickListener {
 				Board newBoard = board.move(selectedItem, destinationItem); // try moving the selected item to destination
 				boardHistory.addState(newBoard);
 				board = newBoard;
-				Solver.solve(board);
+//				Solver.solve(board);
 				logger.trace("successful");
 			} catch (InvalidMoveException e) {
 				logger.debug(e);

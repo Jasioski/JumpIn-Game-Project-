@@ -32,6 +32,7 @@ public class Main {
 
     @SuppressWarnings("PMD.UseVarargs")
     public static void main(String[] args) {
+        Solver solver = new Solver();
 
         print("Starting JumpIn");
         DefaultBoard defBoard = new DefaultBoard();
@@ -71,7 +72,7 @@ public class Main {
                             foxCommand.coordinate);
                     System.out.println("No error");
                 }
-                Solver.solve(board);
+                solver.solve(board);
             }
             catch(Exception e) {
                 System.out.println(e);

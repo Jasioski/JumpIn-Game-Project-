@@ -1,7 +1,10 @@
 package project.solverRefactored;
 
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pcollections.PVector;
+import org.pcollections.TreePVector;
 import project.model.Direction;
 import project.model.GameState;
 import project.model.exceptions.NonSlideableException;
@@ -43,21 +46,22 @@ public class Solver {
         }
     }
 
-    final static int MAX_DEPTH = 30;
+    final static int MAX_DEPTH = 10;
+    int counter = 0;
 
-    public static void solve (Board board) {
-        HashSet<Board> boardHistory = new HashSet<>();
+    public void solve (Board board) {
+        PVector<Pair<Board, Move>> boardHistory = TreePVector.empty();
 
         solve(board,boardHistory, 0);
     }
 
-
-    public static void solve (Board board,
-                              HashSet<Board> boardHistory, int depth) {
+    public boolean solve (Board board,
+                              PVector<Pair<Board, Move>> boardHistory,
+                          int depth) {
 
         if (depth > MAX_DEPTH) {
-            logger.debug("hit max depth on search");
-            return;
+//            logger.debug("hit max depth on search");
+            return false;
         }
 
         if (board.currentGameState == GameState.IN_PROGRESS) {
@@ -65,7 +69,7 @@ public class Solver {
 
             List<Move> moves = generateMoves(board);
 
-            logger.debug("generated moves: " + moves.size());
+//            logger.debug("generated moves: " + moves.size());
 
 //            Collections.shuffle(moves);
 
@@ -73,15 +77,25 @@ public class Solver {
                 try {
                     Board newBoard = applyMove(board, move);
 
-                    System.out.println(board);
+                   if (!boardHistory.contains(Pair.pair(newBoard, move))) {
 
-                    Thread.sleep(1000);
+//
+//                       logger.debug(board);
+//                       Thread.sleep(1000);
 
-                    if (!boardHistory.contains(newBoard)) {
-                        boardHistory.add(board);
-                        logger.trace("attempted boards: "+  boardHistory.size());
-                        solve(newBoard, boardHistory, depth + 1);
-                    }
+                        boardHistory =
+                                boardHistory.plus(Pair.pair(newBoard, move));
+                        counter++;
+                        logger.debug("attempted moves: " + counter);
+
+
+                        if(solve(newBoard, boardHistory, depth + 1))
+                            return true;
+                   }
+
+                   else {
+//                       logger.debug("skipping duplicate board");
+                   }
 
                 } catch (Exception e) {
                     logger.error(e);
@@ -90,11 +104,20 @@ public class Solver {
         }
 
         else {
-            logger.debug("Game solved");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
+            logger.debug("******************Game solved****************");
 
-            return;
+            logger.debug(board);
+
+            return true;
         }
 
+        return false;
     }
 
     public static List<Move> generateMoves(Board board) {

@@ -380,12 +380,17 @@ public class Board {
 		return str;
 	}
 
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(numberOfRows, numberOfColumns,
-				items, currentGameState);
+		return Objects.hash(numberOfRows, numberOfColumns, items, currentGameState);
 	}
+
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(numberOfRows, numberOfColumns,
+//				items, currentGameState);
+//	}
+
 	/**
 	 * Checks if this board is equivalent to another board.
 	 * @param o The board being checked against

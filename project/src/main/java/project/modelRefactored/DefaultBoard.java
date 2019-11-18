@@ -55,6 +55,7 @@ public class DefaultBoard {
                 Optional.absent());
         //5th column end
 
+
         board = board.setItem(holeTopLeft);
         board = board.setItem(elevatedLeft);
         board = board.setItem(holeBottomLeft);
@@ -63,7 +64,7 @@ public class DefaultBoard {
         board = board.setItem(holeMiddle);
         board = board.setItem(fox2);
         board = board.setItem(elevatedBottom);
-        board = board.setItem(rabbitMidTop);
+//        board = board.setItem(rabbitMidTop);
         board = board.setItem(holeTopRight);
         board = board.setItem(elevatedMidRight);
         board = board.setItem(holeBottomRight);
