@@ -150,7 +150,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
 
     /**
      * Method used to check if this Rabbit object is an obstacle.
-     * @return true All Rabbits are obstacles. 
+     * @return true All Rabbits are obstacles.
      */
     @Override
     public boolean isObstacle() {
