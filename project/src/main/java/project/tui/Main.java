@@ -36,7 +36,7 @@ public class Main {
         print("Starting JumpIn");
         DefaultBoard defBoard = new DefaultBoard();
         Board board = defBoard.getDefaultBoard();
-        System.out.println(board.getCurrentGameState());
+        System.out.println(board.currentGameState);
         System.out.println(board.getItem(new Coordinate(0,3)));
         System.out.println(board.getItem(new Coordinate(4,2)));
         System.out.println(board.getItem(new Coordinate(1,1)));
@@ -48,7 +48,7 @@ public class Main {
 
         JumpInClient client = new JumpInClient();
 
-        while (board.getCurrentGameState() == GameState.IN_PROGRESS) {
+        while (board.currentGameState == GameState.IN_PROGRESS) {
 
             try {
                 print(client.getPrompt(board));
@@ -71,7 +71,6 @@ public class Main {
                             foxCommand.coordinate);
                     System.out.println("No error");
                 }
-
                 Solver.solve(board);
             }
             catch(Exception e) {
