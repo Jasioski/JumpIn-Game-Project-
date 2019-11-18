@@ -25,4 +25,21 @@ public abstract class BoardItem implements MaybeObstacle {
     public String toString() {
         return this.uIRepresentation.getRepresentation();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        BoardItem boardItem = (BoardItem) o;
+
+        return (this.uIRepresentation.equals(boardItem.uIRepresentation) &&
+                this.coordinate.equals(boardItem.coordinate)
+        );
+    }
 }

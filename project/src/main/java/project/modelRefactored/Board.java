@@ -93,7 +93,7 @@ public class Board {
 
 		//TODO: clean up this code
 		if (item.coordinate.isRight()) {
-			Pair<Coordinate, Coordinate> coordinate =
+			Pair<Coordinate,Coordinate> coordinate =
 					item.coordinate.right().get();
 
 			modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
@@ -231,13 +231,11 @@ public class Board {
 		BoardItem item = this.getItem(itemSelected);
 		Board board = this;
 
-		if (item instanceof Rabbit || item instanceof ContainerItem) {
-			logger.trace("try jumping in direction:" + direction.toString());
+		if (item instanceof Rabbit || item instanceof ContainerItem)  {
 			board = this.jump(direction, itemSelected);
 		}
 		if (item instanceof Fox) {
-			logger.trace("try sliding fox in direction: " + direction.toString());
-			int moveSpaces = deltaCoordinate.row;
+			int moveSpaces = deltaCoordinate.row ;
 			if (deltaCoordinate.row == 0) {
 				moveSpaces = deltaCoordinate.column;
 			}
@@ -388,11 +386,52 @@ public class Board {
 		return Objects.hash(numberOfRows, numberOfColumns,
 				items, currentGameState);
 	}
-
+	/**
+	 * Checks if this board is equivalent to another board.
+	 * @param o The board being checked against
+	 * @return True if the boards are equivalent (their state is the same)
+	 */
+	@Override
 	public boolean equals (Object o) {
 		if (this == o) return true;
 
-		return false;
+		if (o == null) return false;
+
+		if (this.getClass() != o.getClass())
+			return false;
+
+		Board board = (Board) o;
+
+		if ((this.numberOfRows == board.numberOfRows) &&
+				(this.numberOfColumns == board.numberOfColumns) && (this.currentGameState == board.currentGameState)){
+			return this.hasSameContents(board);
+		}
+		else {
+			return false;
+		}
 	}
 
+	/**
+	 * Checks if this board has the same inner contents as another board(All of the objects inside are in the same places)
+	 * @param board The board being checked against
+	 * @return
+	 */
+	private boolean hasSameContents(Board board) {
+		for (int i = 0; i < numberOfRows; i++){
+			for (int j = 0; j < numberOfColumns; j++){
+				try {
+					BoardItem thisBoardItem = this.getItem(new Coordinate(i,j));
+					BoardItem compareBoardItem = board.getItem(new Coordinate(i,j));
+					if (!thisBoardItem.equals(compareBoardItem)){
+						return false;
+					}
+				}
+				catch(Exception e){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
 }

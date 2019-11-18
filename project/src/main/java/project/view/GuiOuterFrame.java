@@ -38,13 +38,14 @@ public class GuiOuterFrame {
 		// Add the tools dialog to the beginning of the frame
 		outerFrame.add(tools, BorderLayout.PAGE_START);
 		tools.add(boardInnerComponents.newGameAction);
+		tools.add(boardInnerComponents.undoLastMove);
+		tools.add(boardInnerComponents.redoLastMove);
 
 		tools.addSeparator();
 
 		tools.add(boardInnerComponents.getMessage());
 		outerFrame.add(tools, BorderLayout.NORTH);
 		outerFrame.add(boardInnerComponents.boardPanel);
-		boardInnerComponents.setupNewGame();
 		createFrame();
 	}
 
