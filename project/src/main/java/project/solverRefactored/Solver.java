@@ -101,8 +101,9 @@ public class Solver {
     }
 
     private boolean isCoordinateInBoard(Coordinate coordinate, Board board) {
-        int maxRows = board.numberOfRows;
-        int maxColumns = board.numberOfColumns;
+        // Subtract 1 for zero indexing
+        int maxRows = board.numberOfRows - 1;
+        int maxColumns = board.numberOfColumns - 1;
 
         int minRows = 0;
         int minColumns = 0;
