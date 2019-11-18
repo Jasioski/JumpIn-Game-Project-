@@ -394,7 +394,7 @@ public final class RabbitTest {
         //Result
         //  E
         //  M
-        //  H
+        //  HR
 
         Coordinate initialCoordinate = new Coordinate(0, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);

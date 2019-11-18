@@ -6,6 +6,10 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class Rabbit extends SingleBoardItem implements Containable {
 
     public Rabbit(Coordinate coordinate) {
@@ -45,6 +49,12 @@ public class Rabbit extends SingleBoardItem implements Containable {
             , boolean isCurrentlyJumping) throws InvalidMoveException {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
 
+        if (checkIfNotOnBoard(slice, coordinate)) {
+            //TODO: should we replace these with seperate moves?
+            throw new InvalidMoveException("Jumping caused Rabbit to fall off" +
+                    " board");
+        }
+
         Rabbit jumpingRabbit = new Rabbit(coordinate);
 
         // Check if the new coordinate is at an obstacle
@@ -71,7 +81,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         if (isCurrentlyJumping) {
 
             if (item instanceof ContainerItem) {
-                ContainerItem newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                ContainerItem newContainerItem;
+                if (item instanceof Hole) {
+                    newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                } else {
+                    newContainerItem = new ElevatedBoardItem(coordinate,
+                            Optional.of(jumpingRabbit));
+                }
                 return Either.right(newContainerItem);
             } else {
                 return Either.left(jumpingRabbit);
@@ -79,6 +95,18 @@ public class Rabbit extends SingleBoardItem implements Containable {
         } else {
             throw new InvalidMoveException("Cannot move without obstacles");
         }
+    }
+
+    private boolean checkIfNotOnBoard(
+            PMap<Coordinate, BoardItem> slice, Coordinate nextCoordinates
+    ) {
+        HashSet<Coordinate> coordinateSet = new HashSet<>(slice.keySet());
+
+        if (!coordinateSet.contains(nextCoordinates)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
