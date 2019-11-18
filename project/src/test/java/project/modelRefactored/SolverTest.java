@@ -485,7 +485,7 @@ class SolverTest {
         List<Move> generatedMoves =
                 solver.generateMoves(board);
 
-        assertEquals(1,generatedMoves.size(), "the list should have one " +
+        assertEquals(5,generatedMoves.size(), "the list should have five " +
                 "moves");
 
         // FIXME figure out how to assert against the generated moves
