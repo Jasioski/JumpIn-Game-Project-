@@ -48,4 +48,42 @@ public class Hole extends ContainerItem {
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        Hole hole = (Hole) o;
+
+        if (hole.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (hole.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+
+                if (hole.containingItem.isPresent() &&
+                        this.containingItem.isPresent()) {
+
+                    if (hole.containingItem.get().getClass() ==
+                            this.containingItem.get().getClass()) {
+                        return true;
+                    }
+
+                }
+
+                else if (!hole.containingItem.isPresent() &&
+                        !hole.containingItem.isPresent()) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
 }

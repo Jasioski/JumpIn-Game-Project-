@@ -226,5 +226,32 @@ public class Fox extends BoardItem {
         return coordinate.right().get().left();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        Fox fox = (Fox) o;
+
+        if ((fox.coordinate.right().get().left().column ==
+                this.coordinate.right().get().left().column) &&
+                fox.coordinate.right().get().left().row ==
+                        this.coordinate.right().get().left().row) {
+
+            if ((fox.coordinate.right().get().right().row ==
+                    this.coordinate.right().get().right().row &&
+                    fox.coordinate.right().get().right().column ==
+                            this.coordinate.right().get().right().column)) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
 
 }

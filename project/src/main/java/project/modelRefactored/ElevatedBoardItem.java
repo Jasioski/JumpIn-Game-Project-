@@ -48,4 +48,42 @@ public class ElevatedBoardItem extends ContainerItem {
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) o;
+
+        if (elevatedBoardItem.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (elevatedBoardItem.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+
+                if (elevatedBoardItem.containingItem.isPresent() &&
+                        this.containingItem.isPresent()) {
+
+                    if (elevatedBoardItem.containingItem.get().getClass() ==
+                            this.containingItem.get().getClass()) {
+                        return true;
+                    }
+
+                }
+
+                else if (!elevatedBoardItem.containingItem.isPresent() &&
+                        !elevatedBoardItem.containingItem.isPresent()) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
 }
