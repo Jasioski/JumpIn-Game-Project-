@@ -448,4 +448,46 @@ class SolverTest {
 
         // FIXME figure out how to assert against the generated moves
     }
+
+
+
+    @Test
+    void testJumpOneRabbit() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E R
+//      2    M F E E M
+//      3    E F M R E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,4));
+
+        Coordinate foxHead = new Coordinate(2,1);
+        Coordinate foxTail = new Coordinate(3,1);
+
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.VERTICAL);
+        Rabbit rabbit = new Rabbit(new Coordinate(1,4));
+        Rabbit rabbit2 = new Rabbit(new Coordinate(3,3));
+
+        board = board.setItem(fox);
+        board = board.setItem(rabbit);
+        board = board.setItem(rabbit2);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMoves(board);
+
+        assertEquals(5,generatedMoves.size(), "the list should have five " +
+                "moves");
+
+        // FIXME figure out how to assert against the generated moves
+    }
 }
