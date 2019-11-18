@@ -48,11 +48,12 @@ public class Solver {
     public static void solve (Board board) {
         HashSet<Board> boardHistory = new HashSet<>();
 
-        solve(board, 0);
+        solve(board,boardHistory, 0);
     }
 
 
-    public static void solve (Board board, int depth) {
+    public static void solve (Board board,
+                              HashSet<Board> boardHistory, int depth) {
 
         if (depth > MAX_DEPTH) {
             logger.debug("hit max depth on search");
@@ -66,7 +67,7 @@ public class Solver {
 
             logger.debug("generated moves: " + moves.size());
 
-            Collections.shuffle(moves);
+//            Collections.shuffle(moves);
 
             for (Move move: moves) {
                 try {
@@ -76,7 +77,12 @@ public class Solver {
 
                     Thread.sleep(1000);
 
-                    solve(newBoard, depth + 1);
+                    if (!boardHistory.contains(newBoard)) {
+                        boardHistory.add(board);
+                        logger.trace("attempted boards: "+  boardHistory.size());
+                        solve(newBoard, boardHistory, depth + 1);
+                    }
+
                 } catch (Exception e) {
                     logger.error(e);
                 }
