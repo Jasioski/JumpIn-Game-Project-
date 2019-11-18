@@ -212,6 +212,74 @@ public class Board {
 		return board;
 	}
 
+	public Board move(Coordinate itemSelected, Coordinate itemDestination) throws InvalidMoveException, NonSlideableException, SlideHitObstacleException, SlideWrongOrientationException {
+		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
+				itemDestination);
+		Direction direction = this.getDirectionFromDestination(deltaCoordinate);
+		BoardItem item = this.getItem(itemSelected);
+		Board board = this;
+
+		if (item instanceof Rabbit || item instanceof ContainerItem)  {
+			logger.trace("try jumping in direction:" + direction.toString());
+			board = this.jump(direction, itemSelected);
+		}
+		if (item instanceof Fox) {
+			logger.trace("try sliding fox in direction: " + direction.toString());
+			int moveSpaces = deltaCoordinate.row ;
+			if (deltaCoordinate.row == 0) {
+				moveSpaces = deltaCoordinate.column;
+			}
+
+			board = this.slide(direction, Math.abs(moveSpaces), itemSelected);
+		}
+		return board;
+	}
+
+	/**
+	 * Returns the distance coordinate between two different coordinates.
+	 * @param initial The intial coordinate that the movement starts from.
+	 * @param destination The final coordinate that it should end up at.
+	 * @return
+	 */
+	private Coordinate computeDelta (Coordinate initial,
+									 Coordinate destination) {
+		int row = destination.row - initial.row;
+		int column = destination.column - initial.column;
+
+		return new Coordinate(row, column);
+	}
+
+	/**
+	 * Returns the direction of a move based on a coordinate containing the destination's distance
+	 * @param deltaDistance Coordinate of the distance between the start and end point
+	 * @return The direction desired
+	 * @throws IllegalArgumentException if the direction is invalid
+	 */
+	private Direction getDirectionFromDestination(Coordinate deltaDistance) {
+
+		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
+			throw new IllegalArgumentException("Cannot move to the same " +
+					"position");
+		}
+
+		else if(!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
+			if (deltaDistance.row > 0) { //destination is below
+				return  Direction.DOWN;
+			}
+			else if (deltaDistance.row < 0) { //destination is above
+				return Direction.UP;
+			}
+			else if (deltaDistance.column > 0) { //destination is to the right
+				return Direction.RIGHT;
+			}
+			else { //destination is the the left
+				return Direction.LEFT;
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid direction");
+	}
+
 	/**
 	 * Updates the gamestate to won if there are no rabbits remaining on the board.
 	 */

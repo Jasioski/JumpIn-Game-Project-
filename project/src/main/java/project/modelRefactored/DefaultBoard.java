@@ -65,7 +65,6 @@ public class DefaultBoard {
         board = board.setItem(elevatedMidRight);
         board = board.setItem(holeBottomRight);
         board = board.setItem(mush2);
-
     }
 
     public Board getDefaultBoard() {
@@ -76,5 +75,4 @@ public class DefaultBoard {
     public String toString() {
         return board.toString();
     }
-
 }
