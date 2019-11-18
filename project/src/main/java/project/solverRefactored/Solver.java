@@ -18,7 +18,20 @@ public class Solver {
 
     }
 
-    public List<Move> generateMoves(Board board) {
+    private static void printMoves(List<Move> moves) {
+        for (Move move: moves) {
+            logger.trace(move);
+        }
+    }
+
+
+    public static void solve (Board board) {
+        List<Move> moves = generateMoves(board);
+        logger.trace("generated moves: " + moves.size());
+        printMoves(moves);
+    }
+
+    public static List<Move> generateMoves(Board board) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
 
@@ -30,11 +43,34 @@ public class Solver {
                 BoardItem item = board.getItem(coordinate);
 
                 if (item instanceof Rabbit) {
-                    legalMoves.addAll(generateMovesRabbit(board, coordinate));
+                    List<Move> rabbitMoves = generateMovesRabbit(board,
+                            coordinate);
+                    logger.trace("rabbit moves generated: " + rabbitMoves.size());
+
+                    legalMoves.addAll(rabbitMoves);
+                }
+
+                if (item instanceof ContainerItem) {
+                    if (((ContainerItem) item).containingItem.isPresent()) {
+                        ContainerItem containerItem = (ContainerItem) item;
+
+                        Containable containable =
+                                containerItem.containingItem.get();
+
+                        if (containable instanceof Rabbit)  {
+                            List<Move> rabbitMoves = generateMovesRabbit(board,
+                                    coordinate);
+                            logger.trace("rabbit moves generated: " + rabbitMoves.size());
+
+                            legalMoves.addAll(rabbitMoves);
+                        }
+                    }
                 }
 
                 else if (item instanceof Fox) {
-                    legalMoves.addAll(generateMovesFox(board, coordinate));
+                    List<Move> foxMoves = generateMovesFox(board, coordinate);
+                    logger.trace("fox moves generated: " + foxMoves.size());
+                    legalMoves.addAll(foxMoves);
                 }
             }
         }
@@ -42,7 +78,8 @@ public class Solver {
         return legalMoves;
     }
 
-    public List<Move> generateMovesFox(Board board, Coordinate coordinate) {
+    public static List<Move> generateMovesFox(Board board,
+                                            Coordinate coordinate) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
         Fox item = (Fox) board.getItem(coordinate);
@@ -86,7 +123,7 @@ public class Solver {
             //check slide up
             for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) {
                 //todo: bug to slide up fox piece down
-                destination = new Coordinate(coordinate.row, nextRow);
+                destination = new Coordinate(nextRow, coordinate.column);
 
                 if (!board.getItem(destination).isObstacle()) {
                     Move move = new Move(item, Direction.UP, coordinate, destination);
@@ -100,9 +137,10 @@ public class Solver {
             //check slide down
             for (nextRow = coordinate.row + 1; nextRow < board.numberOfRows; nextRow++) {
                 //todo: bug to slide down fox piece up
-                destination = new Coordinate(coordinate.row, nextRow);
+                destination = new Coordinate(nextRow, coordinate.column);
 
-                if (board.getItem(destination).isObstacle()) { //can't slide into obstacle
+                if (!board.getItem(destination).isObstacle()) { //can't slide
+                    // into obstacle
                     Move move = new Move(item, Direction.DOWN, coordinate, destination);
                     legalMoves.add(move);
                 }
@@ -115,7 +153,8 @@ public class Solver {
         return legalMoves;
     }
 
-    private boolean isCoordinateInBoard(Coordinate coordinate, Board board) {
+    private static boolean isCoordinateInBoard(Coordinate coordinate,
+                                            Board board) {
         // Subtract 1 for zero indexing
         int maxRows = board.numberOfRows - 1;
         int maxColumns = board.numberOfColumns - 1;
@@ -135,7 +174,8 @@ public class Solver {
     }
 
 
-    public List<Move> generateMovesRabbit(Board board, Coordinate coordinate) {
+    public static List<Move> generateMovesRabbit(Board board,
+                                            Coordinate coordinate) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
         BoardItem item = board.getItem(coordinate);
