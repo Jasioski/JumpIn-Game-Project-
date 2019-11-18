@@ -71,7 +71,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         if (isCurrentlyJumping) {
 
             if (item instanceof ContainerItem) {
-                ContainerItem newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                ContainerItem newContainerItem;
+                if (item instanceof Hole) {
+                    newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                } else {
+                    newContainerItem = new ElevatedBoardItem(coordinate,
+                            Optional.of(jumpingRabbit));
+                }
                 return Either.right(newContainerItem);
             } else {
                 return Either.left(jumpingRabbit);

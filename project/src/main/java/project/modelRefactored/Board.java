@@ -23,6 +23,21 @@ public class Board {
 
 	protected GameState currentGameState;
 
+	/**
+	 * Gets the correct slice of the board based on direction
+	 * @param direction passes in direction the move is to be performed in
+	 * @param coordinate coordinate of what is trying ot move
+	 * @return rowSlice or columnSlice depending on direction
+	 */
+	private PMap<Coordinate, BoardItem> getSlice(Direction direction,
+												 Coordinate coordinate) {
+		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+			return this.getRowSlice(coordinate.row);
+		} else {
+			return this.getColumnSlice(coordinate.column);
+		}
+	}
+
 	public Board(int rows, int columns) {
 		this.currentGameState = GameState.IN_PROGRESS;
 		items = HashTreePMap.empty();
@@ -115,13 +130,9 @@ public class Board {
 		//if item is a fox, perform the slide
 		if (item instanceof Fox) {
 			Fox fox = (Fox) item;
-			PMap<Coordinate, BoardItem> slice;
+			PMap<Coordinate, BoardItem> slice =
+					board.getSlice(direction, coordinate);
 
-			if (fox.orientation == Orientation.HORIZONTAL) {
-				slice = board.getRowSlice(coordinate.row);
-			} else {
-				slice = board.getColumnSlice(coordinate.column);
-			}
 			Pair<Coordinate, Coordinate> originalCoords =
 					Pair.pair(fox.getHead(), fox.getTail());
 
@@ -141,20 +152,25 @@ public class Board {
 		} else {
 			throw new NonSlideableException("Must be Fox to slide");
 		}
+
+		board = board.updateGameState();
 		return board;
 	}
 
 	public Board jump(Direction direction, Coordinate coordinate)
 			throws InvalidMoveException {
 
+		//TODO refactor to return after if's
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
 		Either<Rabbit, ContainerItem> rabbitOrHole;
 
+		PMap<Coordinate, BoardItem> slice = this.getSlice(direction,
+				coordinate);
+
 		if (item instanceof Rabbit) {
 			Rabbit rabbit = (Rabbit) item;
-			rabbitOrHole = rabbit.jump(direction,
-					this.getRowSlice(coordinate.row));
+			rabbitOrHole = rabbit.jump(direction, slice);
 
 			EmptyBoardItem empty = new EmptyBoardItem(coordinate);
 			board = board.setItem(empty);
@@ -168,8 +184,8 @@ public class Board {
 		else if (item instanceof ContainerItem){
 			ContainerItem containerItem = (ContainerItem) item;
 
-			Pair<ContainerItem, Either<Rabbit, ContainerItem>> holeAndJumped = containerItem.jump(direction,
-					this.getRowSlice(coordinate.row));
+			Pair<ContainerItem, Either<Rabbit, ContainerItem>> holeAndJumped
+					= containerItem.jump(direction, slice);
 
 			rabbitOrHole = holeAndJumped.right();
 
@@ -192,8 +208,7 @@ public class Board {
 			throw new InvalidMoveException("Must be a rabbit to jump!");
 		}
 
-		board.updateGameState();
-
+		board = board.updateGameState();
 		return board;
 	}
 
