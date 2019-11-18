@@ -136,7 +136,6 @@ class SolverTest {
     }
 
 
-    // TODO: make this test pass
     @Test
     void testRabbitOneMoveLeftOutOfBounds() {
         //   0 1 2 3 4
@@ -168,102 +167,105 @@ class SolverTest {
                 solver.generateMoves(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
-        Move move = generatedMoves.get(0);
+    }
 
+    @Test
+    void testRabbitOneMoveRightOutOfBounds() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E E
+//      2    M M M M R
+//      3    E E M E E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,1));
+        board = board.setItem(new Mushroom(2,2));
+        board = board.setItem(new Mushroom(2,3));
+
+        Coordinate rabbitCoordinate = new Coordinate(2,4);
+        Rabbit rabbit = new Rabbit(rabbitCoordinate);
+
+        board = board.setItem(rabbit);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMoves(board, rabbitCoordinate);
+
+        assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
     }
 
 
-//
-//    // TODO: refactor tests into unit and end to end tests
-//
-//    @Test
-//    void testRabbitMovesDown() {
-//        // TODO: add comments explaining this test. the test is really good
-//        //       but it took me a while to figure out what
-//        DefaultBoard board = new DefaultBoard();
-//        System.out.println(board);
-//        BoardItem item = board.getItem(0, 3);
-//        List<Move> generatedMoves;
-//        List<Move> correctMoves = new ArrayList<>();
-//
-//        Move correctMove = new Move(item, Direction.DOWN);
-//        correctMoves.add(correctMove);
-//
-//        Solver solver = new Solver();
-//        generatedMoves = solver.generateMoves(board, item);
-//
-//        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
-//
-//        for (int i = 0; i < generatedMoves.size(); i++) {
-//            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
-//        }
-//    }
-//
-//    @Test
-//    void testRabbitMovesUp() {
-//        DefaultBoard board = new DefaultBoard();
-//        BoardItem item = board.getItem(4, 2);
-//        List<Move> generatedMoves;
-//        List<Move> correctMoves = new ArrayList<>();
-//
-//        Move correctMove = new Move(item, Direction.UP);
-//        correctMoves.add(correctMove);
-//
-//        Solver solver = new Solver();
-//        generatedMoves = solver.generateMoves(board, item);
-//
-//        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
-//
-//        for (int i = 0; i < generatedMoves.size(); i++) {
-//            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
-//        }
-//    }
-//
-//    @Test
-//    void testRabbitMovesRight() {
-//        DefaultBoard board = new DefaultBoard();
-//        BoardItem item = board.getItem(2, 0);
-//        try {
-//            board.slide(Direction.DOWN, 1, new Coordinate(1, 1));
-//        } catch(Exception e) {
-//            System.out.println("SLIDE IS BROKEN NOT THIS TESTS RESPONSIBILITY");
-//            fail();
-//        }
-//
-//        List<Move> generatedMoves;
-//        List<Move> correctMoves = new ArrayList<>();
-//
-//        Move correctMove = new Move(item, Direction.RIGHT);
-//        correctMoves.add(correctMove);
-//
-//        Solver solver = new Solver();
-//        generatedMoves = solver.generateMoves(board, item);
-//
-//        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
-//
-//        for (int i = 0; i < generatedMoves.size(); i++) {
-//            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
-//        }
-//    }
-//
-//    @Test
-//    void testRabbitMovesLeft() {
-//        DefaultBoard board = new DefaultBoard();
-//        BoardItem item = board.getItem(0, 4);
-//
-//        List<Move> generatedMoves;
-//        List<Move> correctMoves = new ArrayList<>();
-//
-//        Move correctMove = new Move(item, Direction.LEFT);
-//        correctMoves.add(correctMove);
-//
-//        Solver solver = new Solver();
-//        generatedMoves = solver.generateMoves(board, item);
-//
-//        assertEquals(generatedMoves.size(), correctMoves.size(), "The lists should have same size");
-//
-//        for (int i = 0; i < generatedMoves.size(); i++) {
-//            assertTrue(generatedMoves.get(i).equals(correctMoves.get(i)));
-//        }
-//    }
+    @Test
+    void testRabbitOneMoveUpOutOfBounds() {
+        //   0 1 2 3 4
+//      0    E E R E E
+//      1    E E M E E
+//      2    M M M M M
+//      3    E E M E E
+//      4    E E M E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+        board = board.setItem(new Mushroom(4,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,1));
+        board = board.setItem(new Mushroom(2,2));
+        board = board.setItem(new Mushroom(2,3));
+        board = board.setItem(new Mushroom(2,4));
+
+        Coordinate rabbitCoordinate = new Coordinate(0,2);
+        Rabbit rabbit = new Rabbit(rabbitCoordinate);
+
+        board = board.setItem(rabbit);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMoves(board, rabbitCoordinate);
+
+        assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
+    }
+
+    @Test
+    void testRabbitOneMoveDownOutOfBounds() {
+        //   0 1 2 3 4
+//      0    E E M E E
+//      1    E E M E E
+//      2    M M M M M
+//      3    E E M E E
+//      4    E E R E E
+
+        Board board = new Board(5,5);
+        board = board.setItem(new Mushroom(0,2));
+        board = board.setItem(new Mushroom(1,2));
+        board = board.setItem(new Mushroom(3,2));
+
+        board = board.setItem(new Mushroom(2,0));
+        board = board.setItem(new Mushroom(2,1));
+        board = board.setItem(new Mushroom(2,2));
+        board = board.setItem(new Mushroom(2,3));
+        board = board.setItem(new Mushroom(2,4));
+
+        Coordinate rabbitCoordinate = new Coordinate(4,2);
+        Rabbit rabbit = new Rabbit(rabbitCoordinate);
+
+        board = board.setItem(rabbit);
+
+        Solver solver = new Solver();
+
+        List<Move> generatedMoves =
+                solver.generateMoves(board, rabbitCoordinate);
+
+        assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
+    }
 }
