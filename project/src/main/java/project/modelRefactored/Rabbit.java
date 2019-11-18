@@ -6,6 +6,10 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class Rabbit extends SingleBoardItem implements Containable {
 
     public Rabbit(Coordinate coordinate) {
@@ -44,6 +48,12 @@ public class Rabbit extends SingleBoardItem implements Containable {
                                                PMap<Coordinate, BoardItem> slice
             , boolean isCurrentlyJumping) throws InvalidMoveException {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
+
+        if (checkIfNotOnBoard(slice, coordinate)) {
+            //TODO: should we replace these with seperate moves?
+            throw new InvalidMoveException("Jumping caused Rabbit to fall off" +
+                    " board");
+        }
 
         Rabbit jumpingRabbit = new Rabbit(coordinate);
 
@@ -85,6 +95,18 @@ public class Rabbit extends SingleBoardItem implements Containable {
         } else {
             throw new InvalidMoveException("Cannot move without obstacles");
         }
+    }
+
+    private boolean checkIfNotOnBoard(
+            PMap<Coordinate, BoardItem> slice, Coordinate nextCoordinates
+    ) {
+        HashSet<Coordinate> coordinateSet = new HashSet<>(slice.keySet());
+
+        if (!coordinateSet.contains(nextCoordinates)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
