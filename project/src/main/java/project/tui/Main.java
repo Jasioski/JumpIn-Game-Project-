@@ -9,6 +9,7 @@ import project.modelRefactored.Coordinate;
 import project.modelRefactored.DefaultBoard;
 import project.model.GameState;
 import project.modelRefactored.Fox;
+import project.solverRefactored.Solver;
 
 public class Main {
 
@@ -71,6 +72,7 @@ public class Main {
                     System.out.println("No error");
                 }
 
+                Solver.solve(board);
             }
             catch(Exception e) {
                 System.out.println(e);
