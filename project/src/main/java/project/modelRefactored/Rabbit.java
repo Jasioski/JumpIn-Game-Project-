@@ -6,21 +6,36 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class Rabbit extends SingleBoardItem implements Containable {
 
+    /**
+     * Constructor for a rabbit initializes uirepresentation and sets
+     * coordinates using coordinate parameter.
+     * @param coordinate coordinate used where rabbit will be placed.
+     */
     public Rabbit(Coordinate coordinate) {
         super(coordinate);
         this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }
 
+    /**
+     * Constructor for a rabbit that initializes ui representation and sets
+     * coordinates using row and column parameters.
+     * @param row
+     * @param column
+     */
     public Rabbit (int row, int column) {
         super(new Coordinate(row, column));
+        this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }
 
+    /**
+     * Computes next coordinate using the to be checked when jumping.
+     * @param direction the direction the rabbit is jumping in.
+     * @return new Coordinate based on what direction its jumping.
+     */
     private Coordinate computeCoordinateFromDirection(Direction direction) {
 
         Coordinate current = this.coordinate.left().get();
@@ -39,11 +54,28 @@ public class Rabbit extends SingleBoardItem implements Containable {
         }
     }
 
+    /**
+     * Makes a rabbit jump by delegating to another jump method.
+     * @param direction direction the rabbit is jumping in.
+     * @param slice slice of the board to be checked when performing the jump.
+     * @return calls the other jump method and returns what that jump method
+     * will return.
+     * @throws InvalidMoveException
+     */
     public Either<Rabbit, ContainerItem> jump(Direction direction,
                                               PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
        return jump(direction, slice, false);
     }
 
+    /**
+     * Makes a rabbit jump by using checks if rabbit is currently jumping.
+     * @param direction direction the rabbit is jumping in.
+     * @param slice slice of the board to be checked when performing the jump.
+     * @param isCurrentlyJumping is a boolean to determine if the rabbit is
+     *                           currently jumping.
+     * @return returns updated rabbit with new coordinates.
+     * @throws InvalidMoveException
+     */
     private Either<Rabbit, ContainerItem> jump(Direction direction,
                                                PMap<Coordinate, BoardItem> slice
             , boolean isCurrentlyJumping) throws InvalidMoveException {
@@ -97,6 +129,13 @@ public class Rabbit extends SingleBoardItem implements Containable {
         }
     }
 
+    /**
+     * check if rabbit fell off the board while jumping.
+     * @param slice slice of the board to check for the jump.
+     * @param nextCoordinates the coordinates the rabbit is jumping to.
+     * @return boolean depending on if the rabbit is on the board or not,
+     * false if the rabbit is on the board, true otherwise.
+     */
     private boolean checkIfNotOnBoard(
             PMap<Coordinate, BoardItem> slice, Coordinate nextCoordinates
     ) {
@@ -109,6 +148,10 @@ public class Rabbit extends SingleBoardItem implements Containable {
         return false;
     }
 
+    /**
+     * Method used to check if this Rabbit object is an obstacle.
+     * @return true All Rabbits are obstacles. 
+     */
     @Override
     public boolean isObstacle() {
         return true;

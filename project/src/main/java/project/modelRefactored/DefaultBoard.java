@@ -6,6 +6,9 @@ import io.atlassian.fugue.Pair;
 public class DefaultBoard {
     private Board board;
 
+    /**
+     * Constructor for default board sets up the board 5x5.
+     */
     public DefaultBoard() {
         board = new Board(5, 5);
         Mushroom mush1 = new Mushroom(new Coordinate(0,0));
@@ -67,10 +70,18 @@ public class DefaultBoard {
         board = board.setItem(mush2);
     }
 
+    /**
+     * returns default board.
+     * @return board.
+     */
     public Board getDefaultBoard() {
         return board;
     }
 
+    /**
+     * Gives to string representation of the board used in text based game.
+     * @return board.toString()
+     */
     @Override
     public String toString() {
         return board.toString();
