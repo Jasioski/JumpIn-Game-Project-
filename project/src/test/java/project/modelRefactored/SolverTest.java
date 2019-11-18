@@ -136,7 +136,6 @@ class SolverTest {
     }
 
 
-    // TODO: make this test pass
     @Test
     void testRabbitOneMoveLeftOutOfBounds() {
         //   0 1 2 3 4
@@ -168,8 +167,6 @@ class SolverTest {
                 solver.generateMoves(board, rabbitCoordinate);
 
         assertEquals(generatedMoves.size(), 0, "The list should be empty no legal moves");
-        Move move = generatedMoves.get(0);
-
     }
 
 

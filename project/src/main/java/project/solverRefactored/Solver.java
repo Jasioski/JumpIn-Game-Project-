@@ -100,6 +100,25 @@ public class Solver {
         return legalMoves;
     }
 
+    private boolean isCoordinateInBoard(Coordinate coordinate, Board board) {
+        int maxRows = board.numberOfRows;
+        int maxColumns = board.numberOfColumns;
+
+        int minRows = 0;
+        int minColumns = 0;
+
+        if (coordinate.row < minRows || coordinate.row > maxRows) {
+            return false;
+        }
+
+        if (coordinate.column < minColumns || coordinate.column > maxColumns) {
+            return false;
+        }
+
+        return true;
+    }
+
+
     public List<Move> generateMovesRabbit(Board board, Coordinate coordinate) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
@@ -111,10 +130,14 @@ public class Solver {
         //check up jump
         nextItem = new Coordinate(coordinate.row - 1, coordinate.column);
 
-        if (nextItem.isWholeNumber()) {
+        if (isCoordinateInBoard(nextItem, board)) {
             if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
                 for (int row = coordinate.row - 2; row >= 0; row--) {
                     nextItem = new Coordinate(row, nextItem.column);
+
+                    if (!isCoordinateInBoard(nextItem, board)) {
+                        break;
+                    }
 
                     if (!board.getItem(nextItem).isObstacle()) {
                         Move move = new Move(item, Direction.UP, coordinate, nextItem);
@@ -128,10 +151,14 @@ public class Solver {
         //check down jump
         nextItem = new Coordinate(coordinate.row + 1, coordinate.column);
 
-        if (nextItem.isWholeNumber()) {
+        if (isCoordinateInBoard(nextItem, board)) {
             if (board.getItem(nextItem).isObstacle()) { //rabbits must jump over obstacle to move
                 for (int row = coordinate.row + 2; row < board.numberOfRows; row++) {
                     nextItem = new Coordinate(row, nextItem.column);
+
+                    if (!isCoordinateInBoard(nextItem, board)) {
+                        break;
+                    }
 
                     if (!board.getItem(nextItem).isObstacle()) {
                         Move move = new Move(item, Direction.DOWN, coordinate, nextItem);
@@ -145,11 +172,15 @@ public class Solver {
         //check left jump
         nextItem = new Coordinate(coordinate.row, coordinate.column - 1);
 
-        if (nextItem.isWholeNumber()) {
+        if (isCoordinateInBoard(nextItem, board)) {
             if (board.getItem(nextItem).isObstacle()) {
                 //rabbits must jump over obstacle to move
                 for (int column = coordinate.column - 2; column >= 0; column--) {
                     nextItem = new Coordinate(nextItem.row, column);
+
+                    if (!isCoordinateInBoard(nextItem, board)) {
+                        break;
+                    }
 
                     if (!board.getItem(nextItem).isObstacle()) {
                         Move move = new Move(item, Direction.LEFT, coordinate, nextItem);
@@ -163,11 +194,15 @@ public class Solver {
         //check right jump
         nextItem = new Coordinate(coordinate.row, coordinate.column + 1);
 
-        if (nextItem.isWholeNumber()) {
+        if (isCoordinateInBoard(nextItem, board)) {
             if (board.getItem(nextItem).isObstacle()) {
                 //rabbits must jump over obstacle to move
                 for (int column = coordinate.column + 2; column < board.numberOfColumns; column++) {
                     nextItem = new Coordinate(nextItem.row, column);
+
+                    if (!isCoordinateInBoard(nextItem, board)) {
+                        break;
+                    }
 
                     if (!board.getItem(nextItem).isObstacle()) {
                         Move move = new Move(item, Direction.RIGHT, coordinate,
