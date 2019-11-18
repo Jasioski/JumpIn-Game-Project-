@@ -1,9 +1,6 @@
 package project.view;
 
-import project.DefaultBoard;
-import project.model.Board;
-import project.model.BoardItem;
-import project.model.Coordinate;
+import project.modelRefactored.*;
 import project.model.GameState;
 
 import java.awt.*;
@@ -54,9 +51,9 @@ public class GuiInnerComponents implements ItemClickListener {
 	private void updateBoard() {
 		boardPanel.removeAll();
 
-		for (int row = 0; row < this.board.getRows(); row++) {
-			for (int column = 0; column < this.board.getColumns(); column++) {
-				BoardItem modelItem = this.board.getItem(row, column);
+		for (int row = 0; row < this.board.numberOfRows; row++) {
+			for (int column = 0; column < this.board.numberOfColumns; column++) {
+				BoardItem modelItem = this.board.getItem(new Coordinate(row, column));
 				JComponent viewItem = new GUIBoardItem(new Coordinate(row, column), modelItem, this);
 				this.boardPanel.add(viewItem);
 			}
@@ -80,7 +77,8 @@ public class GuiInnerComponents implements ItemClickListener {
 	 */
 	void setupNewGame() {
 		message.setText("Make your move!");
-		this.board = new DefaultBoard();
+		DefaultBoard defaultBoard = new DefaultBoard();
+		board = defaultBoard.getDefaultBoard();
 
 		this.updateBoard();
 	}
@@ -112,10 +110,9 @@ public class GuiInnerComponents implements ItemClickListener {
 			logger.trace("set destination");
 			try {
 				logger.trace("attempting");
-				board.move(selectedItem, destinationItem); // try moving the selected item to destination
+				board = board.move(selectedItem, destinationItem); // try moving the selected item to destination
 				logger.trace("successful");
-			} catch (NonMovableItemException | BoardItemNotEmptyException |  SlideOutOfBoundsException | NonSlideableException |  SlideHitElevatedException |
-					NonJumpableException | SlideHitObstacleException | JumpFailedNoObstacleException | HoleIsEmptyException | JumpFailedOutOfBoundsException | IllegalArgumentException e) {
+			} catch (InvalidMoveException e) {
 				logger.debug(e);
 				JOptionPane.showMessageDialog(boardPanel, e.getMessage(), "Exception!", 0);
 			} catch (Exception e) {

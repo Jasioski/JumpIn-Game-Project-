@@ -1,13 +1,12 @@
 package project.view;
 
-import project.DefaultBoard;
-import project.model.Board;
+import project.modelRefactored.DefaultBoard;
+import project.modelRefactored.Board;
 
 /**
  * 
  * This class initializes the GUI of the JumpIn' game
  * Default constructor takes a Board and passes it to the class GuiOuterFrame
- *
  */
 public class BoardGui {
 	protected Board board;
@@ -15,7 +14,9 @@ public class BoardGui {
 	
 	public BoardGui() {
 		ImageResources.getInstance();
-		this.board = new DefaultBoard();
+		DefaultBoard defaultBoard = new DefaultBoard();
+		board = defaultBoard.getDefaultBoard();
+
 		outerFrame = new GuiOuterFrame(this.board);
 	}
 }

@@ -1,7 +1,7 @@
 package project.view;
 
-import project.model.Mushroom;
-import project.model.Rabbit;
+import project.modelRefactored.Mushroom;
+import project.modelRefactored.Rabbit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +16,13 @@ public abstract class ContainerItem extends JPanel {
      * @param model The ContainerItem object that the item in the GUI represents.
      * @param color The desired color of the item.
      */
-    public ContainerItem(project.model.ContainerItem model, Color color) {
+    public ContainerItem(project.modelRefactored.ContainerItem model, Color color) {
         this.setLayout(new OverlayLayout(this));
         this.setOpaque(false);
         this.setBackground(Color.green);
         //check if empty
-        if (model.getContainingItem().isPresent()) {
-            project.model.Containable containable = model.getContainingItem().get();
+        if (model.containingItem.isPresent()) {
+            project.modelRefactored.Containable containable = model.containingItem.get();
             if (containable instanceof Rabbit) {
                 this.add(new project.view.Rabbit(false));
             }
