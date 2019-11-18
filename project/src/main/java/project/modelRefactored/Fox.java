@@ -162,6 +162,14 @@ public class Fox extends BoardItem {
         return fox;
     }
 
+    /**
+     * Used to determine if fox slide hit an obstacle or not.
+     * @param slice sends in slice of the board to loop through.
+     * @param coordinates gives list of coordinates holding the coordinates
+     * of the fox.
+     * @return boolean is returned. True if it hit and obstacle, otherwise
+     * false.
+     */
     private boolean checkIfHitObstacle(PMap<Coordinate, BoardItem> slice,
                                        List<Coordinate> coordinates ) {
         for (Coordinate coordinate: coordinates) {
@@ -180,6 +188,14 @@ public class Fox extends BoardItem {
         return false;
     }
 
+    /**
+     * Used to determine if slide caused fox to fall off the board.
+     * @param slice sends in slice of the board to loop through.
+     * @param nextCoordinates gives list of coordinates holding the
+     *                        coordinates of the fox.
+     * @return boolean is returned. True if it fell off the board, otherwise
+     * false is returned.
+     */
     private boolean checkIfNotOnBoard(
             PMap<Coordinate, BoardItem> slice, List<Coordinate> nextCoordinates
     ) {
