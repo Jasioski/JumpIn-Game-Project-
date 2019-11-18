@@ -15,7 +15,7 @@ public class BoardGui {
 	public BoardGui() {
 		ImageResources.getInstance();
 		DefaultBoard defaultBoard = new DefaultBoard();
-		board = defaultBoard.getDefaultBoard();
+		board = defaultBoard.getBoard();
 
 		outerFrame = new GuiOuterFrame(this.board);
 	}

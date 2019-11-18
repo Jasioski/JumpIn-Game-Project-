@@ -10,7 +10,7 @@ public class BoardHistoryTest {
     void instantiateHistory(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board = defaultBoard.getDefaultBoard();
+            Board board = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board);
             assertEquals(history.getCurrentMove(), 0);
         }
@@ -23,7 +23,7 @@ public class BoardHistoryTest {
     void changeCurrentMove(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board = defaultBoard.getDefaultBoard();
+            Board board = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board);
 
             history.setCurrentMove(4);
@@ -38,7 +38,7 @@ public class BoardHistoryTest {
     void addAndRecallBoard(){
         try{
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board = defaultBoard.getDefaultBoard();
+            Board board = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board);
 
             history.addState(board);
@@ -53,9 +53,9 @@ public class BoardHistoryTest {
     void recallLastTwoBoards(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board1 = defaultBoard.getDefaultBoard();
+            Board board1 = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board1);
-            Board compareBoard1 = defaultBoard.getDefaultBoard();
+            Board compareBoard1 = defaultBoard.getBoard();
 
             board1 = board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
             compareBoard1 = compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
@@ -65,7 +65,7 @@ public class BoardHistoryTest {
             history.addState(board1);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
-            assertEquals(history.getUndoBoard(), defaultBoard.getDefaultBoard());
+            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
         }
         catch(Exception e){
             Assertions.fail(e);
@@ -76,11 +76,11 @@ public class BoardHistoryTest {
     void undoAndRedo(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board1 = defaultBoard.getDefaultBoard();
+            Board board1 = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board1);
 
-            Board compareBoard1 = defaultBoard.getDefaultBoard();
-            Board compareBoard2 = defaultBoard.getDefaultBoard();
+            Board compareBoard1 = defaultBoard.getBoard();
+            Board compareBoard2 = defaultBoard.getBoard();
 
             board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
             compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
@@ -95,7 +95,7 @@ public class BoardHistoryTest {
             assertEquals(history.getRedoBoard(), compareBoard2);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
-            assertEquals(history.getUndoBoard(), defaultBoard.getDefaultBoard());
+            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
 
             assertEquals(history.getRedoBoard(), compareBoard1);
             assertEquals(history.getRedoBoard(), compareBoard2);
@@ -109,11 +109,11 @@ public class BoardHistoryTest {
     void redoMultipleTimes(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board1 = defaultBoard.getDefaultBoard();
+            Board board1 = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board1);
 
-            Board compareBoard1 = defaultBoard.getDefaultBoard();
-            Board compareBoard2 = defaultBoard.getDefaultBoard();
+            Board compareBoard1 = defaultBoard.getBoard();
+            Board compareBoard2 = defaultBoard.getBoard();
 
             board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
             compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
@@ -139,10 +139,10 @@ public class BoardHistoryTest {
     void undoMultipleTimes(){
         try {
             DefaultBoard defaultBoard = new DefaultBoard();
-            Board board1 = defaultBoard.getDefaultBoard();
+            Board board1 = defaultBoard.getBoard();
             BoardHistory history = new BoardHistory(board1);
 
-            Board compareBoard1 = defaultBoard.getDefaultBoard();
+            Board compareBoard1 = defaultBoard.getBoard();
 
             board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
             compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
@@ -152,9 +152,9 @@ public class BoardHistoryTest {
             history.addState(board1);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
-            assertEquals(history.getUndoBoard(), defaultBoard.getDefaultBoard());
-            assertEquals(history.getUndoBoard(), defaultBoard.getDefaultBoard());
-            assertEquals(history.getUndoBoard(), defaultBoard.getDefaultBoard());
+            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
+            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
+            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
             assertEquals(history.getRedoBoard(), compareBoard1);
         }
         catch(Exception e){

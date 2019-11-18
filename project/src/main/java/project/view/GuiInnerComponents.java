@@ -7,8 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.exceptions.*;
-import project.solverRefactored.Solver;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -116,7 +115,7 @@ public class GuiInnerComponents implements ItemClickListener {
 	void setupNewGame() {
 		message.setText("Make your move!");
 		DefaultBoard defaultBoard = new DefaultBoard();
-		board = defaultBoard.getDefaultBoard();
+		board = defaultBoard.getBoard();
 		this.boardHistory = new BoardHistory(board);
 
 		this.updateBoard();

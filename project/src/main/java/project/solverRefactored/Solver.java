@@ -1,5 +1,6 @@
 package project.solverRefactored;
 
+import com.sun.jdi.ObjectCollectedException;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,18 +19,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Solver {
-    Board board;
-
-    //Use logger
     public static Logger logger = LogManager.getLogger(Solver.class);
-
-    public Solver() {
-
-    }
+    final static int MAX_DEPTH = 10;
 
     private static void printMoves(List<Move> moves) {
         for (Move move: moves) {
-            logger.trace(move);
+            logger.debug(move);
         }
     }
 
@@ -46,22 +41,28 @@ public class Solver {
         }
     }
 
-    final static int MAX_DEPTH = 10;
-    int counter = 0;
 
-    public void solve (Board board) {
-        PVector<Pair<Board, Move>> boardHistory = TreePVector.empty();
+    public static List<Move> solve (Board board) {
+        PVector<Board> boardHistory = TreePVector.empty();
 
-        solve(board,boardHistory, 0);
+        List<Move> solutions = solve(board, boardHistory, 0);
+
+        List<Move> reversed =  new ArrayList<>();
+
+
+        for (int i = solutions.size() - 1; i >= 0; i--) {
+            reversed.add(solutions.get(i));
+        }
+
+        return reversed;
     }
 
-    public boolean solve (Board board,
-                              PVector<Pair<Board, Move>> boardHistory,
-                          int depth) {
+    private static PVector<Move> solve (Board board,
+                           PVector<Board> boardHistory,
+                           int depth) {
 
         if (depth > MAX_DEPTH) {
-//            logger.debug("hit max depth on search");
-            return false;
+            return null;
         }
 
         if (board.currentGameState == GameState.IN_PROGRESS) {
@@ -69,32 +70,21 @@ public class Solver {
 
             List<Move> moves = generateMoves(board);
 
-//            logger.debug("generated moves: " + moves.size());
-
-//            Collections.shuffle(moves);
-
             for (Move move: moves) {
                 try {
                     Board newBoard = applyMove(board, move);
 
-                   if (!boardHistory.contains(Pair.pair(newBoard, move))) {
+                   if (!boardHistory.contains(newBoard)) {
 
-//
-//                       logger.debug(board);
-//                       Thread.sleep(1000);
+                        boardHistory = boardHistory.plus(newBoard);
 
-                        boardHistory =
-                                boardHistory.plus(Pair.pair(newBoard, move));
-                        counter++;
-                        logger.debug("attempted moves: " + counter);
+                       PVector<Move> solution = solve(newBoard, boardHistory,
+                               depth + 1);
 
-
-                        if(solve(newBoard, boardHistory, depth + 1))
-                            return true;
-                   }
-
-                   else {
-//                       logger.debug("skipping duplicate board");
+                        if(solution != null) {
+                            solution = solution.plus(move);
+                            return solution;
+                        }
                    }
 
                 } catch (Exception e) {
@@ -105,19 +95,14 @@ public class Solver {
 
         else {
             logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-            logger.debug("******************Game solved****************");
-
             logger.debug(board);
 
-            return true;
+            PVector<Move> solvedMoves = TreePVector.empty();
+
+            return solvedMoves;
         }
 
-        return false;
+        return null;
     }
 
     public static List<Move> generateMoves(Board board) {

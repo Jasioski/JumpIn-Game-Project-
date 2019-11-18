@@ -5,6 +5,10 @@ import java.util.List;
 import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
 import project.model.Direction;
+import project.model.GameState;
+import project.model.exceptions.NonSlideableException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideWrongOrientationException;
 import project.solverRefactored.Move;
 import project.solverRefactored.Solver;
 
@@ -489,5 +493,27 @@ class SolverTest {
                 "moves");
 
         // FIXME figure out how to assert against the generated moves
+    }
+
+    @Test
+    void testSolveDefaultBoard() {
+        Board board = new DefaultBoard().getBoard();
+
+        List<Move> moves = Solver.solve(board);
+
+
+        assertNotNull(moves);
+
+        for (int i = 0; i < moves.size(); i++) {
+            Move move = moves.get(i);
+            try {
+                board = board.move(move.initial, move.ending);
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        assertEquals(GameState.SOLVED, board.currentGameState);
+
     }
 }

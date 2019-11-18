@@ -36,7 +36,7 @@ public class Main {
 
         print("Starting JumpIn");
         DefaultBoard defBoard = new DefaultBoard();
-        Board board = defBoard.getDefaultBoard();
+        Board board = defBoard.getBoard();
         System.out.println(board.currentGameState);
         System.out.println(board.getItem(new Coordinate(0,3)));
         System.out.println(board.getItem(new Coordinate(4,2)));

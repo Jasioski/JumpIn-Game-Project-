@@ -75,7 +75,7 @@ public class DefaultBoard {
      * returns default board.
      * @return board.
      */
-    public Board getDefaultBoard() {
+    public Board getBoard() {
         return board;
     }
 
