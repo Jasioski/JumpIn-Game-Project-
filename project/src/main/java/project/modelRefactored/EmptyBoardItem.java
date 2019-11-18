@@ -1,8 +1,12 @@
 package project.modelRefactored;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
 
 public class EmptyBoardItem extends SingleBoardItem {
+
+    private static Logger logger = LogManager.getLogger(Board.class);
 
     public EmptyBoardItem(Coordinate coordinate) {
         super(coordinate);
@@ -21,6 +25,7 @@ public class EmptyBoardItem extends SingleBoardItem {
 
     @Override
     public boolean equals(Object o) {
+        logger.trace("Checking empty!");
         if (this == o) {return true;}
 
         if (o == null) {return false;}
@@ -34,6 +39,7 @@ public class EmptyBoardItem extends SingleBoardItem {
 
             if (empty.coordinate.left().get().row ==
                     this.coordinate.left().get().row) {
+                logger.trace("Empty IS SAME!");
                 return true;
             }
 

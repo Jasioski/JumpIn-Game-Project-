@@ -228,6 +228,7 @@ public class Fox extends BoardItem {
 
     @Override
     public boolean equals(Object o) {
+        logger.trace("Checking fox!");
         if (this == o) {return true;}
 
         if (o == null) {return false;}
@@ -245,6 +246,7 @@ public class Fox extends BoardItem {
                     this.coordinate.right().get().right().row &&
                     fox.coordinate.right().get().right().column ==
                             this.coordinate.right().get().right().column)) {
+                logger.trace("Fox IS SAME!");
                 return true;
             }
 

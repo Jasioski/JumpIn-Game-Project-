@@ -2,6 +2,8 @@ package project.modelRefactored;
 
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
@@ -9,6 +11,8 @@ import project.tui.ItemUIRepresentation;
 import java.util.HashSet;
 
 public class Rabbit extends SingleBoardItem implements Containable {
+
+    private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
      * Constructor for a rabbit initializes uirepresentation and sets
@@ -159,6 +163,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
 
     @Override
     public boolean equals(Object o) {
+        logger.trace("Checking rabbit!");
         if (this == o) {return true;}
 
         if (o == null) {return false;}
@@ -172,6 +177,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
 
             if (rabbit.coordinate.left().get().row ==
                     this.coordinate.left().get().row) {
+                logger.trace("Rabbit IS SAME!");
                 return true;
             }
 

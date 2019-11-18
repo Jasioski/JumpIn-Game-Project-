@@ -1,8 +1,12 @@
 package project.modelRefactored;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
 
 public final class Mushroom extends SingleBoardItem implements Containable {
+
+    private static Logger logger = LogManager.getLogger(Board.class);
 
     public Mushroom(int row, int column) {
         super(new Coordinate(row, column));
@@ -20,6 +24,7 @@ public final class Mushroom extends SingleBoardItem implements Containable {
 
     @Override
     public boolean equals(Object o) {
+        logger.trace("Checking mushroom!");
         if (this == o) {return true;}
 
         if (o == null) {return false;}
@@ -33,6 +38,7 @@ public final class Mushroom extends SingleBoardItem implements Containable {
 
             if (mushroom.coordinate.left().get().row ==
                     this.coordinate.left().get().row) {
+                logger.trace("Mushroom IS SAME!");
                 return true;
             }
 

@@ -3,11 +3,16 @@ package project.modelRefactored;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
 public class Hole extends ContainerItem {
+
+    private static Logger logger = LogManager.getLogger(Board.class);
+
     /**
      * Constructs a new hole with a coordinate and optional item.
      *
@@ -51,6 +56,7 @@ public class Hole extends ContainerItem {
 
     @Override
     public boolean equals(Object o) {
+        logger.trace("Checking hole!");
         if (this == o) {return true;}
 
         if (o == null) {return false;}
@@ -70,6 +76,7 @@ public class Hole extends ContainerItem {
 
                     if (hole.containingItem.get().getClass() ==
                             this.containingItem.get().getClass()) {
+                        logger.trace("HOLE IS SAME!");
                         return true;
                     }
 
@@ -77,6 +84,7 @@ public class Hole extends ContainerItem {
 
                 else if (!hole.containingItem.isPresent() &&
                         !hole.containingItem.isPresent()) {
+                    logger.trace("HOLE IS SAME!");
                     return true;
                 }
 
