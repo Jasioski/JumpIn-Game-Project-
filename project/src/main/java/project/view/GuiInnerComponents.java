@@ -1,14 +1,13 @@
 package project.view;
 
 import project.modelRefactored.*;
-import project.model.GameState;
+import project.modelRefactored.GameState;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.exceptions.*;
-import project.solverRefactored.Solver;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -79,13 +78,18 @@ public class GuiInnerComponents implements ItemClickListener {
 		this.updateBoard();
 	}
 
+	/**
+	 * Creates the inner components of the board.
+	 */
 	private void boardInnerComponents() {
 		boardPanel = new JPanel(new GridLayout(6, 6));
 		boardPanel.setBorder(new LineBorder(Color.BLACK));
 		boardPanel.setLayout(new GridLayout(5, 5));
 	}
 
-	// update method
+	/**
+	 * Updates the view based on what is contained in the board model.
+	 */
 	private void updateBoard() {
 		boardPanel.removeAll();
 
@@ -122,10 +126,18 @@ public class GuiInnerComponents implements ItemClickListener {
 		this.updateBoard();
 	}
 
+	/**
+	 * Returns the message that the top bar should display.
+	 * @return The message in the top bar.
+	 */
 	public JLabel getMessage() {
 		return this.message;
 	}
 
+	/**
+	 * Returns the border containing the board.
+	 * @return The EmptyBorder element that will contain board elements.
+	 */
 	public EmptyBorder boardBorderSetup() {
 		//padding for the board itself
 		padding = 5;
@@ -133,6 +145,11 @@ public class GuiInnerComponents implements ItemClickListener {
 		return border;
 	}
 
+	/**
+	 * Processes a space on the board being clicked, setting the first location as the selected
+	 * item and the second location as the destination, and then triggering a move on the board.
+	 * @param event The click event sent by the clicked item.
+	 */
 	@Override
 	public void onItemClick(ItemClickEvent event) {
 		logger.trace(event.coordinate);

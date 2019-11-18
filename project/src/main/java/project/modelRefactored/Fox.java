@@ -20,6 +20,9 @@ import java.util.Set;
  */
 public class Fox extends BoardItem {
 
+    /**
+     * The logger used to log errors.
+     */
     private static Logger logger = LogManager.getLogger(Fox.class);
 
     /**

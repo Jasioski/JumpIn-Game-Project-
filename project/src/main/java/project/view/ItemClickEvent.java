@@ -5,6 +5,9 @@ import project.modelRefactored.Coordinate;
  * An event thrown by objects when they are clicked, specifying their coordinates.
  */
 public class ItemClickEvent {
+    /**
+     * The coordinate that the click event comes from.
+     */
     public Coordinate coordinate;
 
     /**

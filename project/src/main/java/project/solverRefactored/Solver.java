@@ -6,14 +6,12 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 import project.model.Direction;
-import project.model.GameState;
+import project.modelRefactored.GameState;
 import project.model.exceptions.NonSlideableException;
 import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
 import project.modelRefactored.*;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 

@@ -8,6 +8,9 @@ import java.awt.*;
  */
 public class Circle extends JComponent {
 
+    /**
+     * The color of the circle.
+     */
     private Color color;
 
     /**

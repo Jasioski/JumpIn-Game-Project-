@@ -5,14 +5,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Sets up a default layout for the board
+ * Sets up a default layout for the board.
  */
 public class DefaultBoard extends Board {
 
+    /**
+     * Logs an error if it comes up in creating the board.
+     */
     private static Logger logger = LogManager.getLogger(DefaultBoard.class);
 
     /**
-     * Creates a default setup for the board
+     * Creates a default setup for the board.
      */
     public DefaultBoard() {
         super(5);

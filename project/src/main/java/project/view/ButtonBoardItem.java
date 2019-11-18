@@ -6,6 +6,9 @@ import javax.swing.*;
  * Abstract class representing a board item's button on the GUI.
  */
 public abstract class ButtonBoardItem extends JPanel {
+    /**
+     * The Jbutton, containing its icon.
+     */
     protected JButton iconButton;
 
     /**

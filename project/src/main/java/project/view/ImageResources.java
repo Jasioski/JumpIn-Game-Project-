@@ -10,12 +10,22 @@ import java.util.Map;
 
 /**
  * A class containing all of the images used by the GUI, with each image mapped to a string.
- * This is created only once
+ * This is created only once.
  */
 public class ImageResources {
-
+    /**
+     * The logger that logs errors.
+     */
     private static Logger logger = LogManager.getLogger(ImageResources.class);
+
+    /**
+     * The ImageResources that this object creates.
+     */
     private static ImageResources imageResources;
+
+    /**
+     * A map containing each image mapped to a key.
+     */
     private static Map<String, BufferedImage> imagesBank;
 
     /**

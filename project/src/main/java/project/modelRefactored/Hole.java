@@ -9,13 +9,18 @@ import org.pcollections.PMap;
 import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
+/**
+ * Represents a hole on the board.
+ */
 public class Hole extends ContainerItem {
 
+    /**
+     * The logger used to log errors.
+     */
     private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
      * Constructs a new hole with a coordinate and optional item.
-     *
      * @param coordinate     The coordinate where the hole is located.
      * @param containingItem The optional item that it can contain.
      */
@@ -36,7 +41,13 @@ public class Hole extends ContainerItem {
         }
     }
 
-
+    /**
+     * Attempts to jump a rabbit out of the hole.
+     * @param direction The direction that the rabbit must jump.
+     * @param slice The slice where the jump occurs.
+     * @return A pair containing the hole and the result of the jump.
+     * @throws InvalidMoveException If the jump is an invalid move.
+     */
     public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
         if (!containingItem.isPresent()){
             if (! (containingItem.get() instanceof  Rabbit)) {
@@ -54,6 +65,11 @@ public class Hole extends ContainerItem {
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
 
+    /**
+     * Compares this item to another hole to determine if they are equal.
+     * @param o The object being compared.
+     * @return True of the are equal.
+     */
     @Override
     public boolean equals(Object o) {
         logger.trace("Checking hole!");

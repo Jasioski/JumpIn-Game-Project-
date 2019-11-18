@@ -3,7 +3,13 @@ package project.modelRefactored;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Pair;
 
+/**
+ * Creates the default layout of the board.
+ */
 public class DefaultBoard {
+    /**
+     * The board containing the default layout.
+     */
     private Board board;
 
     /**
@@ -41,7 +47,7 @@ public class DefaultBoard {
                         Optional.of(rabbitBottom));
         //3rd column end
 
-        Rabbit rabbitMidTop = new Rabbit(new Coordinate(0, 3));
+        //Rabbit rabbitMidTop = new Rabbit(new Coordinate(0, 3));
         Mushroom mush2 = new Mushroom(new Coordinate(1,3));
         //4th column end
 

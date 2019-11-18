@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.exceptions.*;
+import project.modelRefactored.GameState;
 
 /**
  * The main board class that contains and controls all objects on the board.

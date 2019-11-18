@@ -15,11 +15,24 @@ import java.awt.event.MouseListener;
  * Class representing the JPanel gui and associated model item for each item on the board.
  */
 public class GUIBoardItem extends JPanel implements ActionListener, MouseListener{
+    /**
+     * The logger that logs what happens with board items.
+     */
     public static Logger logger = LogManager.getLogger(GUIBoardItem.class);
 
-    private project.modelRefactored.BoardItem item;
+    /**
+     * The BoardItem that the gui space represents.
+     */
+    private BoardItem item;
 
-    ItemClickListener listener;
+    /**
+     * The click lsitener that the item has.
+     */
+    private ItemClickListener listener;
+
+    /**
+     * The coordinate of the item on the board.
+     */
     private Coordinate coordinate;
 
     /**

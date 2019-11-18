@@ -4,7 +4,13 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import project.tui.ItemUIRepresentation;
 
+/**
+ * Represents an item on the board.
+ */
 public abstract class BoardItem implements MaybeObstacle {
+    /**
+     *
+     */
     public final Either<Coordinate, Pair<Coordinate, Coordinate>> coordinate;
 
     /**
@@ -13,19 +19,36 @@ public abstract class BoardItem implements MaybeObstacle {
     protected ItemUIRepresentation uIRepresentation =
             ItemUIRepresentation.EMPTY;
 
+    /**
+     * Creates the board item with a pair of coordinates.
+     * @param coordinate The pair of coordinates of the item.
+     */
     public BoardItem(Pair<Coordinate, Coordinate> coordinate) {
         this.coordinate = Either.right(coordinate);
     }
 
+    /**
+     * Creates the board item with a single coordinate.
+     * @param coordinate The coordinate of the board item.
+     */
     public BoardItem(Coordinate coordinate) {
         this.coordinate = Either.left(coordinate);
     }
 
+    /**
+     * Returns the item's string representation.
+     * @return The string representation.
+     */
     @Override
     public String toString() {
         return this.uIRepresentation.getRepresentation();
     }
 
+    /**
+     * Checks if this item is equal to another.
+     * @param o The object being compared.
+     * @return True if they represent the same board item.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

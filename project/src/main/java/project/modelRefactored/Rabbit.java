@@ -10,8 +10,14 @@ import project.tui.ItemUIRepresentation;
 
 import java.util.HashSet;
 
+/**
+ * Represents a rabbit on the board.
+ */
 public class Rabbit extends SingleBoardItem implements Containable {
 
+    /**
+     * Logger used to log errors.
+     */
     private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
@@ -161,6 +167,11 @@ public class Rabbit extends SingleBoardItem implements Containable {
         return true;
     }
 
+    /**
+     * Checks if this object is equal to another.
+     * @param o The object being compared.
+     * @return True if they are equal.
+     */
     @Override
     public boolean equals(Object o) {
         logger.trace("Checking rabbit!");

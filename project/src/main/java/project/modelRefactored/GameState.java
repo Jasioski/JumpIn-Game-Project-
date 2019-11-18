@@ -1,4 +1,4 @@
-package project.model;
+package project.modelRefactored;
 
 /**
  * Enum containing the state of the game, either solved or in progress.

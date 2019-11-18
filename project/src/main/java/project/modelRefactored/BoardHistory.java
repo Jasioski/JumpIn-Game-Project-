@@ -1,6 +1,5 @@
 package project.modelRefactored;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +50,8 @@ public class BoardHistory {
      */
     public void addState(Board boardState) {
         currentMove++;
-        System.out.println(currentMove);
         if (!(boardHistory.size() == currentMove)) {
             for (int i = boardHistory.size() - 1; i >= currentMove; i--){
-                System.out.println("Wahoo");
                 boardHistory.remove(i);
             }
         }

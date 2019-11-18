@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import project.modelRefactored.Board;
 import project.modelRefactored.Coordinate;
 import project.modelRefactored.DefaultBoard;
-import project.model.GameState;
+import project.modelRefactored.GameState;
 import project.modelRefactored.Fox;
 import project.solverRefactored.Solver;
 
