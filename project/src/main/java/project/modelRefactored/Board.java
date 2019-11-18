@@ -12,6 +12,8 @@ import project.model.exceptions.NonSlideableException;
 import project.model.exceptions.SlideHitObstacleException;
 import project.model.exceptions.SlideWrongOrientationException;
 
+import java.util.Objects;
+
 public class Board {
 
 	public final int numberOfRows;
@@ -21,11 +23,12 @@ public class Board {
 	//todo: override and throw exception on map.get
 	private PMap<Coordinate, BoardItem> items;
 
-	protected GameState currentGameState;
+	public final GameState currentGameState;
 
 	/**
 	 * Gets the correct slice of the board based on direction
-	 * @param direction passes in direction the move is to be performed in
+	 *
+	 * @param direction  passes in direction the move is to be performed in
 	 * @param coordinate coordinate of what is trying ot move
 	 * @return rowSlice or columnSlice depending on direction
 	 */
@@ -39,13 +42,17 @@ public class Board {
 	}
 
 	public Board(int rows, int columns) {
-		this.currentGameState = GameState.IN_PROGRESS;
+		this(rows, columns, GameState.IN_PROGRESS);
+	}
+
+	public Board(int rows, int columns, GameState gameState) {
+		this.currentGameState = gameState;
 		items = HashTreePMap.empty();
 		this.numberOfRows = rows;
 		this.numberOfColumns = columns;
 
 		// Initialize Board Items
-		for (int row = 0; row < numberOfRows; row ++) {
+		for (int row = 0; row < numberOfRows; row++) {
 			for (int column = 0; column < numberOfColumns; column++) {
 				Coordinate currentCoordinate = new Coordinate(row, column);
 				BoardItem itemToAdd = new EmptyBoardItem(currentCoordinate);
@@ -54,8 +61,16 @@ public class Board {
 		}
 	}
 
-	private Board (Board board) {
+	private Board(Board board) {
 		this.currentGameState = GameState.IN_PROGRESS;
+		this.numberOfRows = board.numberOfRows;
+		this.numberOfColumns = board.numberOfColumns;
+
+		this.items = board.items;
+	}
+
+	private Board(Board board, GameState gameState) {
+		this.currentGameState = gameState;
 		this.numberOfRows = board.numberOfRows;
 		this.numberOfColumns = board.numberOfColumns;
 
@@ -64,30 +79,29 @@ public class Board {
 
 	/**
 	 * Set an item on a board while preserving purity
+	 *
 	 * @param item the item you want to add to the board
 	 * @return a board which is a result of the applied transformation
 	 */
 	public Board setItem(BoardItem item) {
-        Board modifiedBoard = new Board(this);
+		Board modifiedBoard = new Board(this);
 
 		if (item.coordinate.isLeft()) {
-			logger.trace("found left item");
 			Coordinate coordinate = item.coordinate.left().get();
 			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
 		}
 
 		//TODO: clean up this code
 		if (item.coordinate.isRight()) {
-			logger.trace("found right type");
-			Pair<Coordinate,Coordinate> coordinate =
+			Pair<Coordinate, Coordinate> coordinate =
 					item.coordinate.right().get();
 
-        	modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
 			modifiedBoard.items = modifiedBoard.items.plus(coordinate.right(), item);
 		}
 
 		return modifiedBoard;
-    }
+	}
 
 	public BoardItem getItem(Coordinate coordinate) {
 		return this.items.get(coordinate);
@@ -146,7 +160,7 @@ public class Board {
 			board = board.setItem(emptyTail);
 
 			Fox newFox = fox.slide(slice,
-					moveSpaces,	direction);
+					moveSpaces, direction);
 
 			board = board.setItem(newFox);
 		} else {
@@ -180,8 +194,7 @@ public class Board {
 			} else {
 				board = board.setItem(rabbitOrHole.right().get());
 			}
-		}
-		else if (item instanceof ContainerItem){
+		} else if (item instanceof ContainerItem) {
 			ContainerItem containerItem = (ContainerItem) item;
 
 			Pair<ContainerItem, Either<Rabbit, ContainerItem>> holeAndJumped
@@ -203,8 +216,7 @@ public class Board {
 				ContainerItem newContainerItem = rabbitOrHole.right().get();
 				board = board.setItem(newContainerItem);
 			}
-		}
-		else{
+		} else {
 			throw new InvalidMoveException("Must be a rabbit to jump!");
 		}
 
@@ -219,13 +231,13 @@ public class Board {
 		BoardItem item = this.getItem(itemSelected);
 		Board board = this;
 
-		if (item instanceof Rabbit || item instanceof ContainerItem)  {
+		if (item instanceof Rabbit || item instanceof ContainerItem) {
 			logger.trace("try jumping in direction:" + direction.toString());
 			board = this.jump(direction, itemSelected);
 		}
 		if (item instanceof Fox) {
 			logger.trace("try sliding fox in direction: " + direction.toString());
-			int moveSpaces = deltaCoordinate.row ;
+			int moveSpaces = deltaCoordinate.row;
 			if (deltaCoordinate.row == 0) {
 				moveSpaces = deltaCoordinate.column;
 			}
@@ -237,12 +249,13 @@ public class Board {
 
 	/**
 	 * Returns the distance coordinate between two different coordinates.
-	 * @param initial The intial coordinate that the movement starts from.
+	 *
+	 * @param initial     The intial coordinate that the movement starts from.
 	 * @param destination The final coordinate that it should end up at.
 	 * @return
 	 */
-	private Coordinate computeDelta (Coordinate initial,
-									 Coordinate destination) {
+	private Coordinate computeDelta(Coordinate initial,
+									Coordinate destination) {
 		int row = destination.row - initial.row;
 		int column = destination.column - initial.column;
 
@@ -251,6 +264,7 @@ public class Board {
 
 	/**
 	 * Returns the direction of a move based on a coordinate containing the destination's distance
+	 *
 	 * @param deltaDistance Coordinate of the distance between the start and end point
 	 * @return The direction desired
 	 * @throws IllegalArgumentException if the direction is invalid
@@ -260,19 +274,14 @@ public class Board {
 		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
 			throw new IllegalArgumentException("Cannot move to the same " +
 					"position");
-		}
-
-		else if(!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
+		} else if (!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
 			if (deltaDistance.row > 0) { //destination is below
-				return  Direction.DOWN;
-			}
-			else if (deltaDistance.row < 0) { //destination is above
+				return Direction.DOWN;
+			} else if (deltaDistance.row < 0) { //destination is above
 				return Direction.UP;
-			}
-			else if (deltaDistance.column > 0) { //destination is to the right
+			} else if (deltaDistance.column > 0) { //destination is to the right
 				return Direction.RIGHT;
-			}
-			else { //destination is the the left
+			} else { //destination is the the left
 				return Direction.LEFT;
 			}
 		}
@@ -284,24 +293,29 @@ public class Board {
 	 * Updates the gamestate to won if there are no rabbits remaining on the board.
 	 */
 	public Board updateGameState() {
-		Board board = new Board(this);
-		for (int row = 0; row < board.numberOfRows; row++) {
-			for (int column = 0; column < board.numberOfColumns; column++) {
+		for (int row = 0; row < this.numberOfRows; row++) {
+			for (int column = 0; column < this.numberOfColumns; column++) {
 				// make sure there are no top level rabbits
-				if (board.items.get(new Coordinate(row, column)) instanceof Rabbit) {
-					board.currentGameState = GameState.IN_PROGRESS;
+				if (this.items.get(new Coordinate(row, column)) instanceof Rabbit) {
+					GameState currentGameState = GameState.IN_PROGRESS;
+
+					Board board = new Board(this, currentGameState);
+
 					return board;
 				}
 				// make sure there are no rabbits inside elevated positions
-				else if (board.items.get(new Coordinate(row, column)) instanceof ElevatedBoardItem) {
+				else if (this.items.get(new Coordinate(row, column)) instanceof ElevatedBoardItem) {
 					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
-							board.items.get(new Coordinate(row, column));
+							this.items.get(new Coordinate(row, column));
 					if (elevatedBoardItem.containingItem.isPresent()) {
 						Containable containable =
 								elevatedBoardItem.containingItem.get();
 
-						if (containable instanceof  Rabbit) {
-							board.currentGameState = GameState.IN_PROGRESS;
+						if (containable instanceof Rabbit) {
+							GameState currentGameState = GameState.IN_PROGRESS;
+
+							Board board = new Board(this, currentGameState);
+
 							return board;
 						}
 					}
@@ -309,19 +323,15 @@ public class Board {
 			}
 		}
 
-		board.currentGameState = GameState.SOLVED;
+		GameState currentGameState = GameState.SOLVED;
+
+		Board board = new Board(this, currentGameState);
+
 		return board;
 	}
 
-	/**
-	 * Gets the current gamestate of the board.
-	 * @return The current gamestate.
-	 */
-	public GameState getCurrentGameState() {
-		return currentGameState;
-	}
 	@Override
-		public String toString() {
+	public String toString() {
 		String str = "";
 		String rowLine = "";
 
@@ -329,16 +339,16 @@ public class Board {
 			rowLine += "--------";
 		}
 
-		String columnLine = "" ;
+		String columnLine = "";
 
 		// column header
 		for (int i = 0; i < numberOfRows; i++) {
-			columnLine += "     " + (i + 1 ) + " ";
+			columnLine += "     " + (i + 1) + " ";
 		}
 
 		columnLine += "\n";
 
-		for (int row = 0; row < numberOfRows; row ++) {
+		for (int row = 0; row < numberOfRows; row++) {
 
 			if (row == 0) {
 				str += columnLine;
@@ -347,19 +357,17 @@ public class Board {
 			str += rowLine;
 			str += "\n";
 
-			str += ""+ (row+1);
+			str += "" + (row + 1);
 			for (int column = 0; column < numberOfColumns; column++) {
-				BoardItem item =  getItem(new Coordinate(row, column));
+				BoardItem item = getItem(new Coordinate(row, column));
 
 				str += " | ";
 				//test code
 				if (item.toString().length() == 10) {
 					str += " " + item.toString() + " ";
-				}
-				else if (item.toString().length() == 11) {
+				} else if (item.toString().length() == 11) {
 					str += " " + item.toString();
-				}
-				else {
+				} else {
 					logger.error("badly sized ui text");
 				}
 
@@ -373,4 +381,18 @@ public class Board {
 
 		return str;
 	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(numberOfRows, numberOfColumns,
+				items, currentGameState);
+	}
+
+	public boolean equals (Object o) {
+		if (this == o) return true;
+
+		return false;
+	}
+
 }

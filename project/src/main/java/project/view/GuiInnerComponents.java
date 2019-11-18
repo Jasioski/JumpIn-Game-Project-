@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.exceptions.*;
+import project.solverRefactored.Solver;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -62,7 +63,7 @@ public class GuiInnerComponents implements ItemClickListener {
 		boardPanel.repaint();
 		boardPanel.revalidate();
 		// updates the visuals
-		if (board.getCurrentGameState() == GameState.SOLVED) {
+		if (board.currentGameState == GameState.SOLVED) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
 			JOptionPane.showMessageDialog(boardPanel, "Congratulations! \nYou Won!", "Victory!", 1);
 			int playAgain = JOptionPane.showConfirmDialog(boardPanel, "Do you want to play again?", "Reset?", dialogButton);
@@ -111,6 +112,7 @@ public class GuiInnerComponents implements ItemClickListener {
 			try {
 				logger.trace("attempting");
 				board = board.move(selectedItem, destinationItem); // try moving the selected item to destination
+				Solver.solve(board);
 				logger.trace("successful");
 			} catch (InvalidMoveException e) {
 				logger.debug(e);
@@ -122,6 +124,7 @@ public class GuiInnerComponents implements ItemClickListener {
 				destinationItem = null;
 				this.updateBoard();
 			}
+
 		}
 	}
 

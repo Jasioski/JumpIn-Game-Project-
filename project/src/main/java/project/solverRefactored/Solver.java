@@ -3,8 +3,14 @@ package project.solverRefactored;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.Direction;
+import project.model.GameState;
+import project.model.exceptions.NonSlideableException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideWrongOrientationException;
 import project.modelRefactored.*;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -25,10 +31,64 @@ public class Solver {
     }
 
 
+    // TODO: delete ALLL THe old code
+    private static Board applyMove(Board board, Move move) throws
+            InvalidMoveException, NonSlideableException,
+            SlideWrongOrientationException, SlideHitObstacleException {
+        try {
+            return board.move(move.initial, move.ending);
+        } catch (Exception e) {
+            logger.error("received an error when applying a move");
+            throw e;
+        }
+    }
+
+    final static int MAX_DEPTH = 30;
+
     public static void solve (Board board) {
-        List<Move> moves = generateMoves(board);
-        logger.trace("generated moves: " + moves.size());
-        printMoves(moves);
+        HashSet<Board> boardHistory = new HashSet<>();
+
+        solve(board, 0);
+    }
+
+
+    public static void solve (Board board, int depth) {
+
+        if (depth > MAX_DEPTH) {
+            logger.debug("hit max depth on search");
+            return;
+        }
+
+        if (board.currentGameState == GameState.IN_PROGRESS) {
+            // board is the root of the tree
+
+            List<Move> moves = generateMoves(board);
+
+            logger.debug("generated moves: " + moves.size());
+
+            Collections.shuffle(moves);
+
+            for (Move move: moves) {
+                try {
+                    Board newBoard = applyMove(board, move);
+
+                    System.out.println(board);
+
+                    Thread.sleep(1000);
+
+                    solve(newBoard, depth + 1);
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }
+        }
+
+        else {
+            logger.debug("Game solved");
+
+            return;
+        }
+
     }
 
     public static List<Move> generateMoves(Board board) {
