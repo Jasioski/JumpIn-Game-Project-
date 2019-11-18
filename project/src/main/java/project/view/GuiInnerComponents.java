@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.exceptions.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -19,26 +18,64 @@ import javax.swing.border.*;
  */
 public class GuiInnerComponents implements ItemClickListener {
 
-	public static Logger logger =
-            LogManager.getLogger(GuiInnerComponents.class);
-
-	// View Layer
+	//View layer
+	/**
+	 * Logger that logs results of moves.
+	 */
+	public static Logger logger = LogManager.getLogger(GuiInnerComponents.class);
+	/**
+	 * Panel for the view layer.
+	 */
 	JPanel boardPanel;
 
+	/**
+	 * Message displayed at the top of the page.
+	 */
 	private JLabel message;
 
-	// Model Layer
-	private Board board;
+	/**
+	 * The border surrounding the board.
+	 */
 	private EmptyBorder border;
+
+	// Model Layer
+	/**
+	 * The board being represented by the gui.
+	 */
+	private Board board;
+
+	/**
+	 * The coordinate of the item currently selected.
+	 */
 	private Coordinate selectedItem;
+
+	/**
+	 * The coordinate of the destination selected.
+	 */
 	private Coordinate destinationItem;
 
-	private int padding; 
+	/**
+	 * The history of board states.
+	 */
+	private BoardHistory boardHistory;
+
+	/**
+	 * The padding used by the board's border.
+	 */
+	private int padding;
+
+	/**
+	 * Creates a gui for the inner components using an initial board state.
+	 * @param board The initial state of the board.
+	 */
 	public GuiInnerComponents(Board board) {
 		this.board = board;
 		message = new JLabel();
+		message.setText("Make your move!");
+		this.boardHistory = new BoardHistory(board);
 		boardInnerComponents();
 
+		this.updateBoard();
 	}
 
 	private void boardInnerComponents() {
@@ -79,6 +116,7 @@ public class GuiInnerComponents implements ItemClickListener {
 		message.setText("Make your move!");
 		DefaultBoard defaultBoard = new DefaultBoard();
 		board = defaultBoard.getDefaultBoard();
+		this.boardHistory = new BoardHistory(board);
 
 		this.updateBoard();
 	}
@@ -87,7 +125,7 @@ public class GuiInnerComponents implements ItemClickListener {
 		return this.message;
 	}
 
-	EmptyBorder boardBorderSetup() {
+	public EmptyBorder boardBorderSetup() {
 		//padding for the board itself
 		padding = 5;
 		border = new EmptyBorder(padding, padding, padding, padding);
@@ -110,7 +148,9 @@ public class GuiInnerComponents implements ItemClickListener {
 			logger.trace("set destination");
 			try {
 				logger.trace("attempting");
-				board = board.move(selectedItem, destinationItem); // try moving the selected item to destination
+				Board newBoard = board.move(selectedItem, destinationItem); // try moving the selected item to destination
+				boardHistory.addState(newBoard);
+				board = newBoard;
 				logger.trace("successful");
 			} catch (InvalidMoveException e) {
 				logger.debug(e);
@@ -125,12 +165,51 @@ public class GuiInnerComponents implements ItemClickListener {
 		}
 	}
 
-	// Reset board
-	Action newGameAction = new AbstractAction("New") {
+	/**
+	 * Undoes a move, retrieving it from the move history.
+	 */
+	public void undoMove(){
+		Board recalledMove = boardHistory.getUndoBoard();
+		this.board = recalledMove;
+		updateBoard();
+	}
 
+	/**
+	 * Redoes a move after an undo, retrieving it from the move history.
+	 */
+	public void redoMove(){
+		try {
+			Board recalledMove = boardHistory.getRedoBoard();
+			this.board = recalledMove;
+			updateBoard();
+		}
+		catch(Exception e){
+			logger.error(e);
+		}
+	}
+
+	// Linked to the button to reset the board
+	Action newGameAction = new AbstractAction("New") {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setupNewGame();
+		}
+	};
+
+	// Linked to the button to perform an undo
+	Action undoLastMove = new AbstractAction("Undo") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			undoMove();
+		}
+	};
+
+	// Linked to the button to perform a redo
+	Action redoLastMove = new AbstractAction("Redo") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			redoMove();
 		}
 	};
 

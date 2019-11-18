@@ -630,5 +630,56 @@ public class Board {
 			}
 
 			this.slide(direction, Math.abs(moveSpaces), itemSelected);
-		} }
+		}
+	}
+
+	/**
+	 * Checks if this board is equivalent to another board.
+	 * @param o The board being checked against
+	 * @return True if the boards are equivalent (their state is the same)
+	 */
+	@Override
+	public boolean equals (Object o) {
+		if (this == o) return true;
+
+		if (o == null) return false;
+
+		if (this.getClass() != o.getClass())
+			return false;
+
+		Board board = (Board) o;
+
+		if ((this.rows == board.rows) &&
+				(this.columns == board.columns) && (this.currentGameState == board.currentGameState)){
+			return this.hasSameContents(board);
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * Checks if this board has the same inner contents as another board(All of the objects inside are in the same places)
+	 * @param board The board being checked against
+	 * @return
+	 */
+	private boolean hasSameContents(Board board) {
+		for (int i = 0; i < rows; i++){
+			for (int j = 0; j < columns; j++){
+				try {
+					BoardItem thisBoardItem = this.getItem(i, j);
+					BoardItem compareBoardItem = board.getItem(i, j);
+					if (!thisBoardItem.equals(compareBoardItem)){
+						return false;
+					}
+				}
+				catch(Exception e){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 }
