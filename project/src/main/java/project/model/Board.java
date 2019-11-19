@@ -122,7 +122,6 @@ public class Board {
 			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
 		}
 
-		//TODO: clean up this code
 		if (item.coordinate.isRight()) {
 			Pair<Coordinate,Coordinate> coordinate =
 					item.coordinate.right().get();

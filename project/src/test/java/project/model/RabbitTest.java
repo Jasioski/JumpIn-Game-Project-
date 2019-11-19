@@ -18,8 +18,6 @@ public final class RabbitTest {
                 " type");
     }
 
-    // TODO: implement obstacle?
-
     @Test
     void testJumpRightOne () {
         // Slice setup
@@ -121,8 +119,6 @@ public final class RabbitTest {
         board = board.setItem(new Mushroom(new Coordinate(0 ,1)));
         board = board.setItem(containerItem);
 
-
-        // TODO: jump should return a list of items to be set to the board
         // Perform jump
         Either<Rabbit, ContainerItem> returnPair =
                 null;

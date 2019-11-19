@@ -57,10 +57,6 @@ public class ContainerItemTest {
                 "the hole is not an obstacle when empty");
     }
 
-    // TODO: write test for when the hole contains something which is not an
-    //  obstacle. I am not sure if this invariant event exists, someone needs
-    //  to look into this
-
     @Test
     void testIsObstacleWithItem() {
         Rabbit rabbit = new Rabbit(new Coordinate(0,0));

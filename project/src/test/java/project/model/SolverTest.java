@@ -365,7 +365,6 @@ class SolverTest {
         assertEquals(2,generatedMoves.size(), "the list should have two " +
                 "moves");
 
-        // FIXME figure out how to assert against the generated moves
     }
 
 
@@ -404,7 +403,6 @@ class SolverTest {
         assertEquals(2,generatedMoves.size(), "the list should have two " +
                 "moves");
 
-        // FIXME figure out how to assert against the generated moves
     }
 
 
@@ -445,7 +443,6 @@ class SolverTest {
         assertEquals(3,generatedMoves.size(), "the list should have two " +
                 "moves");
 
-        // FIXME figure out how to assert against the generated moves
     }
 
 
@@ -487,7 +484,6 @@ class SolverTest {
         assertEquals(5,generatedMoves.size(), "the list should have five " +
                 "moves");
 
-        // FIXME figure out how to assert against the generated moves
     }
 
     @Test

@@ -154,7 +154,6 @@ public class Fox extends BoardItem {
         coordinates.add(nextCoordinates.right());
 
         if (checkIfNotOnBoard(slice, coordinates)) {
-            //TODO: should we replace these with seperate moves?
             throw new InvalidMoveException("Slide caused fox to fall off " +
                     "board");
         }
