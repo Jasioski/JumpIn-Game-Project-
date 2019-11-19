@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
-import project.modelRefactored.exceptions.SlideHitObstacleException;
-import project.modelRefactored.exceptions.SlideWrongOrientationException;
 
 import java.util.Objects;
 
@@ -131,8 +129,7 @@ public class Board {
 	}
 
 	public Board slide(Direction direction, int moveSpaces,
-					   Coordinate coordinate) throws InvalidMoveException,
-			SlideHitObstacleException, SlideWrongOrientationException {
+					   Coordinate coordinate) throws InvalidMoveException {
 
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
@@ -221,7 +218,7 @@ public class Board {
 	}
 
 	public Board move(Coordinate itemSelected, Coordinate itemDestination)
-			throws InvalidMoveException, SlideHitObstacleException, SlideWrongOrientationException {
+			throws InvalidMoveException {
 		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
 				itemDestination);
 		Direction direction = this.getDirectionFromDestination(deltaCoordinate);

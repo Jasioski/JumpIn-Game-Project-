@@ -6,8 +6,6 @@ import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 import project.modelRefactored.Direction;
 import project.modelRefactored.GameState;
-import project.modelRefactored.exceptions.SlideHitObstacleException;
-import project.modelRefactored.exceptions.SlideWrongOrientationException;
 import project.modelRefactored.*;
 
 import java.util.List;
@@ -26,8 +24,7 @@ public class Solver {
 
     // TODO: delete ALLL THe old code
     private static Board applyMove(Board board, Move move) throws
-            InvalidMoveException,
-            SlideWrongOrientationException, SlideHitObstacleException {
+            InvalidMoveException {
         try {
             return board.move(move.initial, move.ending);
         } catch (Exception e) {

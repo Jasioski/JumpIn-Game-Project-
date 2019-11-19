@@ -4,8 +4,6 @@ import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
-import project.modelRefactored.exceptions.SlideHitObstacleException;
-import project.modelRefactored.exceptions.SlideWrongOrientationException;
 import project.tui.ItemUIRepresentation;
 
 import java.util.ArrayList;
@@ -29,7 +27,8 @@ public class Fox extends BoardItem {
      * @param coords The pair of coordinates of the Fox.
      */
     private static void validateArguments(Pair<Coordinate, Coordinate> coords) {
-        validateArguments(coords.left().row, coords.left().column, coords.right().row, coords.right().column);
+        validateArguments(coords.left().row, coords.left().column,
+                coords.right().row, coords.right().column);
     }
 
     /**
@@ -40,20 +39,25 @@ public class Fox extends BoardItem {
      * @param tailColumn The column of the fox's tail.
      * @throws IllegalArgumentException If the hea and tail conflict with eachother.
      */
-    private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
+    private static void validateArguments(int headRow, int headColumn,
+                                          int tailRow, int tailColumn)
             throws IllegalArgumentException {
 
         if (headColumn == tailColumn && headRow == tailRow) {
-            throw new IllegalArgumentException("The fox cannot have its tail and head in the same position");
+            throw new IllegalArgumentException("The fox cannot have its tail " +
+                    "and head in the same position");
         }
 
-        if (Math.abs(headColumn - tailColumn) > 1 || Math.abs(headRow - tailRow) > 1) {
+        if (Math.abs(headColumn - tailColumn) > 1 ||
+                Math.abs(headRow - tailRow) > 1) {
             throw new IllegalArgumentException(
-                    "The fox cannot have its tail more than a unit " + "a way from its head");
+                    "The fox cannot have its tail more than a unit " +
+                            "a way from its head");
         }
 
         if (Math.abs(headColumn - tailColumn) == Math.abs(headRow - tailRow)) {
-            throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
+            throw new IllegalArgumentException("The fox cannot have its tail " +
+                    "diagonal to its head");
         }
     }
 
@@ -73,20 +77,20 @@ public class Fox extends BoardItem {
     /**
      * Method used to determine what next coordinate should be checked when sliding the fox
      * @return nextCoordinates The next coordinates that should be checked when sliding the fox
-     * @throws SlideWrongOrientationException
+     * @throws InvalidMoveException
      */
     private Pair<Coordinate, Coordinate> computeNextCoordinates(Direction direction)
-            throws SlideWrongOrientationException {
+            throws InvalidMoveException {
         Coordinate head = getHead();
         Coordinate tail = getTail();
 
         if (this.orientation == Orientation.HORIZONTAL) {
             if (direction == Direction.UP || direction == Direction.DOWN) {
-                throw new SlideWrongOrientationException("Fox is oriented horizontally!");
+                throw new InvalidMoveException("Fox is oriented horizontally!");
             }
         } else if (this.orientation == Orientation.VERTICAL) {
             if (direction == Direction.LEFT || direction == Direction.RIGHT) {
-                throw new SlideWrongOrientationException("Fox is oriented vertically!");
+                throw new InvalidMoveException("Fox is oriented vertically!");
             }
         }
 
@@ -117,7 +121,9 @@ public class Fox extends BoardItem {
      * @param moveSpaces The spaces the Fox wants to move
      * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
      */
-    public Fox slide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction) throws SlideWrongOrientationException, SlideHitObstacleException, InvalidMoveException {
+    public Fox slide(PMap<Coordinate, BoardItem> slice, int moveSpaces,
+                     Direction direction) throws InvalidMoveException {
+
         return performSlide(slice, moveSpaces, direction);
     }
 
@@ -128,7 +134,7 @@ public class Fox extends BoardItem {
      * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
      */
     public Fox performSlide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction)
-            throws SlideWrongOrientationException, InvalidMoveException {
+            throws InvalidMoveException {
         // Generate new coordinates
         Pair<Coordinate, Coordinate> nextCoordinates =
                 this.computeNextCoordinates(direction);
