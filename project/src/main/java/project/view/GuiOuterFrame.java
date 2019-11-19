@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-import project.modelRefactored.Board;
+import project.model.Board;
 
 /**
  * 

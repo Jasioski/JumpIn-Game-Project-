@@ -2,7 +2,7 @@ package project.view;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.modelRefactored.*;
+import project.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ import java.awt.event.MouseListener;
 public class GUIBoardItem extends JPanel implements ActionListener, MouseListener{
     public static Logger logger = LogManager.getLogger(GUIBoardItem.class);
 
-    private project.modelRefactored.BoardItem item;
+    private project.model.BoardItem item;
 
     ItemClickListener listener;
     private Coordinate coordinate;
@@ -36,22 +36,22 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
 
         this.setLayout(new OverlayLayout(this));
 
-        if (item instanceof project.modelRefactored.Rabbit) {
+        if (item instanceof project.model.Rabbit) {
             this.coordinate = coordinate;
             this.add(new Rabbit());
         }
-        else if (item instanceof project.modelRefactored.Mushroom) {
+        else if (item instanceof project.model.Mushroom) {
             this.coordinate = coordinate;
             this.add(new Mushroom());
         }
-        else if (item instanceof project.modelRefactored.Hole) {
+        else if (item instanceof project.model.Hole) {
             this.coordinate = coordinate;
-            project.modelRefactored.Hole hole = (project.modelRefactored.Hole) item;
+            project.model.Hole hole = (project.model.Hole) item;
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
             this.add(new Hole(hole));
         }
 
-        else if (item instanceof project.modelRefactored.ElevatedBoardItem) {
+        else if (item instanceof project.model.ElevatedBoardItem) {
             this.coordinate = coordinate;
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5));
             ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) item;
@@ -63,7 +63,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
             this.add(circle);
             this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         }
-        else if (item instanceof project.modelRefactored.Fox)  {
+        else if (item instanceof project.model.Fox)  {
             this.coordinate = coordinate;
             this.add(new Fox());
         }

@@ -1,5 +1,5 @@
 package project.view;
-import project.modelRefactored.Coordinate;
+import project.model.Coordinate;
 
 /**
  * An event thrown by objects when they are clicked, specifying their coordinates.

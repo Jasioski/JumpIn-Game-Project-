@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.modelRefactored.Board;
-import project.modelRefactored.Coordinate;
-import project.modelRefactored.DefaultBoard;
-import project.modelRefactored.GameState;
-import project.modelRefactored.Fox;
-import project.solverRefactored.Solver;
+import project.model.Board;
+import project.model.Coordinate;
+import project.model.DefaultBoard;
+import project.model.GameState;
+import project.model.Fox;
+import project.solver.Solver;
 
 public class Main {
 
