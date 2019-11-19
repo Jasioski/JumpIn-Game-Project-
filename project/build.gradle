@@ -28,7 +28,7 @@ task uberJar(type: Jar) {
 	manifest {
         attributes 'Implementation-Title': 'Jump In By Group',  
         	'Implementation-Version': version,
-        	'Main-Class': 'project.tui.Main'
+        	'Main-Class': 'project.Application'
     }
   baseName = project.name + '-uberjar'
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } with jar
@@ -36,7 +36,7 @@ task uberJar(type: Jar) {
 
 
 application {
-    mainClassName = 'project.tui.Main'
+    mainClassName = 'project.Application'
 }
 
 dependencies {
