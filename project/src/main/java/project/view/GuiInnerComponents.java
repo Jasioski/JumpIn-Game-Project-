@@ -1,7 +1,7 @@
 package project.view;
 
 import project.modelRefactored.*;
-import project.model.GameState;
+import project.modelRefactored.GameState;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -6,11 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
-import project.model.Direction;
-import project.model.GameState;
-import project.model.exceptions.NonSlideableException;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
+import project.modelRefactored.exceptions.SlideHitObstacleException;
+import project.modelRefactored.exceptions.SlideWrongOrientationException;
 
 import java.util.Objects;
 
@@ -135,8 +132,7 @@ public class Board {
 
 	public Board slide(Direction direction, int moveSpaces,
 					   Coordinate coordinate) throws InvalidMoveException,
-			SlideHitObstacleException, SlideWrongOrientationException,
-			NonSlideableException {
+			SlideHitObstacleException, SlideWrongOrientationException {
 
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
@@ -164,7 +160,7 @@ public class Board {
 
 			board = board.setItem(newFox);
 		} else {
-			throw new NonSlideableException("Must be Fox to slide");
+			throw new InvalidMoveException("Must be Fox to slide");
 		}
 
 		board = board.updateGameState();
@@ -224,7 +220,8 @@ public class Board {
 		return board;
 	}
 
-	public Board move(Coordinate itemSelected, Coordinate itemDestination) throws InvalidMoveException, NonSlideableException, SlideHitObstacleException, SlideWrongOrientationException {
+	public Board move(Coordinate itemSelected, Coordinate itemDestination)
+			throws InvalidMoveException, SlideHitObstacleException, SlideWrongOrientationException {
 		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
 				itemDestination);
 		Direction direction = this.getDirectionFromDestination(deltaCoordinate);

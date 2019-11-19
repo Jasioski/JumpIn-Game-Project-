@@ -1,4 +1,4 @@
-package project.model.exceptions;
+package project.modelRefactored.exceptions;
 
 /**
  * Returned if the slideable item would collide with an obstacle.

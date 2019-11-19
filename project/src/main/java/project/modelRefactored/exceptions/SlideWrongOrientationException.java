@@ -1,4 +1,4 @@
-package project.model.exceptions;
+package project.modelRefactored.exceptions;
 
 /**
  * Thrown if the slideable object tries to slide in different orientation.

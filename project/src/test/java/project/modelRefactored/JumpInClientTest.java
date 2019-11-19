@@ -1,8 +1,6 @@
-package project;
+package project.modelRefactored;
 
 import org.junit.jupiter.api.Test;
-import project.model.Coordinate;
-import project.model.Direction;
 import project.tui.JumpInClient;
 
 import static org.junit.jupiter.api.Assertions.*;

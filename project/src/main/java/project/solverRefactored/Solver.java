@@ -1,20 +1,15 @@
 package project.solverRefactored;
 
-import com.sun.jdi.ObjectCollectedException;
-import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
-import project.model.Direction;
-import project.model.GameState;
-import project.model.exceptions.NonSlideableException;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
+import project.modelRefactored.Direction;
+import project.modelRefactored.GameState;
+import project.modelRefactored.exceptions.SlideHitObstacleException;
+import project.modelRefactored.exceptions.SlideWrongOrientationException;
 import project.modelRefactored.*;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -31,7 +26,7 @@ public class Solver {
 
     // TODO: delete ALLL THe old code
     private static Board applyMove(Board board, Move move) throws
-            InvalidMoveException, NonSlideableException,
+            InvalidMoveException,
             SlideWrongOrientationException, SlideHitObstacleException {
         try {
             return board.move(move.initial, move.ending);

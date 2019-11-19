@@ -1,19 +1,16 @@
 package project.modelRefactored;
 
-import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
-import project.model.Direction;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
+import project.modelRefactored.exceptions.SlideHitObstacleException;
+import project.modelRefactored.exceptions.SlideWrongOrientationException;
 import project.tui.ItemUIRepresentation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A class that represents a fox on the board, which can slide across the board to move.

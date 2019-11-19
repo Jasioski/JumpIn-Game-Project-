@@ -2,7 +2,6 @@ package project.modelRefactored;
 
 import com.google.common.base.Optional;
 import org.junit.jupiter.api.Test;
-import project.model.Direction;
 
 import static org.junit.jupiter.api.Assertions.*;
 

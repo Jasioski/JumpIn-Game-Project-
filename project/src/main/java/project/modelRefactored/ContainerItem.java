@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
-import project.model.Direction;
 
 /**
  * Represents a hole object on the board.

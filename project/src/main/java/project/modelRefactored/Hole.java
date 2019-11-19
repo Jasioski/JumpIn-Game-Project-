@@ -6,7 +6,6 @@ import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
-import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
 public class Hole extends ContainerItem {

@@ -4,11 +4,6 @@ import java.util.List;
 
 import io.atlassian.fugue.Pair;
 import org.junit.jupiter.api.Test;
-import project.model.Direction;
-import project.model.GameState;
-import project.model.exceptions.NonSlideableException;
-import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideWrongOrientationException;
 import project.solverRefactored.Move;
 import project.solverRefactored.Solver;
 

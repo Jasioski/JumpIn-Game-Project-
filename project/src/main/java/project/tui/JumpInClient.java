@@ -3,7 +3,7 @@ package project.tui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.modelRefactored.Coordinate;
-import project.model.Direction;
+import project.modelRefactored.Direction;
 import project.modelRefactored.Board;
 
 import java.util.regex.Matcher;

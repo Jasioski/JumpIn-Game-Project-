@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Optional;
-import project.model.Direction;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class FoxTest {
