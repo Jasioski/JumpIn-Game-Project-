@@ -41,7 +41,6 @@ public class DefaultBoard {
                         Optional.of(rabbitBottom));
         //3rd column end
 
-        Rabbit rabbitMidTop = new Rabbit(new Coordinate(0, 3));
         Mushroom mush2 = new Mushroom(new Coordinate(1,3));
         //4th column end
 
@@ -64,7 +63,6 @@ public class DefaultBoard {
         board = board.setItem(holeMiddle);
         board = board.setItem(fox2);
         board = board.setItem(elevatedBottom);
-//        board = board.setItem(rabbitMidTop);
         board = board.setItem(holeTopRight);
         board = board.setItem(elevatedMidRight);
         board = board.setItem(holeBottomRight);

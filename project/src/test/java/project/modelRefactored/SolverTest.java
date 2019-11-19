@@ -497,6 +497,13 @@ class SolverTest {
 
     @Test
     void testSolveDefaultBoard() {
+        //   0  1  2  3  4
+//      0    HM F  U  E  HR
+//      1    E  F  E  M  E
+//      2    UR E  HE E  U
+//      3    E  E  F  F  E
+//      4    HE E  UR E  HE
+
         Board board = new DefaultBoard().getBoard();
 
         List<Move> moves = Solver.solve(board);
