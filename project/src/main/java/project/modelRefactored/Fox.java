@@ -64,14 +64,21 @@ public class Fox extends BoardItem {
     /**
      * Ensures that given head and tail coordinates do not conflict with each other
      * @param coordinates The coordinates of the head and tail.
-     * @param orientation the orientation of the fox.
      */
-    public Fox(Pair<Coordinate, Coordinate> coordinates, Orientation orientation) {
+    public Fox(Pair<Coordinate, Coordinate> coordinates) {
         //TODO: calc orientation based on pair of coords
         super(coordinates);
+        if (coordinates.left().row - coordinates.right().row != 0) {
+            //should be vertical if row is not same for head and tail
+            this.orientation = Orientation.VERTICAL;
+
+        }
+
+        else {
+            this.orientation = Orientation.HORIZONTAL;
+        }
         this.uIRepresentation = ItemUIRepresentation.FOX;
         validateArguments(coordinates);
-        this.orientation = orientation;
     }
 
     /**
@@ -140,7 +147,7 @@ public class Fox extends BoardItem {
                 this.computeNextCoordinates(direction);
 
         // Create new Fox
-        Fox fox = new Fox(nextCoordinates, this.orientation);
+        Fox fox = new Fox(nextCoordinates);
 
         List<Coordinate> coordinates = new ArrayList<>();
 

@@ -18,7 +18,7 @@ public class FoxTest {
         Coordinate tail = new Coordinate(6, 5);
         Pair<Coordinate, Coordinate> coords = Pair.pair(head, tail);
 
-        Fox fox = new Fox(coords, Orientation.VERTICAL);
+        Fox fox = new Fox(coords);
 
         Coordinate expectedHead = new Coordinate(fox.getHead());
         Coordinate expectedTail = new Coordinate(fox.getTail());
@@ -33,8 +33,8 @@ public class FoxTest {
         //slice setup
         //F F H E
         Coordinate destination = new Coordinate(0, 2);
-        Fox slidingFox = new Fox(Pair.pair(new Coordinate(0,0), new Coordinate(0, 1)),
-                Orientation.HORIZONTAL);
+        Fox slidingFox = new Fox(Pair.pair(new Coordinate(0,0),
+                new Coordinate(0, 1)));
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
         board = board.setItem(new Hole(destination, Optional.absent()));
@@ -52,8 +52,7 @@ public class FoxTest {
         // E E F F
         Coordinate originalHead = new Coordinate(0,0);
         Coordinate originalTail = new Coordinate(0, 1);
-        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
-                Orientation.HORIZONTAL);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail));
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
 
@@ -87,8 +86,7 @@ public class FoxTest {
         // F F E E
         Coordinate originalHead = new Coordinate(0,2);
         Coordinate originalTail = new Coordinate(0, 3);
-        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
-                Orientation.HORIZONTAL);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail));
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
 
@@ -130,8 +128,7 @@ public class FoxTest {
         // F
         Coordinate originalHead = new Coordinate(0,0);
         Coordinate originalTail = new Coordinate(1, 0);
-        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
-                Orientation.VERTICAL);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail));
         Board board = new Board(4, 1);
         board = board.setItem(slidingFox);
 
@@ -173,8 +170,7 @@ public class FoxTest {
         // E
         Coordinate originalHead = new Coordinate(2,0);
         Coordinate originalTail = new Coordinate(3, 0);
-        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
-                Orientation.VERTICAL);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail));
         Board board = new Board(4, 1);
         board = board.setItem(slidingFox);
 
@@ -208,8 +204,7 @@ public class FoxTest {
         // E E F F
         Coordinate originalHead = new Coordinate(0,0);
         Coordinate originalTail = new Coordinate(0, 1);
-        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail),
-                Orientation.HORIZONTAL);
+        Fox slidingFox = new Fox(Pair.pair(originalHead, originalTail));
         Board board = new Board(1, 4);
         board = board.setItem(slidingFox);
 

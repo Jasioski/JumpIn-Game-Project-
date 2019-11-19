@@ -286,7 +286,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,2);
         Coordinate foxTail = new Coordinate(2,3);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
 
         board = board.setItem(fox);
 
@@ -321,7 +321,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,3);
         Coordinate foxTail = new Coordinate(2,4);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
 
         board = board.setItem(fox);
 
@@ -353,7 +353,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,1);
         Coordinate foxTail = new Coordinate(2,2);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
 
         board = board.setItem(fox);
 
@@ -390,7 +390,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,1);
         Coordinate foxTail = new Coordinate(2,2);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
         Rabbit rabbit = new Rabbit(new Coordinate(2,4));
 
         board = board.setItem(fox);
@@ -429,7 +429,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,1);
         Coordinate foxTail = new Coordinate(2,2);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.HORIZONTAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
         Rabbit rabbit = new Rabbit(new Coordinate(1,4));
         Rabbit rabbit2 = new Rabbit(new Coordinate(3,4));
 
@@ -471,7 +471,7 @@ class SolverTest {
         Coordinate foxHead = new Coordinate(2,1);
         Coordinate foxTail = new Coordinate(3,1);
 
-        Fox fox = new Fox(Pair.pair(foxHead, foxTail), Orientation.VERTICAL);
+        Fox fox = new Fox(Pair.pair(foxHead, foxTail));
         Rabbit rabbit = new Rabbit(new Coordinate(1,4));
         Rabbit rabbit2 = new Rabbit(new Coordinate(3,3));
 

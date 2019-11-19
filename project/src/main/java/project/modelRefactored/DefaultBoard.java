@@ -23,7 +23,7 @@ public class DefaultBoard {
         //1st column end
 
         Fox fox1 = new Fox(Pair.pair(new Coordinate(1, 1),
-                new Coordinate(0,1)), Orientation.VERTICAL);
+                new Coordinate(0,1)));
         //2nd column end
 
         ElevatedBoardItem elevatedTop =
@@ -33,7 +33,7 @@ public class DefaultBoard {
         Hole holeMiddle = new Hole(new Coordinate(2,2),
                 Optional.absent());
         Fox fox2 = new Fox(Pair.pair(new Coordinate(3, 2),
-                new Coordinate(3,3)), Orientation.HORIZONTAL);
+                new Coordinate(3,3)));
 
         Rabbit rabbitBottom = new Rabbit(new Coordinate (4, 2));
         ElevatedBoardItem elevatedBottom =
