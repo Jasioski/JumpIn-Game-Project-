@@ -2,9 +2,9 @@ package project.tui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.modelRefactored.Coordinate;
+import project.model.Coordinate;
 import project.model.Direction;
-import project.modelRefactored.Board;
+import project.model.Board;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

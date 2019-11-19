@@ -1,7 +1,7 @@
 package project.view;
 
-import project.modelRefactored.DefaultBoard;
-import project.modelRefactored.Board;
+import project.model.DefaultBoard;
+import project.model.Board;
 
 /**
  * 

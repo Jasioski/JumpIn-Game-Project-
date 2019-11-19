@@ -1,220 +1,187 @@
 package project.model;
 
+import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.exceptions.HoleAlreadyHasRabbitException;
-import project.model.exceptions.JumpFailedNoObstacleException;
-import project.model.exceptions.JumpFailedOutOfBoundsException;
+import org.pcollections.PMap;
 import project.tui.ItemUIRepresentation;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-/**
- * A class representing the rabbit object on the board. Can jump over other objects and land inside containers.
- */
-public class Rabbit extends BoardItem implements Jumpable, Containable {
-	/**
-	 * Denotes whether the object is currently attempting to jump, used by the jumping functions.
-	 */
-	private boolean isCurrentlyJumping;
-	private static Logger logger = LogManager.getLogger(Rabbit.class);
+public class Rabbit extends SingleBoardItem implements Containable {
 
-	/**
-	 * Creates a rabbit at a specific row and column.
-	 * @param row The rabbit's row.
-	 * @param column The rabbit's column.
-	 */
-	public Rabbit(int row, int column) {
-		this(new Coordinate(row, column));
-	}
+    private static Logger logger = LogManager.getLogger(Board.class);
 
-	/**
-	 * Creates a rabbit at a specific coordinate.
-	 * @param coordinate The rabbit's coordinate.
-	 */
-	public Rabbit(Coordinate coordinate) {
-		super(ItemUIRepresentation.RABBIT);
-		this.setCoordinate(coordinate);
-		isCurrentlyJumping = false;
-	}
+    /**
+     * Constructor for a rabbit initializes uirepresentation and sets
+     * coordinates using coordinate parameter.
+     * @param coordinate coordinate used where rabbit will be placed.
+     */
+    public Rabbit(Coordinate coordinate) {
+        super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.RABBIT;
+    }
 
+    /**
+     * Constructor for a rabbit that initializes ui representation and sets
+     * coordinates using row and column parameters.
+     * @param row
+     * @param column
+     */
+    public Rabbit (int row, int column) {
+        super(new Coordinate(row, column));
+        this.uIRepresentation = ItemUIRepresentation.RABBIT;
+    }
 
-	/**
-	 * Sets the rabbit's coordinate.
-	 * @param coordinate The coordinate the rabbit is being set at.
-	 */
-	@Override
-	public void setCoordinate(Coordinate coordinate) {
-		this.coordinates.clear();
-		this.coordinates.add(coordinate);
-	}
+    /**
+     * Computes next coordinate using the to be checked when jumping.
+     * @param direction the direction the rabbit is jumping in.
+     * @return new Coordinate based on what direction its jumping.
+     */
+    private Coordinate computeCoordinateFromDirection(Direction direction) {
 
-	/**
-	 * Sets the rabbit's coordinates using a list of coordinates.
-	 * @param coordinates The item's coordinates.
-	 */
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) {
-		if (coordinates.size() != 1) {
-			if (coordinates.size() != 1) {
-				throw new IllegalArgumentException("Can only add a coordinate "
-						+ "of length 1.");
-			}
-		}
+        Coordinate current = this.coordinate.left().get();
 
-		this.setCoordinate(coordinates.get(0));
-	}
+        switch (direction) {
+            case RIGHT:
+                return new Coordinate(current.row, current.column + 1);
+            case LEFT:
+                return new Coordinate(current.row, current.column - 1);
+            case DOWN:
+                return new Coordinate(current.row + 1, current.column);
+            case UP:
+                return new Coordinate(current.row - 1, current.column);
+            default:
+                throw new IllegalArgumentException("Invalid Direction.");
+        }
+    }
 
-	/**
-	 * Gets the rabbit's coordinates.
-	 */
-	public Coordinate getCoordinate() {
-		return this.getCoordinates().get(0);
-	}
+    /**
+     * Makes a rabbit jump by delegating to another jump method.
+     * @param direction direction the rabbit is jumping in.
+     * @param slice slice of the board to be checked when performing the jump.
+     * @return calls the other jump method and returns what that jump method
+     * will return.
+     * @throws InvalidMoveException
+     */
+    public Either<Rabbit, ContainerItem> jump(Direction direction,
+                                              PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+       return jump(direction, slice, false);
+    }
 
-	/**
-	 * Attempts to jump in a specific direction and slice on the board.
-	 * @param direction The direction where the item is jumping.
-	 * @param slice The slice where the jump is being performed.
-	 * @return The new coordinates of the rabbit.
-	 * @throws JumpFailedNoObstacleException If there is no obstacle for the rabbit to jump over.
-	 * @throws JumpFailedOutOfBoundsException If the rabbit would be jumping out of bounds.
-	 */
-	@Override
-	public List<Coordinate> jump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
-		List<Coordinate> oldCoordinates = this.getCoordinates();
+    /**
+     * Makes a rabbit jump by using checks if rabbit is currently jumping.
+     * @param direction direction the rabbit is jumping in.
+     * @param slice slice of the board to be checked when performing the jump.
+     * @param isCurrentlyJumping is a boolean to determine if the rabbit is
+     *                           currently jumping.
+     * @return returns updated rabbit with new coordinates.
+     * @throws InvalidMoveException
+     */
+    private Either<Rabbit, ContainerItem> jump(Direction direction,
+                                               PMap<Coordinate, BoardItem> slice
+            , boolean isCurrentlyJumping) throws InvalidMoveException {
+        Coordinate coordinate = computeCoordinateFromDirection(direction);
 
-		try {
-			return performJump(direction, slice);
-		} catch (JumpFailedNoObstacleException | JumpFailedOutOfBoundsException e) {
-			this.setCoordinates(oldCoordinates);
-			throw e;
-		}
-	}
+        if (checkIfNotOnBoard(slice, coordinate)) {
+            //TODO: should we replace these with seperate moves?
+            throw new InvalidMoveException("Jumping caused Rabbit to fall off" +
+                    " board");
+        }
 
-	/**
-	 * Used by the jump function to actually perform the jump, and contains the logic to determine whether the rabbit can jump.
-	 * @param direction The direction the rabbit is jumping in.
-	 * @param slice The slice where the jump is being performed.
-	 * @return The new coordinates where the rabbit lands.
-	 * @throws JumpFailedNoObstacleException If the rabbit has no obstacle to jump over.
-	 * @throws JumpFailedOutOfBoundsException If the rabbit would be jumping out of bounds.
-	 */
-	private List<Coordinate> performJump(Direction direction, List<BoardItem> slice) throws JumpFailedNoObstacleException, JumpFailedOutOfBoundsException {
-		Coordinate currentCoordinate = this.getCoordinate();
-		Coordinate newCoordinate;
-		switch (direction) {
-			case RIGHT:
-				newCoordinate = new Coordinate(currentCoordinate.row, currentCoordinate.column + 1);
-				break;
-			case LEFT:
-				newCoordinate = new Coordinate(currentCoordinate.row, currentCoordinate.column - 1);
-				break;
-			case DOWN:
-				newCoordinate = new Coordinate(currentCoordinate.row + 1, currentCoordinate.column);
-				break;
-			case UP:
-				newCoordinate = new Coordinate(currentCoordinate.row - 1, currentCoordinate.column);
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid Direction.");
-		}
+        Rabbit jumpingRabbit = new Rabbit(coordinate);
 
-		// Get all coordinates in the slice without duplicates
-		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
+        // Check if the new coordinate is at an obstacle
+        // TODO: wrap pmap with type safe getter
+        // TODO: find a way to make this a compile time check instead of
+        //  using instance of
+        BoardItem item = slice.get(coordinate);
 
-		for (BoardItem item : slice) {
-			sliceCoordinates.addAll(item.getCoordinates());
-		}
+        // Found obstacle
+        //Perform Jump
+        if (item.isObstacle()){
+            return jumpingRabbit.jump(direction, slice, true);
+        }
 
-		// Check if we are in the board
-		if (!sliceCoordinates.contains(newCoordinate)) {
-			throw new JumpFailedOutOfBoundsException("You tried to jump off the board.");
-		}
+        // Could be empty hole or empty item
 
-		// Check if we are hitting an obstacle
-		// loop over all the items in the slice
-		boolean hitObstacle = slice.stream().anyMatch(sliceItem -> {
+        // R M E  ==> obstacle found, keep going,
 
+        // R E E  => error
 
-			// check if is at the same coordinate as one of the new coordinates
-			if (sliceItem.getCoordinates().contains(newCoordinate)) {
+        // R M H => E M H(R)
 
-				// do not match if not an empty elevated
-				if (sliceItem instanceof ContainerItem) {
-					ContainerItem containerItem = (ContainerItem) sliceItem;
-					if (containerItem.getContainingItem().isEmpty()) {
-						return false;
-					}
-				}
+        // Not found obstacle
+        if (isCurrentlyJumping) {
 
-				// not empty
-				if ((sliceItem.getClass() != EmptyBoardItem.class)) {
-					// not current item
-					if (!(sliceItem.equals(this))) {
-						return true;
-					}
-				}
-			}
+            if (item instanceof ContainerItem) {
+                ContainerItem newContainerItem;
+                if (item instanceof Hole) {
+                    newContainerItem = new Hole(coordinate, Optional.of(jumpingRabbit));
+                } else {
+                    newContainerItem = new ElevatedBoardItem(coordinate,
+                            Optional.of(jumpingRabbit));
+                }
+                return Either.right(newContainerItem);
+            } else {
+                return Either.left(jumpingRabbit);
+            }
+        } else {
+            throw new InvalidMoveException("Cannot move without obstacles");
+        }
+    }
 
-			// do not match if the item is empty or the current item
-			return false;
-		});
+    /**
+     * check if rabbit fell off the board while jumping.
+     * @param slice slice of the board to check for the jump.
+     * @param nextCoordinates the coordinates the rabbit is jumping to.
+     * @return boolean depending on if the rabbit is on the board or not,
+     * false if the rabbit is on the board, true otherwise.
+     */
+    private boolean checkIfNotOnBoard(
+            PMap<Coordinate, BoardItem> slice, Coordinate nextCoordinates
+    ) {
+        HashSet<Coordinate> coordinateSet = new HashSet<>(slice.keySet());
 
-		// Hitting Obstacle
-		if (hitObstacle) {
-			this.setCoordinate(newCoordinate);
-			isCurrentlyJumping = true;
+        if (!coordinateSet.contains(nextCoordinates)) {
+            return true;
+        }
 
-			// Keep going
-			return performJump(direction, slice);
-		}
-		// Found empty spot
-		else {
-			List<Coordinate> newCoordinates = new ArrayList<>();
+        return false;
+    }
 
-			// If we have jumped over something
-			if (isCurrentlyJumping) {
+    /**
+     * Method used to check if this Rabbit object is an obstacle.
+     * @return true All Rabbits are obstacles.
+     */
+    @Override
+    public boolean isObstacle() {
+        return true;
+    }
 
-				// If we are settling in a containable
-				for (BoardItem sliceItem: slice) {
-					if (sliceItem.getCoordinates().contains(newCoordinate)) {
-						if (sliceItem instanceof ContainerItem) {
-							ContainerItem containerItem = (ContainerItem) sliceItem;
-							try {
-								containerItem.contain(this);
-								isCurrentlyJumping = false;
-								return new ArrayList<Coordinate>();
-							} catch (HoleAlreadyHasRabbitException e) {
-								logger.error(e);
-							}
-						}
-					}
-				}
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking rabbit!");
+        if (this == o) {return true;}
 
-				// Stay in the new spot
-				newCoordinates.add(newCoordinate);
-				this.setCoordinate(newCoordinate);
-				isCurrentlyJumping = false;
-				return newCoordinates;
-			}
+        if (o == null) {return false;}
 
-			// If we haven't jumped over anything then throw
-			// Rabbits cannot jump to adjacent blocks,
-			// they must jump over something
-			else {
-				throw new JumpFailedNoObstacleException("There was nothing to jump over.");
-			}
-		}
-	}
+        if (this.getClass() != o.getClass()) {return false;}
 
-	@Override
-	public String toString() {
-		String s = "Coordinates: ";
-		s += this.getCoordinate();
-		return s;
-	}
+        Rabbit rabbit = (Rabbit) o;
+
+        if (rabbit.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (rabbit.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+                logger.trace("Rabbit IS SAME!");
+                return true;
+            }
+
+        }
+
+        return false;
+    }
 }

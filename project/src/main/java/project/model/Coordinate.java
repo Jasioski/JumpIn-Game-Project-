@@ -2,74 +2,51 @@ package project.model;
 
 import java.util.Objects;
 
-/**
- * A coordinate on the board where an item can be located, consisting of its row and column.
- */
 public class Coordinate {
-	/**
-	 * The row of the item.
-	 */
-	public int row;
 
-	/**
-	 * The column of the item.
-	 */
-	public int column;
+    public final int row;
+    public final int column;
 
-	/**
-	 * Constructs the coordinate with a specific row and column.
-	 * @param row The coordinate's row.
-	 * @param column The coordinate's column.
-	 */
-	public Coordinate(int row, int column) {
-		this.row = row;
-		this.column = column;
-	}
 
-	/**
-	 * Constructs the coordinate with the same row and column.
-	 * @param coordinate The row and column used for the coordinate.
-	 */
-	public Coordinate(Coordinate coordinate) {
-		this.row = coordinate.row;
-		this.column = coordinate.column;
-	}
+    // TODO: throw on negative
+    public Coordinate(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
 
-	/**
-	 * Checks if this coordinate is equal to another.
-	 * @param o The object being compared to.
-	 * @return Boolean containing the object's equality.
-	 */
-	@Override
-	public boolean equals (Object o) {
-		if (this == o) return true;
+    public Coordinate(Coordinate coordinate) {
+        this.row = coordinate.row;
+        this.column = coordinate.column;
+    }
 
-		if (o == null) return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
 
-		if (this.getClass() != o.getClass())
-			return false;
+    @Override
+    public boolean equals (Object o) {
+        if (this == o) return true;
 
-		Coordinate coordinate = (Coordinate) o;
+        if (o == null) return false;
 
-		return (this.row == coordinate.row &&
-				this.column == coordinate.column);
-	}
+        if (this.getClass() != o.getClass())
+            return false;
 
-	/**
-	 * Returns the hashcode of the coordinates.
-	 * @return The coordinate's hashcode.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(row, column);
-	}
+        Coordinate coordinate = (Coordinate) o;
 
-	/**
-	 * Returns a string representation of the coordinate.
-	 * @return The string, in format row:column
-	 */
-	@Override
-	public String toString() {
-		return row + ":" + column;
-	}
+        return (this.row == coordinate.row &&
+                this.column == coordinate.column);
+    }
+
+    public boolean isWholeNumber() {
+        return (row > -1 ) && ( column > -1);
+    }
+
+
+    @Override
+    public String toString() {
+        return row + ":" + column;
+    }
+
 }

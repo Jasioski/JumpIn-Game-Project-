@@ -12,7 +12,7 @@ public class Elevated extends ContainerItem {
      * Creates the elevated board object.
      * @param model The Elevated model object that the gui item is representing.
      */
-    public Elevated(project.modelRefactored.ContainerItem model) {
+    public Elevated(project.model.ContainerItem model) {
         super(model, color);
     }
 }

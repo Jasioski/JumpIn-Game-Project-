@@ -12,7 +12,7 @@ public class Hole extends ContainerItem {
      * Creates a hole object.
      * @param model The Hole model object that is being represented in the gui.
      */
-    public Hole(project.modelRefactored.ContainerItem model) {
+    public Hole(project.model.ContainerItem model) {
         super(model, color);
     }
 }

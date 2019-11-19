@@ -1,56 +1,50 @@
 package project.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
 
-import java.util.List;
+public class EmptyBoardItem extends SingleBoardItem {
 
-/**
- * A board item that represents an empty space on the board.
- */
-public class EmptyBoardItem extends BoardItem {
-	/**
-	 * Creates the empty board item with a specific row and column.
-	 * @param row The row where the empty item will be placed.
-	 * @param column The column where the empty item will be placed.
-	 */
-	public EmptyBoardItem(int row, int column) {
-		this(new Coordinate(row, column));
-	}
+    private static Logger logger = LogManager.getLogger(Board.class);
 
-	/**
-	 * Creates the empty board item with a coordinate on the board.
-	 * @param coordinate The coordinate where the empty space should be placed.
-	 */
-	public EmptyBoardItem(Coordinate coordinate) {
-		super(ItemUIRepresentation.EMPTY);
-		this.setCoordinate(coordinate);
-	}
+    public EmptyBoardItem(Coordinate coordinate) {
+        super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.EMPTY;
+    }
 
-	/**
-	 * Sets a coordinate of the empty item.
-	 * @param coordinate The coordinate being set.
-	 */
-	public void setCoordinate(Coordinate coordinate) {
+    @Override
+    public String toString() {
+        return ItemUIRepresentation.EMPTY.getRepresentation();
+    }
 
-		this.coordinates.clear();
-		this.coordinates.add(coordinate);
-	}
+    @Override
+    public boolean isObstacle() {
+        return false;
+    }
 
-	/**
-	 * Sets the coordinates of the empty board item.
-	 * @param coordinates The list containing the item's coordinates.
-	 * @throws IllegalArgumentException If there is more than one set of coordinates.
-	 */
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) throws
-			IllegalArgumentException {
-		if (coordinates.size() != 1) {
-			if (coordinates.size() != 1) {
-				throw new IllegalArgumentException("can only add a coordinate "
-						+ "of length 1");
-			}
-		}
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking empty!");
+        if (this == o) {return true;}
 
-		this.setCoordinate(coordinates.get(0));
-	}
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        EmptyBoardItem empty = (EmptyBoardItem) o;
+
+        if (empty.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (empty.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+                logger.trace("Empty IS SAME!");
+                return true;
+            }
+
+        }
+
+        return false;
+    }
 }

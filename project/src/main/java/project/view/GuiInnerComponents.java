@@ -1,6 +1,6 @@
 package project.view;
 
-import project.modelRefactored.*;
+import project.model.*;
 import project.model.GameState;
 
 import java.awt.*;
