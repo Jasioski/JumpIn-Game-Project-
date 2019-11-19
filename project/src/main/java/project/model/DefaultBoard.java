@@ -3,7 +3,13 @@ package project.model;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Pair;
 
+/**
+ * Creates the default layout of the board.
+ */
 public class DefaultBoard {
+    /**
+     * The board containing the default layout.
+     */
     private Board board;
 
     /**

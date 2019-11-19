@@ -66,7 +66,6 @@ public class Fox extends BoardItem {
      * @param coordinates The coordinates of the head and tail.
      */
     public Fox(Pair<Coordinate, Coordinate> coordinates) {
-        //TODO: calc orientation based on pair of coords
         super(coordinates);
         if (coordinates.left().row - coordinates.right().row != 0) {
             //should be vertical if row is not same for head and tail
@@ -228,14 +227,27 @@ public class Fox extends BoardItem {
         return true;
     }
 
+    /**
+     * gets tail coordinate for the fox.
+     * @return coordinate.right().get().right().
+     */
     public Coordinate getTail() {
        return coordinate.right().get().right();
     }
 
+    /**
+     * gets head coordinate for the fox.
+     * @return coordinate.right().get().left().
+     */
     public Coordinate getHead() {
         return coordinate.right().get().left();
     }
 
+    /**
+     * equals method for Fox.
+     * @param o The object being compared.
+     * @return true or false based on if its equals
+     */
     @Override
     public boolean equals(Object o) {
         logger.trace("Checking fox!");

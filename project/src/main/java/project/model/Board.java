@@ -11,13 +11,29 @@ import java.util.Objects;
 
 public class Board {
 
+	/**
+	 * The number of rows in the board.
+	 */
 	public final int numberOfRows;
+
+	/**
+	 * The number of columns in the board.
+	 */
 	public final int numberOfColumns;
+
+	/**
+	 * The logger used to log any errors.
+	 */
 	private static Logger logger = LogManager.getLogger(Board.class);
 
-	//todo: override and throw exception on map.get
+	/**
+	 * The persistent map containing the items in the board.
+	 */
 	private PMap<Coordinate, BoardItem> items;
 
+	/**
+	 * The current gamestate of the board, either won or in progress.
+	 */
 	public final GameState currentGameState;
 
 	/**
@@ -36,10 +52,21 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Creates a board with a specified number of rows and columns.
+	 * @param rows The number of rows the board has.
+	 * @param columns The number of columns the board has.
+	 */
 	public Board(int rows, int columns) {
 		this(rows, columns, GameState.IN_PROGRESS);
 	}
 
+	/**
+	 * Creates a board with a specified number of rows and columns, and a specific gamestate.
+	 * @param rows The number of rows the board has.
+	 * @param columns The number of columns the board has.
+	 * @param gameState The gamestate the board is in.
+	 */
 	public Board(int rows, int columns, GameState gameState) {
 		this.currentGameState = gameState;
 		items = HashTreePMap.empty();
@@ -56,6 +83,10 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Creates a new board using another board.
+	 * @param board The board that should be copied.
+	 */
 	private Board(Board board) {
 		this.currentGameState = GameState.IN_PROGRESS;
 		this.numberOfRows = board.numberOfRows;
@@ -64,6 +95,11 @@ public class Board {
 		this.items = board.items;
 	}
 
+	/**
+	 * Creates a board using another board and a gamestate.
+	 * @param board The board that should be copied.
+	 * @param gameState The new board's gamestate.
+	 */
 	private Board(Board board, GameState gameState) {
 		this.currentGameState = gameState;
 		this.numberOfRows = board.numberOfRows;
@@ -98,14 +134,28 @@ public class Board {
 		return modifiedBoard;
 	}
 
+	/**
+	 * Gets the BoardItem at a specific coordinate.
+	 * @param coordinate The coordinate of the board item.
+	 * @return The board item.
+	 */
 	public BoardItem getItem(Coordinate coordinate) {
 		return this.items.get(coordinate);
 	}
 
+	/**
+	 * Returns the persistent map containing the items in the board.
+	 * @return The items in the board.
+	 */
 	public PMap<Coordinate, BoardItem> getItems() {
 		return items;
 	}
 
+	/**
+	 * Returns the map of items in a specific slice along a column.
+	 * @param column The column of the slice.
+	 * @return The map containing the items in that column.
+	 */
 	public PMap<Coordinate, BoardItem> getColumnSlice(int column) {
 		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
 
@@ -117,6 +167,11 @@ public class Board {
 		return slice;
 	}
 
+	/**
+	 * Returns the map of items in a specific slice along a row.
+	 * @param row The row of the slice.
+	 * @return The map containing the items in that row.
+	 */
 	public PMap<Coordinate, BoardItem> getRowSlice(int row) {
 		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
 
@@ -128,6 +183,14 @@ public class Board {
 		return slice;
 	}
 
+	/**
+	 * Attempts to slide a fox in a specific direction and returns the resulting board.
+	 * @param direction The direction the fox should slide.
+	 * @param moveSpaces The amount of spaces it should move.
+	 * @param coordinate The coordinate of the fox.
+	 * @return The board with the resulting move.
+	 * @throws InvalidMoveException If the move is invalid.
+	 */
 	public Board slide(Direction direction, int moveSpaces,
 					   Coordinate coordinate) throws InvalidMoveException {
 
@@ -164,10 +227,16 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Attempts to jump a rabbit at a location on the board, and returns the resulting board.
+	 * @param direction The direction the rabbit should jump.
+	 * @param coordinate The coordinate of the rabbit.
+	 * @return The resulting board after the move.
+	 * @throws InvalidMoveException If the move is not valid.
+	 */
 	public Board jump(Direction direction, Coordinate coordinate)
 			throws InvalidMoveException {
 
-		//TODO refactor to return after if's
 		Board board = new Board(this);
 		BoardItem item = this.items.get(coordinate);
 		Either<Rabbit, ContainerItem> rabbitOrHole;
@@ -217,6 +286,13 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Attempts to move an item at a specific coordinate to another coordinate.
+	 * @param itemSelected The coordinate that the item is moved from.
+	 * @param itemDestination The coordinate the item is moved to.
+	 * @return The resulting board.
+	 * @throws InvalidMoveException If the move is invalid.
+	 */
 	public Board move(Coordinate itemSelected, Coordinate itemDestination)
 			throws InvalidMoveException {
 		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
@@ -241,7 +317,6 @@ public class Board {
 
 	/**
 	 * Returns the distance coordinate between two different coordinates.
-	 *
 	 * @param initial     The intial coordinate that the movement starts from.
 	 * @param destination The final coordinate that it should end up at.
 	 * @return
@@ -255,8 +330,8 @@ public class Board {
 	}
 
 	/**
-	 * Returns the direction of a move based on a coordinate containing the destination's distance
-	 *
+	 * Returns the direction of a move based on a coordinate containing the
+	 * destination's distance.
 	 * @param deltaDistance Coordinate of the distance between the start and end point
 	 * @return The direction desired
 	 * @throws IllegalArgumentException if the direction is invalid
@@ -322,6 +397,10 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Returns a string representation of the board.
+	 * @return The string representation.
+	 */
 	@Override
 	public String toString() {
 		String str = "";
@@ -374,16 +453,14 @@ public class Board {
 		return str;
 	}
 
+	/**
+	 * Returns the hashcode of the board.
+	 * @return The board's hashcode.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(numberOfRows, numberOfColumns, items, currentGameState);
 	}
-
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(numberOfRows, numberOfColumns,
-//				items, currentGameState);
-//	}
 
 	/**
 	 * Checks if this board is equivalent to another board.
@@ -409,6 +486,7 @@ public class Board {
 			return false;
 		}
 	}
+
 
 	/**
 	 * Checks if this board has the same inner contents as another board(All of the objects inside are in the same places)

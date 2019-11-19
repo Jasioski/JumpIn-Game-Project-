@@ -8,8 +8,14 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.PMap;
 import project.tui.ItemUIRepresentation;
 
+/**
+ * A space on the board that is elevated.
+ */
 public class ElevatedBoardItem extends ContainerItem {
 
+    /**
+     * The logger used to log errors.
+     */
     private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
@@ -35,7 +41,13 @@ public class ElevatedBoardItem extends ContainerItem {
         }
     }
 
-
+    /**
+     * Attempts to jump a board out of the elevated space.
+     * @param direction The direction that the rabbit must jump.
+     * @param slice The slice where the jump occurs.
+     * @return A pair containing the container and the result of the jump.
+     * @throws InvalidMoveException If the move is invalid.
+     */
     public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
         if (!containingItem.isPresent()){
             if (! (containingItem.get() instanceof  Rabbit)) {
@@ -53,6 +65,11 @@ public class ElevatedBoardItem extends ContainerItem {
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
 
+    /**
+     * Returns true of this object is the same as another ElevatedBoardItem.
+     * @param o The object being compared.
+     * @return True if they are the same.
+     */
     @Override
     public boolean equals(Object o) {
         logger.trace("Checking elevated!");

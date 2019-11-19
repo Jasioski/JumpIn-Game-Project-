@@ -85,17 +85,12 @@ public class Rabbit extends SingleBoardItem implements Containable {
         Coordinate coordinate = computeCoordinateFromDirection(direction);
 
         if (checkIfNotOnBoard(slice, coordinate)) {
-            //TODO: should we replace these with seperate moves?
             throw new InvalidMoveException("Jumping caused Rabbit to fall off" +
                     " board");
         }
 
         Rabbit jumpingRabbit = new Rabbit(coordinate);
 
-        // Check if the new coordinate is at an obstacle
-        // TODO: wrap pmap with type safe getter
-        // TODO: find a way to make this a compile time check instead of
-        //  using instance of
         BoardItem item = slice.get(coordinate);
 
         // Found obstacle
@@ -160,6 +155,11 @@ public class Rabbit extends SingleBoardItem implements Containable {
         return true;
     }
 
+    /**
+     * Checks if this object is equal to another.
+     * @param o The object being compared.
+     * @return True if they are equal.
+     */
     @Override
     public boolean equals(Object o) {
         logger.trace("Checking rabbit!");
