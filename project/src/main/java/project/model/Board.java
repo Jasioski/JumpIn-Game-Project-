@@ -1,156 +1,439 @@
-package project.model;
+package project.modelRefactored;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import project.model.exceptions.*;
-import project.modelRefactored.GameState;
+import org.pcollections.HashTreePMap;
+import org.pcollections.PMap;
+import project.model.Direction;
+import project.model.exceptions.NonSlideableException;
+import project.model.exceptions.SlideHitObstacleException;
+import project.model.exceptions.SlideWrongOrientationException;
+
+import java.util.Objects;
 
 /**
- * The main board class that contains and controls all objects on the board.
+ * Represents the board used in the game.
  */
 public class Board {
+	/**
+	 * The number of rows in the board.
+	 */
+	public final int numberOfRows;
 
 	/**
-	 * This is the 2D array that contains all the items in the board.
+	 * The number of columns in the board.
 	 */
-	private BoardItem[][] items;
+	public final int numberOfColumns;
 
 	/**
-	 * The number of rows that the board contains.
+	 * The logger used to log any errors.
 	 */
-	private int rows;
-
-	/**
-	 * The number of columns that the board contains.
-	 */
-	private int columns;
-
-	/**
-	 * The current state of the game, based on the GameState enum (either in progress or solved).
-	 */
-	protected GameState currentGameState;
-
 	private static Logger logger = LogManager.getLogger(Board.class);
 
 	/**
-	 * This method ensures that a given row and column are not negative.
-	 * @param rows The given row.
-	 * @param columns The given column.
-	 * @throws IllegalArgumentException if the rows and columns are negative.
+	 * The persistent map containing the items in the board.
 	 */
-	private static void validateArguments(int rows, int columns) throws IllegalArgumentException {
-		if (rows <= 0 || columns <= 0) {
+	private PMap<Coordinate, BoardItem> items;
 
-			throw new IllegalArgumentException("Rows and columns must be positive"
-					+ "integers.");
+	/**
+	 * The current gamestate of the board, either won or in progress.
+	 */
+	public final GameState currentGameState;
+
+	/**
+	 * Gets the correct slice of the board based on direction
+	 *
+	 * @param direction  passes in direction the move is to be performed in
+	 * @param coordinate coordinate of what is trying ot move
+	 * @return rowSlice or columnSlice depending on direction
+	 */
+	private PMap<Coordinate, BoardItem> getSlice(Direction direction,
+												 Coordinate coordinate) {
+		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+			return this.getRowSlice(coordinate.row);
+		} else {
+			return this.getColumnSlice(coordinate.column);
 		}
 	}
 
 	/**
-	 * Constructor that initializes the board with a specific number of rows and columns.
-	 * @param rows The number of rows the board should contain.
-	 * @param columns The number of columns the board should contain.
+	 * Creates a board with a specified number of rows and columns.
+	 * @param rows The number of rows the board has.
+	 * @param columns The number of columns the board has.
 	 */
 	public Board(int rows, int columns) {
-		// Setting the initial game state
-		this.currentGameState = GameState.IN_PROGRESS;
-		validateArguments(rows, columns);
+		this(rows, columns, GameState.IN_PROGRESS);
+	}
 
-		this.rows = rows;
-		this.columns = columns;
-
-		items = new BoardItem[rows][columns];
+	/**
+	 * Creates a board with a specified number of rows and columns, and a specific gamestate.
+	 * @param rows The number of rows the board has.
+	 * @param columns The number of columns the board has.
+	 * @param gameState The gamestate the board is in.
+	 */
+	public Board(int rows, int columns, GameState gameState) {
+		this.currentGameState = gameState;
+		items = HashTreePMap.empty();
+		this.numberOfRows = rows;
+		this.numberOfColumns = columns;
 
 		// Initialize Board Items
-		for (int row = 0; row < rows; row ++) {
-			for (int column = 0; column < columns; column++) {
-				items[row][column] = new EmptyBoardItem(row, column);
+		for (int row = 0; row < numberOfRows; row++) {
+			for (int column = 0; column < numberOfColumns; column++) {
+				Coordinate currentCoordinate = new Coordinate(row, column);
+				BoardItem itemToAdd = new EmptyBoardItem(currentCoordinate);
+				items = items.plus(currentCoordinate, itemToAdd);
+			}
+		}
+	}
+
+	/**
+	 * Creates a new board using another board.
+	 * @param board The board that should be copied.
+	 */
+	private Board(Board board) {
+		this.currentGameState = GameState.IN_PROGRESS;
+
+		this.numberOfRows = board.numberOfRows;
+		this.numberOfColumns = board.numberOfColumns;
+
+		this.items = board.items;
+	}
+
+	/**
+	 * Creates a board using another board and a gamestate.
+	 * @param board The board that should be copied.
+	 * @param gameState The new board's gamestate.
+	 */
+	private Board(Board board, GameState gameState) {
+		this.currentGameState = gameState;
+		this.numberOfRows = board.numberOfRows;
+		this.numberOfColumns = board.numberOfColumns;
+
+		this.items = board.items;
+	}
+
+	/**
+	 * Set an item on a board while preserving purity
+	 *
+	 * @param item the item you want to add to the board
+	 * @return a board which is a result of the applied transformation
+	 */
+	public Board setItem(BoardItem item) {
+		Board modifiedBoard = new Board(this);
+
+		if (item.coordinate.isLeft()) {
+			Coordinate coordinate = item.coordinate.left().get();
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
+		}
+
+		//TODO: clean up this code
+		if (item.coordinate.isRight()) {
+			Pair<Coordinate,Coordinate> coordinate =
+					item.coordinate.right().get();
+
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate.right(), item);
+		}
+
+		return modifiedBoard;
+	}
+
+	/**
+	 * Gets the BoardItem at a specific coordinate.
+	 * @param coordinate The coordinate of the board item.
+	 * @return The board item.
+	 */
+	public BoardItem getItem(Coordinate coordinate) {
+		return this.items.get(coordinate);
+	}
+
+	/**
+	 * Returns the persistent map containing the items in the board.
+	 * @return The items in the board.
+	 */
+	public PMap<Coordinate, BoardItem> getItems() {
+		return items;
+	}
+
+	/**
+	 * Returns the map of items in a specific slice along a column.
+	 * @param column The column of the slice.
+	 * @return The map containing the items in that column.
+	 */
+	public PMap<Coordinate, BoardItem> getColumnSlice(int column) {
+		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
+
+		for (int row = 0; row < numberOfRows; row++) {
+			Coordinate coordinate = new Coordinate(row, column);
+			slice = slice.plus(coordinate, getItem(coordinate));
+		}
+
+		return slice;
+	}
+
+	/**
+	 * Returns the map of items in a specific slice along a row.
+	 * @param row The row of the slice.
+	 * @return The map containing the items in that row.
+	 */
+	public PMap<Coordinate, BoardItem> getRowSlice(int row) {
+		PMap<Coordinate, BoardItem> slice = HashTreePMap.empty();
+
+		for (int column = 0; column < numberOfColumns; column++) {
+			Coordinate coordinate = new Coordinate(row, column);
+			slice = slice.plus(coordinate, getItem(coordinate));
+		}
+
+		return slice;
+	}
+
+	/**
+	 * Attempts to slide a fox in a specific direction and returns the resulting board.
+	 * @param direction The direction the fox should slide.
+	 * @param moveSpaces The amount of spaces it should move.
+	 * @param coordinate The coordinate of the fox.
+	 * @return The board with the resulting move.
+	 * @throws InvalidMoveException If the move is invalid.
+	 * @throws SlideHitObstacleException If the slide would collide with an obstacle.
+	 * @throws SlideWrongOrientationException If the slide is not parallel to the fox.
+	 * @throws NonSlideableException If the item at the coordinate is not a fox.
+	 */
+	public Board slide(Direction direction, int moveSpaces,
+					   Coordinate coordinate) throws InvalidMoveException,
+			SlideHitObstacleException, SlideWrongOrientationException,
+			NonSlideableException {
+
+		Board board = new Board(this);
+		BoardItem item = this.items.get(coordinate);
+
+		//if item is a fox, perform the slide
+		if (item instanceof Fox) {
+			Fox fox = (Fox) item;
+			PMap<Coordinate, BoardItem> slice =
+					board.getSlice(direction, coordinate);
+
+			Pair<Coordinate, Coordinate> originalCoords =
+					Pair.pair(fox.getHead(), fox.getTail());
+
+			EmptyBoardItem emptyHead =
+					new EmptyBoardItem(originalCoords.left());
+
+			EmptyBoardItem emptyTail =
+					new EmptyBoardItem(originalCoords.right());
+
+			board = board.setItem(emptyHead);
+			board = board.setItem(emptyTail);
+
+			Fox newFox = fox.slide(slice,
+					moveSpaces, direction);
+
+			board = board.setItem(newFox);
+		} else {
+			throw new NonSlideableException("Must be Fox to slide");
+		}
+
+		board = board.updateGameState();
+		return board;
+	}
+
+	/**
+	 * Attempts to jump a rabbit at a location on the board, and returns the resulting board.
+	 * @param direction The direction the rabbit should jump.
+	 * @param coordinate The coordinate of the rabbit.
+	 * @return The resulting board after the move.
+	 * @throws InvalidMoveException If the move is not valid.
+	 */
+	public Board jump(Direction direction, Coordinate coordinate)
+			throws InvalidMoveException {
+
+		//TODO refactor to return after if's
+		Board board = new Board(this);
+		BoardItem item = this.items.get(coordinate);
+		Either<Rabbit, ContainerItem> rabbitOrHole;
+
+		PMap<Coordinate, BoardItem> slice = this.getSlice(direction,
+				coordinate);
+
+		if (item instanceof Rabbit) {
+			Rabbit rabbit = (Rabbit) item;
+			rabbitOrHole = rabbit.jump(direction, slice);
+
+			EmptyBoardItem empty = new EmptyBoardItem(coordinate);
+			board = board.setItem(empty);
+
+			if (rabbitOrHole.isLeft()) {
+				board = board.setItem(rabbitOrHole.left().get());
+			} else {
+				board = board.setItem(rabbitOrHole.right().get());
+			}
+		} else if (item instanceof ContainerItem) {
+			ContainerItem containerItem = (ContainerItem) item;
+
+			Pair<ContainerItem, Either<Rabbit, ContainerItem>> holeAndJumped
+					= containerItem.jump(direction, slice);
+
+			rabbitOrHole = holeAndJumped.right();
+
+			// sets empty hole
+			board = board.setItem(holeAndJumped.left());
+
+			// if its a rabbit
+			if (rabbitOrHole.isLeft()) {
+				Rabbit newRabbit = rabbitOrHole.left().get();
+				board = board.setItem(newRabbit);
+			}
+
+			// if its a hole
+			else {
+				ContainerItem newContainerItem = rabbitOrHole.right().get();
+				board = board.setItem(newContainerItem);
+			}
+		} else {
+			throw new InvalidMoveException("Must be a rabbit to jump!");
+		}
+
+		board = board.updateGameState();
+		return board;
+	}
+
+	/**
+	 * Attempts to move an item at a specific coordinate to another coordinate.
+	 * @param itemSelected The coordinate that the item is moved from.
+	 * @param itemDestination The coordinate the item is moved to.
+	 * @return The resulting board.
+ 	 * @throws InvalidMoveException If the move is invalid.
+	 * @throws NonSlideableException If a slide is attempted on a non slidable object.
+	 * @throws SlideHitObstacleException If a slide would hit an obstacle.
+	 * @throws SlideWrongOrientationException If a slide would go parallel to the fox.
+	 */
+	public Board move(Coordinate itemSelected, Coordinate itemDestination) throws InvalidMoveException, NonSlideableException, SlideHitObstacleException, SlideWrongOrientationException {
+		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
+				itemDestination);
+		Direction direction = this.getDirectionFromDestination(deltaCoordinate);
+		BoardItem item = this.getItem(itemSelected);
+		Board board = this;
+
+		if (item instanceof Rabbit || item instanceof ContainerItem)  {
+			board = this.jump(direction, itemSelected);
+		}
+		if (item instanceof Fox) {
+			int moveSpaces = deltaCoordinate.row ;
+			if (deltaCoordinate.row == 0) {
+				moveSpaces = deltaCoordinate.column;
+			}
+
+			board = this.slide(direction, Math.abs(moveSpaces), itemSelected);
+		}
+		return board;
+	}
+
+	/**
+	 * Returns the distance coordinate between two different coordinates.
+	 * @param initial     The intial coordinate that the movement starts from.
+	 * @param destination The final coordinate that it should end up at.
+	 * @return
+	 */
+	private Coordinate computeDelta(Coordinate initial,
+									Coordinate destination) {
+		int row = destination.row - initial.row;
+		int column = destination.column - initial.column;
+
+		return new Coordinate(row, column);
+	}
+
+	/**
+	 * Returns the direction of a move based on a coordinate containing the destination's distance.
+	 * @param deltaDistance Coordinate of the distance between the start and end point.
+	 * @return The direction desired.
+	 * @throws IllegalArgumentException if the direction is invalid.
+	 */
+	private Direction getDirectionFromDestination(Coordinate deltaDistance) {
+
+		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
+			throw new IllegalArgumentException("Cannot move to the same " +
+					"position");
+		} else if (!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
+			if (deltaDistance.row > 0) { //destination is below
+				return Direction.DOWN;
+			} else if (deltaDistance.row < 0) { //destination is above
+				return Direction.UP;
+			} else if (deltaDistance.column > 0) { //destination is to the right
+				return Direction.RIGHT;
+			} else { //destination is the the left
+				return Direction.LEFT;
 			}
 		}
 
+		throw new IllegalArgumentException("Invalid direction");
 	}
 
 	/**
-	 *  Constructor that creates the board with the same dimension for the rows and columns.
-	 * @param dimension Amount of rows and columns for the board.
+	 * Updates the gamestate to won if there are no rabbits remaining on the board.
 	 */
-	public Board(int dimension) {
-		this(dimension, dimension);
-	}
+	public Board updateGameState() {
+		for (int row = 0; row < this.numberOfRows; row++) {
+			for (int column = 0; column < this.numberOfColumns; column++) {
+				// make sure there are no top level rabbits
+				if (this.items.get(new Coordinate(row, column)) instanceof Rabbit) {
+					GameState currentGameState = GameState.IN_PROGRESS;
 
-	/**
-	 * Gets the number of rows in the board.
-	 * @return The number of rows.
-	 */
-	public int getRows() {
-		return rows;
-	}
+					Board board = new Board(this, currentGameState);
 
-	/**
-	 * Gets the number of columns in the board.
-	 * @return The number of columns.
-	 */
-	public int getColumns() {
-		return columns;
-	}
+					return board;
+				}
+				// make sure there are no rabbits inside elevated positions
+				else if (this.items.get(new Coordinate(row, column)) instanceof ElevatedBoardItem) {
+					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
+							this.items.get(new Coordinate(row, column));
+					if (elevatedBoardItem.containingItem.isPresent()) {
+						Containable containable =
+								elevatedBoardItem.containingItem.get();
 
-	/**
-	 * Gets the board item at the specified row and column on the board.
-	 * @param row The row of the item being searched for.
-	 * @param column The column of the item being searched for.
-	 * @return The item at the board position specified.
-	 * @throws IllegalArgumentException If the rows and columns are negative or out of range of the board.
-	 */
-	public BoardItem getItem(int row, int column) throws IllegalArgumentException {
+						if (containable instanceof Rabbit) {
+							GameState currentGameState = GameState.IN_PROGRESS;
 
-		if (row < 0 || column < 0) {
-			throw new IllegalArgumentException("row and column must be integers greater than 0.");
+							Board board = new Board(this, currentGameState);
+
+							return board;
+						}
+					}
+				}
+			}
 		}
 
-		if (row >= this.rows || column >= this.columns) {
-			throw new IllegalArgumentException("row and column must be within the range of the board.");
-		}
+		GameState currentGameState = GameState.SOLVED;
 
-		return items[row][column];
+		Board board = new Board(this, currentGameState);
+
+		return board;
 	}
 
 	/**
-	 * Gets the item at a specific coordinate.
-	 * @param coordinate The coordinate of the item being retrieved.
-	 * @return The item found at the coordinate.
-	 */
-	public BoardItem getItem(Coordinate coordinate) {
-		return getItem(coordinate.row, coordinate.column);
-	}
-
-	/**
-	 * Prints out a string representation of the board.
-	 * @return The string representation of the board.
+	 * Returns a string representation of the board.
+	 * @return The string representation.
 	 */
 	@Override
 	public String toString() {
 		String str = "";
-
 		String rowLine = "";
 
-		for (int i = 0; i < rows; i++) {
+		for (int i = 0; i < numberOfRows; i++) {
 			rowLine += "--------";
 		}
 
-		String columnLine = "" ;
+		String columnLine = "";
 
 		// column header
-		for (int i = 0; i < rows; i++) {
-			columnLine += "     " + (i + 1 ) + " ";
+		for (int i = 0; i < numberOfRows; i++) {
+			columnLine += "     " + (i + 1) + " ";
 		}
 
 		columnLine += "\n";
 
-		for (int row = 0; row < rows; row ++) {
+		for (int row = 0; row < numberOfRows; row++) {
 
 			if (row == 0) {
 				str += columnLine;
@@ -159,19 +442,17 @@ public class Board {
 			str += rowLine;
 			str += "\n";
 
-			str += ""+ (row+1);
-			for (int column = 0; column < columns; column++) {
-				BoardItem item = items[row][column];
+			str += "" + (row + 1);
+			for (int column = 0; column < numberOfColumns; column++) {
+				BoardItem item = getItem(new Coordinate(row, column));
 
 				str += " | ";
 				//test code
 				if (item.toString().length() == 10) {
 					str += " " + item.toString() + " ";
-				}
-				else if (item.toString().length() == 11) {
+				} else if (item.toString().length() == 11) {
 					str += " " + item.toString();
-				}
-				else {
+				} else {
 					logger.error("badly sized ui text");
 				}
 
@@ -187,451 +468,12 @@ public class Board {
 	}
 
 	/**
-	 * Sets an item at a specific location on the board.
-	 * @param row The row where the item should be set.
-	 * @param column The column where the item should be set.
-	 * @param item The item being placed into the board.
-	 * @throws BoardItemNotEmptyException If there is already an item in that location.
+	 * Returns the hashcode of the board.
+	 * @return The board's hashcode.
 	 */
-	public void setItem(int row, int column, BoardItem item)
-			throws BoardItemNotEmptyException {
-		List<Coordinate> coordinates = new ArrayList<Coordinate>();
-		coordinates.add(new Coordinate(row, column));
-
-		setItem(coordinates, item);
-	}
-
-	/**
-	 * Used to set an item on the board
-	 *
-	 * It is expected that this method is used for setting up a board.
-	 * It should not be used for player moves as it does not support
-	 * cleaning up the items old position from the board or for placing
-	 * items inside holes
-	 *
-	 * This method delegates to item.setCoordinate() to set the coordinates
-	 * of the item as well.
-	 *
-	 * @param coordinates where to set
-	 * @param item to set
-	 * @throws BoardItemNotEmptyException if the coordinate is not empty
-	 */
-	public void setItem(List<Coordinate> coordinates, BoardItem item)
-			throws BoardItemNotEmptyException {
-
-		// Check that the coordinates are not empty
-		if (coordinates.isEmpty()) {
-			throw new IllegalArgumentException("Coordinates cannot be empty.");
-		}
-
-		// Check that the item at the coordinates are not an empty item
-		for (Coordinate coordinate: coordinates) {
-			BoardItem itemCoord = items[coordinate.row][coordinate.column];
-
-			Class itemClass = itemCoord.getClass();
-
-			// If it is not a board item or a container item
-			if (itemClass != EmptyBoardItem.class) {
-				if (!(itemCoord instanceof ContainerItem)) {
-					throw new BoardItemNotEmptyException(
-							"Cannot set an item on the "
-									+ "board if there is already a non empty item in the"
-									+ "slot");
-				}
-
-				// We have a container now
-				else {
-					ContainerItem containerItem = (ContainerItem) itemCoord;
-					if (item instanceof Containable) {
-
-						Containable containable = (Containable) item;
-						try {
-							containerItem.contain(containable);
-							return;
-						} catch (HoleAlreadyHasRabbitException e) {
-							this.logger.error(e);
-						}
-					} else {
-						throw new BoardItemNotEmptyException("The coordinates have already been occupied.");
-					}
-				}
-			}
-		}
-
-		// Set the coordinates
-		for (Coordinate coordinate: coordinates) {
-			items[coordinate.row][coordinate.column] = item;
-		}
-
-		item.setCoordinates(coordinates);
-	}
-
-	/**
-	 * Sets a board item that already has defined coordinates.
-	 * @param item The board item being set.
-	 * @throws BoardItemNotEmptyException if the coordinate is not empty
-	 */
-	public void setItem(BoardItem item) throws BoardItemNotEmptyException {
-		setItem(item.getCoordinates(), item);
-	}
-
-	/**
-	 * Sets an EmptyBoardItem at a specific coordinate.
-	 * @param coordinate The coordinate where the empty item is being placed.
-	 */
-	public void setEmptyItem(Coordinate coordinate) {
-		items[coordinate.row][coordinate.column] = new EmptyBoardItem(coordinate);
-	}
-
-	/**
-	 * Returns a slice of the board along the given row.
-	 * @return The list of items in that row.
-	 */
-	private List<BoardItem> getRow(int row) {
-		List <BoardItem> slice = new ArrayList<BoardItem>();
-
-		for (int column = 0; column < this.columns; column++) {
-			slice.add(items[row][column]);
-		}
-
-		return slice;
-	}
-
-	/**
-	 * Returns a slice of the board down the given column
-	 * @return The list of items in the column
-	 */
-	private List<BoardItem> getColumn(int column) {
-		List <BoardItem> slice = new ArrayList<BoardItem>();
-
-		for (int row = 0; row < this.rows; row++) {
-			slice.add(items[row][column]);
-		}
-
-		return slice;
-	}
-
-	/**
-	 * Gets a slice in a direction from a specific item on the board.
-	 * @param direction The direction of the slice wanted.
-	 * @param item The item where the slice is located.
-	 * @return The list of the items in that slice.
-	 */
-	private List<BoardItem> getSlice(Direction direction, BoardItem item) {
-		Coordinate itemCoordinate = item.getCoordinates().get(0);
-		List<BoardItem> slice = new ArrayList<BoardItem>();
-
-		switch (direction) {
-			case UP:
-			case DOWN:
-				slice = this.getColumn(itemCoordinate.column);
-				break;
-			case LEFT:
-			case RIGHT:
-				slice = this.getRow(itemCoordinate.row);
-				break;
-			default:
-				break;
-		}
-
-		return slice;
-	}
-
-	/**
-	 * Attempts to perform a slide of an object at a specific location on the board.
-	 * @param moveDirection The direction that the object must slide in
-	 * @param moveSpaces The spaces the object must slide
-	 * @param itemCoordinate The coordinates of the object
-	 * @throws NonSlideableException If the desired object is not Slidable
-	 * @throws BoardItemNotEmptyException If the space where the object must slide is not empty
-	 * @throws SlideOutOfBoundsException If the object would slide out of bounds
-	 * @throws SlideHitObstacleException If the object would hit an obstacle
-	 * @throws SlideHitElevatedException If the object would hit an elevated space
-	 */
-	@SuppressWarnings("PMD.AvoidPrintStackTrace")
-	public void slide(Direction moveDirection, int moveSpaces, Coordinate itemCoordinate)
-			throws NonSlideableException, BoardItemNotEmptyException, SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
-		BoardItem itemAtCoordinate = getItem(itemCoordinate);
-
-
-
-		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Slidable)) {
-			throw new NonSlideableException("Cannot slide a non-slidable item.");
-		}
-
-		// Get slice
-		List<BoardItem> slice = this.getSlice(moveDirection, itemAtCoordinate);
-
-		// Store initial coordinates
-		List<Coordinate> initialCoordinates =
-				itemAtCoordinate.getCoordinates()
-						.stream().map(coordinate -> new Coordinate(coordinate))
-						.collect(Collectors.toList());
-
-		// Move Item
-		Slidable movableItem = (Slidable) itemAtCoordinate;
-		List<Coordinate> newCoordinates;
-
-		newCoordinates = movableItem.slide(moveDirection, moveSpaces, slice );
-		// Clear old coordinates
-		for (Coordinate initialCoordinate: initialCoordinates) {
-			setEmptyItem(initialCoordinate);
-		}
-
-		// Change the board representation
-		setItem(newCoordinates, itemAtCoordinate);
-	}
-
-	/**
-	 * Attempts to jump an object with a specific coordinate.
-	 * @param jumpDirection The direction the item must jump
-	 * @param jumpingCoordinate The coordinate of the item that must jump
-	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
-	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
-	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
-	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
-	 * @throws NonJumpableException If the desired object is not Jumpable
-	 * @throws NonMovableItemException If the desired object is not movable
-	 */
-	public void jump(Direction jumpDirection, Coordinate jumpingCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
-		BoardItem itemAtCoordinate = getItem(jumpingCoordinate);
-
-		jump(jumpDirection, itemAtCoordinate);
-
-	}
-
-	/**
-	 * Attempts to jump a specific item.
-	 * @param jumpDirection The direction the item must jump
-	 * @param itemAtCoordinate The item that must jump
-	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
-	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
-	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
-	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
-	 * @throws NonJumpableException If the desired object is not Jumpable
-	 * @throws NonMovableItemException If the desired object is not movable
-	 */
-	public void jump(Direction jumpDirection, BoardItem itemAtCoordinate) throws JumpFailedNoObstacleException, BoardItemNotEmptyException, JumpFailedOutOfBoundsException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
-		if (itemAtCoordinate instanceof ContainerItem) {
-			logger.trace("JUMP OUT OF HOLE!");
-			this.jumpOut(jumpDirection, ((ContainerItem) itemAtCoordinate).getCoordinate());
-			return;
-		}
-
-		// Throw an error if does not implement Movable
-		if (!(itemAtCoordinate instanceof Jumpable)) {
-			throw new NonJumpableException("Cannot jump a non-jumpable item.");
-		}
-
-		List<BoardItem> slice = this.getSlice(jumpDirection, itemAtCoordinate);
-
-		// Store initial coordinates
-		List<Coordinate> initialCoordinates =
-				itemAtCoordinate.getCoordinates()
-						.stream().map(coordinate -> new Coordinate(coordinate))
-						.collect(Collectors.toList());
-
-		// Move Item
-		Jumpable jumpableItem = (Jumpable) itemAtCoordinate;
-		List<Coordinate> newCoordinates;
-
-		newCoordinates = jumpableItem.jump(jumpDirection, slice);
-
-		// Clear old coordinates if it is not a containable
-		for (Coordinate initialCoordinate: initialCoordinates) {
-			if (!(this.getItem(initialCoordinate) instanceof ContainerItem)) {
-				setEmptyItem(initialCoordinate);
-			}
-		}
-
-		// Change the board representation
-		if (!newCoordinates.isEmpty()) {
-			setItem(newCoordinates, itemAtCoordinate);
-		}
-
-		//making a call to function to check the current game state
-		updateGameState();
-	}
-
-	/**
-	 * Attempts to jump an object out of a hole
-	 * @param jumpDirection The direction the item must jump
-	 * @param holeCoordinate The coordinate of the hole that the object must jump out of
-	 * @throws JumpFailedOutOfBoundsException If the jump would send the item out of bounds
-	 * @throws JumpFailedNoObstacleException If the item can't jump over an obstacle
-	 * @throws BoardItemNotEmptyException If the space is not empty where the item must be placed
-	 * @throws HoleIsEmptyException If an attempt to remove from an empty hole is made
-	 * @throws NonJumpableException If the desired object is not Jumpable
-	 * @throws NonMovableItemException If the desired object is not movable
-	 */
-	private void jumpOut(Direction jumpDirection,
-						 Coordinate holeCoordinate) throws JumpFailedOutOfBoundsException, JumpFailedNoObstacleException, BoardItemNotEmptyException, HoleIsEmptyException, NonJumpableException, NonMovableItemException {
-		// Get the item
-		BoardItem itemAtCoordinate = getItem(holeCoordinate);
-
-		// Check if it is a hole
-		if (!(itemAtCoordinate instanceof ContainerItem)) {
-			// throw exception if it is not a hole
-			throw new project.model.exceptions.NonMovableItemException();
-		}
-
-		ContainerItem containerItem = (ContainerItem) itemAtCoordinate;
-
-		try {
-			Optional<Containable> optionlContainable = containerItem.getContainingItem();
-
-			if (optionlContainable.isPresent()) {
-				if (optionlContainable.get().getClass() != Rabbit.class) {
-					throw new IllegalArgumentException("Must be a rabbit that jumps out.");
-				}
-
-				Containable containable = containerItem.removeContainingItem();
-
-				try {
-					if (containable.getClass() == Rabbit.class) {
-						Rabbit rabbit = (Rabbit) containable;
-						this.jump(jumpDirection, rabbit);
-					}
-					else
-					{
-						throw new IllegalArgumentException("Tried to jump out a non rabbit.");
-					}
-				} catch (JumpFailedOutOfBoundsException | JumpFailedNoObstacleException | NonJumpableException e){
-					try {
-						containerItem.contain(containable);
-					} catch (HoleAlreadyHasRabbitException ex) {
-						this.logger.error(ex);
-					}
-					throw e;
-				}
-			}
-		}
-
-		catch(HoleIsEmptyException | NonJumpableException e)
-		{
-			throw e;
-		}
-	}
-
-
-	/**
-	 * Updates the gamestate to won if there are no rabbits remaining on the board.
-	 */
-	public void updateGameState() {
-		for (int row = 0; row < rows; row++) {
-			for (int column = 0; column < columns; column++) {
-				// make sure there are no top level rabbits
-				if (items[row][column] instanceof Rabbit) {
-					this.currentGameState = GameState.IN_PROGRESS;
-					return;
-				}
-				// make sure there are no rabbits inside elevated positions
-				else if (items[row][column] instanceof ElevatedBoardItem) {
-					ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem)
-							items[row][column];
-					if ( elevatedBoardItem.getContainingItem().isPresent()) {
-						Containable containable =
-								elevatedBoardItem.getContainingItem().get();
-
-						if (containable instanceof  Rabbit) {
-							this.currentGameState = GameState.IN_PROGRESS;
-							return;
-						}
-					}
-				}
-			}
-		}
-
-
-		this.currentGameState = GameState.SOLVED;
-	}
-
-	/**
-	 * Gets the current gamestate of the board.
-	 * @return The current gamestate.
-	 */
-	public GameState getCurrentGameState() {
-		return currentGameState;
-	}
-
-	private Coordinate computeDelta (Coordinate initial,
-									 Coordinate destination) {
-		int row = destination.row - initial.row;
-		int column = destination.column - initial.column;
-
-		return new Coordinate(row, column);
-	}
-
-	/**
-	 * Returns the direction of a move based on a coordinate containing the destination's distance
-	 * @param deltaDistance Coordinate of the distance between the start and end point
-	 * @return The direction desired
-	 * @throws IllegalArgumentException if the direction is invalid
-	 */
-	private Direction getDirectionFromDestination(Coordinate deltaDistance) {
-
-		if (deltaDistance.row == 0 && deltaDistance.column == 0) {
-			throw new IllegalArgumentException("Cannot move to the same " +
-					"position");
-		}
-
-		else if(!(deltaDistance.row != 0 && deltaDistance.column != 0)) {
-			if (deltaDistance.row > 0) { //destination is below
-				return  Direction.DOWN;
-			}
-			else if (deltaDistance.row < 0) { //destination is above
-				return Direction.UP;
-			}
-			else if (deltaDistance.column > 0) { //destination is to the right
-				return Direction.RIGHT;
-			}
-			else { //destination is the the left
-				return Direction.LEFT;
-			}
-		}
-
-		throw new IllegalArgumentException("Invalid direction");
-	}
-
-	/**
-	 * Attempts to move an object using its starting coordinate and destination.
-	 * @param itemSelected The coordinate of the item that must be moved.
-	 * @param itemDestination The coordinate of the item's destination.
-	 * @throws JumpFailedOutOfBoundsException If the item would jump out of bounds.
-	 * @throws JumpFailedNoObstacleException If the item would not jump over an obstacle.
-	 * @throws BoardItemNotEmptyException If the item would be placed in an occupied tile.
-	 * @throws NonJumpableException If a jump attempt is made on an item that isn't jumpable.
-	 * @throws HoleIsEmptyException If a move attempt is made on an empty hole.
-	 * @throws NonSlideableException If a slide attempt is made on an item that isn't slidable.
-	 * @throws SlideHitElevatedException If a slide would hit an elevated space.
-	 * @throws SlideOutOfBoundsException If a slide would send an object out of bounds.
-	 * @throws SlideHitObstacleException If a slide would hit an obstacle.
-	 * @throws NonMovableItemException If a move is attempted on an item that can't move.
-	 */
-	public void move(Coordinate itemSelected, Coordinate itemDestination) throws JumpFailedOutOfBoundsException,
-			JumpFailedNoObstacleException, BoardItemNotEmptyException, NonJumpableException, HoleIsEmptyException,
-			NonSlideableException, SlideHitElevatedException, SlideOutOfBoundsException, SlideHitObstacleException, NonMovableItemException {
-
-		Coordinate deltaCoordinate = this.computeDelta(itemSelected,
-				itemDestination);
-		Direction direction = this.getDirectionFromDestination(deltaCoordinate);
-
-		BoardItem item = this.getItem(itemSelected);
-
-		if (item instanceof Rabbit || item instanceof ContainerItem)  {
-			logger.trace("try jumping in direction:" + direction.toString());
-	    	this.jump(direction, itemSelected);
-		}
-		if (item instanceof Fox) {
-			logger.trace("try sliding fox in direction: " + direction.toString());
-			int moveSpaces = deltaCoordinate.row ;
-			if (deltaCoordinate.row == 0) {
-				moveSpaces = deltaCoordinate.column;
-			}
-
-			this.slide(direction, Math.abs(moveSpaces), itemSelected);
-		}
+	@Override
+	public int hashCode() {
+		return Objects.hash(numberOfRows, numberOfColumns, items, currentGameState);
 	}
 
 	/**
@@ -650,8 +492,8 @@ public class Board {
 
 		Board board = (Board) o;
 
-		if ((this.rows == board.rows) &&
-				(this.columns == board.columns) && (this.currentGameState == board.currentGameState)){
+		if ((this.numberOfRows == board.numberOfRows) &&
+				(this.numberOfColumns == board.numberOfColumns) && (this.currentGameState == board.currentGameState)){
 			return this.hasSameContents(board);
 		}
 		else {
@@ -665,11 +507,11 @@ public class Board {
 	 * @return
 	 */
 	private boolean hasSameContents(Board board) {
-		for (int i = 0; i < rows; i++){
-			for (int j = 0; j < columns; j++){
+		for (int i = 0; i < numberOfRows; i++){
+			for (int j = 0; j < numberOfColumns; j++){
 				try {
-					BoardItem thisBoardItem = this.getItem(i, j);
-					BoardItem compareBoardItem = board.getItem(i, j);
+					BoardItem thisBoardItem = this.getItem(new Coordinate(i,j));
+					BoardItem compareBoardItem = board.getItem(new Coordinate(i,j));
 					if (!thisBoardItem.equals(compareBoardItem)){
 						return false;
 					}
@@ -682,5 +524,4 @@ public class Board {
 
 		return true;
 	}
-
 }

@@ -1,8 +1,13 @@
-package project.model;
+package project.modelRefactored;
 
-import project.model.exceptions.SlideHitElevatedException;
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.pcollections.PMap;
+import project.model.Direction;
 import project.model.exceptions.SlideHitObstacleException;
-import project.model.exceptions.SlideOutOfBoundsException;
+import project.model.exceptions.SlideWrongOrientationException;
 import project.tui.ItemUIRepresentation;
 
 import java.util.ArrayList;
@@ -13,298 +18,245 @@ import java.util.Set;
 /**
  * A class that represents a fox on the board, which can slide across the board to move.
  */
-public class Fox extends BoardItem implements Slidable {
+public class Fox extends BoardItem {
 
-	/**
-	 * Ensures that given head and tail coordinates do not conflict with each other
-	 * @param head The coordinate of the head.
-	 * @param tail The coordinate of the tail.
-	 */
-	private static void validateArguments(Coordinate head, Coordinate tail) {
-		validateArguments(head.row, head.column, tail.row, tail.column);
-	}
+    /**
+     * The logger used to log errors.
+     */
+    private static Logger logger = LogManager.getLogger(Fox.class);
 
-	/**
-	 * Ensures that the head and tail do not conflict with each other.
-	 * @param headRow The row of the fox's head.
-	 * @param headColumn The column of the fox's head.
-	 * @param tailRow The row of the fox's tail.
-	 * @param tailColumn The column of the fox's tail.
-	 * @throws IllegalArgumentException If the hea and tail conflict with eachother.
-	 */
-	private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
-			throws IllegalArgumentException {
+    /**
+     * The orientation of the fox
+     */
+    public final Orientation orientation;
 
-		if (headColumn == tailColumn && headRow == tailRow) {
-			throw new IllegalArgumentException("The fox cannot have its tail and head in the same position");
-		}
+    /**
+     * Ensures that given head and tail coordinates do not conflict with each other
+     * @param coords The pair of coordinates of the Fox.
+     */
+    private static void validateArguments(Pair<Coordinate, Coordinate> coords) {
+        validateArguments(coords.left().row, coords.left().column, coords.right().row, coords.right().column);
+    }
 
-		if (Math.abs(headColumn - tailColumn) > 1 || Math.abs(headRow - tailRow) > 1) {
-			throw new IllegalArgumentException(
-					"The fox cannot have its tail more than a unit " + "a way from its head");
-		}
+    /**
+     * Ensures that the head and tail do not conflict with each other.
+     * @param headRow The row of the fox's head.
+     * @param headColumn The column of the fox's head.
+     * @param tailRow The row of the fox's tail.
+     * @param tailColumn The column of the fox's tail.
+     * @throws IllegalArgumentException If the hea and tail conflict with eachother.
+     */
+    private static void validateArguments(int headRow, int headColumn, int tailRow, int tailColumn)
+            throws IllegalArgumentException {
 
-		if (Math.abs(headColumn - tailColumn) == Math.abs(headRow - tailRow)) {
-			throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
-		}
-	}
+        if (headColumn == tailColumn && headRow == tailRow) {
+            throw new IllegalArgumentException("The fox cannot have its tail and head in the same position");
+        }
 
-	/**
-	 * Ensures that the fox can slide in a specific direction.
-	 * @param direction The direction that the fox should slide in.
-	 * @throws IllegalArgumentException If the fox cannot slide in that direction.
-	 */
-	private void verifyDirection(Direction direction) throws IllegalArgumentException {
-		if (direction == Direction.DOWN || direction == Direction.UP) {
-			//Don't allow vertical slide if not oriented vertically
-			if (this.getHead().column != this.getTail().column) {
-				throw new IllegalArgumentException("Must slide in same direction "
-						+ "as oriented");
-			}
-		}
+        if (Math.abs(headColumn - tailColumn) > 1 || Math.abs(headRow - tailRow) > 1) {
+            throw new IllegalArgumentException(
+                    "The fox cannot have its tail more than a unit " + "a way from its head");
+        }
 
-		if (direction == Direction.LEFT || direction == Direction.RIGHT) {
-			//Don't allow horizontal slide if not oriented horizontally
-			if (this.getHead().row != this.getTail().row) {
-				throw new IllegalArgumentException("Must slide in same direction "
-						+ "as oriented");
-			}
-		}
-	}
+        if (Math.abs(headColumn - tailColumn) == Math.abs(headRow - tailRow)) {
+            throw new IllegalArgumentException("The fox cannot have its tail diagonal to its head");
+        }
+    }
 
-	/**
-	 * Creates a new fox with specific row and columns for its head and tail.
-	 * @param headRow The head's row.
-	 * @param headColumn The head's column.
-	 * @param tailRow The tail's row.
-	 * @param tailColumn The tail's column.
-	 */
-	public Fox(int headRow, int headColumn, int tailRow, int tailColumn) {
-		this(new Coordinate(headRow, headColumn),
-				new Coordinate(tailRow, tailColumn));
-	}
+    /**
+     * Ensures that given head and tail coordinates do not conflict with each other
+     * @param coordinates The coordinates of the head and tail.
+     * @param orientation the orientation of the fox.
+     */
+    public Fox(Pair<Coordinate, Coordinate> coordinates, Orientation orientation) {
+        //TODO: calc orientation based on pair of coords
+        super(coordinates);
+        this.uIRepresentation = ItemUIRepresentation.FOX;
+        validateArguments(coordinates);
+        this.orientation = orientation;
+    }
 
-	/**
-	 * Creates a new fox with coordinates for the head and tail.
-	 * @param head The head's coordinates.
-	 * @param tail The tail's coordinates.
-	 */
-	public Fox(Coordinate head, Coordinate tail) {
-		super(ItemUIRepresentation.FOX);
+    /**
+     * Method used to determine what next coordinate should be checked when sliding the fox
+     * @return nextCoordinates The next coordinates that should be checked when sliding the fox
+     * @throws SlideWrongOrientationException
+     */
+    private Pair<Coordinate, Coordinate> computeNextCoordinates(Direction direction)
+            throws SlideWrongOrientationException {
+        Coordinate head = getHead();
+        Coordinate tail = getTail();
 
-		validateArguments(head, tail);
+        if (this.orientation == Orientation.HORIZONTAL) {
+            if (direction == Direction.UP || direction == Direction.DOWN) {
+                throw new SlideWrongOrientationException("Fox is oriented horizontally!");
+            }
+        } else if (this.orientation == Orientation.VERTICAL) {
+            if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                throw new SlideWrongOrientationException("Fox is oriented vertically!");
+            }
+        }
 
-		this.setHeadAndTail(head, tail);
-	}
+        if (direction == Direction.DOWN) {
+            Coordinate newHead = new Coordinate(head.row + 1, head.column);
+            Coordinate newTail = new Coordinate(tail.row + 1, tail.column);
+            return Pair.pair(newHead, newTail);
+        } else if (direction == Direction.UP) {
+            Coordinate newHead = new Coordinate(head.row - 1, head.column);
+            Coordinate newTail = new Coordinate(tail.row - 1, tail.column);
+            return Pair.pair(newHead, newTail);
+        } else if (direction == Direction.RIGHT) {
+            Coordinate newHead = new Coordinate(head.row, head.column + 1);
+            Coordinate newTail = new Coordinate(tail.row, tail.column + 1);
+            return Pair.pair(newHead, newTail);
+        } else if (direction == Direction.LEFT) {
+            Coordinate newHead = new Coordinate(head.row, head.column - 1);
+            Coordinate newTail = new Coordinate(tail.row, tail.column - 1);
+            return Pair.pair(newHead, newTail);
+        }
 
-	/**
-	 * Returns the coordinates of the head.
-	 * @return The head's coordinates.
-	 */
-	public Coordinate getHead() {
-		return this.getCoordinates().get(0);
-	}
+        throw new IllegalArgumentException("Invalid Direction!");
+    }
 
-	/**
-	 * Returns the coordinates of the tail.
-	 * @return The tail's coordinates.
-	 */
-	public Coordinate getTail() {
-		return this.getCoordinates().get(1);
-	}
+    /**
+     * Checks which slide should be used
+     * @param slice A slice of the board used to get the item at a given coordinate
+     * @param moveSpaces The spaces the Fox wants to move
+     * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
+     */
+    public Fox slide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction) throws SlideWrongOrientationException, SlideHitObstacleException, InvalidMoveException {
+        return performSlide(slice, moveSpaces, direction);
+    }
 
-	/**
-	 * Sets the head and tail of the fox with new coordinates.
-	 * @param head The coordinates of the head.
-	 * @param tail The coordinates of the tail.
-	 */
-	public void setHeadAndTail(Coordinate head, Coordinate tail) {
-		List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    /**
+     * Checks if sliding the Fox horizontally to the destination coordinate is valid
+     * @param slice A slice of the board used to get the item at a given coordinate
+     * @param moveSpaces The spaces the Fox wants to move
+     * @return slidingFox A new Fox at the destinationCoordinate or at same location if the slide failed
+     */
+    public Fox performSlide(PMap<Coordinate, BoardItem> slice, int moveSpaces, Direction direction)
+            throws SlideWrongOrientationException, InvalidMoveException {
+        // Generate new coordinates
+        Pair<Coordinate, Coordinate> nextCoordinates =
+                this.computeNextCoordinates(direction);
 
-		validateArguments(head.row, head.column, tail.row, tail.column);
+        // Create new Fox
+        Fox fox = new Fox(nextCoordinates, this.orientation);
 
-		coordinates.add(head);
-		coordinates.add(tail);
+        List<Coordinate> coordinates = new ArrayList<>();
 
-		this.setCoordinates(coordinates);
-	}
+        coordinates.add(nextCoordinates.left());
+        coordinates.add(nextCoordinates.right());
 
-	/**
-	 * Sets the coordinates of the Fox using a list where the
-	 * head is stored at index = 0 and tail is stored at index = 1
-	 * @param coordinates A list of the new coordinates.
-	 */
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) {
-		if (coordinates.size() != 2) {
-			throw new IllegalArgumentException("can only add a coordinate " +
-					"of length 2");
-		}
+        if (checkIfNotOnBoard(slice, coordinates)) {
+            //TODO: should we replace these with seperate moves?
+            throw new InvalidMoveException("Slide caused fox to fall off " +
+                    "board");
+        }
 
-		this.coordinates.clear();
-		this.coordinates.addAll(coordinates);
-	}
+        if (checkIfHitObstacle(slice, coordinates)) {
+            throw new InvalidMoveException("Slide caused fox to hit an " +
+                    "obstacle");
+        }
 
-	/**
-	 * Ensures that the slide can occur based on its new location and the rest of the slice.
-	 * @param newCoordinates The new coordinates of the fox.
-	 * @param slice The slice where the slide is happening.
-	 * @throws SlideOutOfBoundsException If the fox would slide out of bounds.
-	 * @throws SlideHitObstacleException If the fox would hit an obstacle.
-	 * @throws SlideHitElevatedException If the fox would hit an elevated item.
-	 */
-	private void ValidateSlide(List<Coordinate> newCoordinates, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException,
-			SlideHitElevatedException {
-		// Get all coordinates in the slice without duplicates
-		Set<Coordinate> sliceCoordinates = new HashSet<Coordinate>();
+        if (moveSpaces > 1) {
+            return fox.performSlide(slice, --moveSpaces, direction);
+        }
 
-		for (BoardItem item: slice) {
-			sliceCoordinates.addAll(item.getCoordinates());
-		}
+        return fox;
+    }
 
-		// If all of the new coordinates are not within the slice
-		// then it must have fallen out of bounds
-		if (! sliceCoordinates.containsAll(newCoordinates)) {
-			throw new SlideOutOfBoundsException("Sliding the fox caused it to "
-					+ "go out of bounds.");
-		}
+    /**
+     * Used to determine if fox slide hit an obstacle or not.
+     * @param slice sends in slice of the board to loop through.
+     * @param coordinates gives list of coordinates holding the coordinates
+     * of the fox.
+     * @return boolean is returned. True if it hit and obstacle, otherwise
+     * false.
+     */
+    private boolean checkIfHitObstacle(PMap<Coordinate, BoardItem> slice,
+                                       List<Coordinate> coordinates ) {
+        for (Coordinate coordinate: coordinates) {
 
-		// if the new coordinates are at a coordinate that is not empty
-		// or the current item then it must have hit an obstacle
-		for (Coordinate newCoordinate: newCoordinates) {
-			// loop over all the items in the slice
-			boolean hitObstacle = false;
-			boolean hitElevated = false;
+            BoardItem item = slice.get(coordinate);
 
-			for (BoardItem sliceItem: slice) {
-				if (sliceItem.getCoordinates().contains(newCoordinate))
-				{
-					if (sliceItem.getClass() == ElevatedBoardItem.class) {
-						hitElevated = true;
-					}
+            if (item.isObstacle() && !item.equals(this)) {
+                return true;
+            }
 
-					// match if the item is not empty
-					// and not the current item
-					else if ((sliceItem.getClass() != EmptyBoardItem.class)) {
-						if (!(sliceItem.equals(this))) {
-							hitObstacle = true;
-						}
-					}
-					// match if it is an elevated
-				}
-				// DO NOT MATCH IF THE ITEM IS EMPTY OR THE CURRENT ITEM
-			}
+            if (item instanceof ContainerItem) {
+                return true;
+            }
+        }
 
-			if (hitObstacle) {
-				throw new SlideHitObstacleException("Sliding the fox from caused it to hit an obstacle.");
-			}
+        return false;
+    }
 
-			if (hitElevated) {
-				throw new SlideHitElevatedException("An elevated item was encountered while sliding the fox " +
-						"to the new position.");
-			}
+    /**
+     * Used to determine if slide caused fox to fall off the board.
+     * @param slice sends in slice of the board to loop through.
+     * @param nextCoordinates gives list of coordinates holding the
+     *                        coordinates of the fox.
+     * @return boolean is returned. True if it fell off the board, otherwise
+     * false is returned.
+     */
+    private boolean checkIfNotOnBoard(
+            PMap<Coordinate, BoardItem> slice, List<Coordinate> nextCoordinates
+    ) {
+        HashSet<Coordinate> coordinateSet = new HashSet<>(slice.keySet());
 
-		}
+        if (!coordinateSet.containsAll(nextCoordinates)) {
+            return true;
+        }
+
+        return false;
+    }
 
 
-	}
+    /**
+     * Returns whether this object can be treated as an obstacle
+     * @return true The Fox object is an obstacle
+     */
+    @Override
+    public boolean isObstacle() {
+        return true;
+    }
 
-	/**
-	 * Performs the slide in the desired direction and number of spaces.
-	 * @param direction The direction of the slide.
-	 * @param spaces The number of spaces for the slide.
-	 * @param slice The slice where the slides is happening.
-	 * @return A list containing the new coordinates of the fox.
-	 * @throws SlideOutOfBoundsException If the slide would push the fox out of bounds.
-	 * @throws SlideHitObstacleException If the slide would cause the fox to collide with an obstacle.
-	 * @throws SlideHitElevatedException If the slide would cause the fox to hit an elevated item.
-	 */
-	public List<Coordinate> performSlide(Direction direction, int spaces, List<BoardItem> slice) throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
-		List<Coordinate> newCoordinates = new ArrayList<Coordinate>();
-		Coordinate head = this.getHead();
-		Coordinate tail = this.getTail();
+    public Coordinate getTail() {
+       return coordinate.right().get().right();
+    }
 
-		// Compute new coordinates
-		Coordinate newHead;
-		Coordinate newTail;
+    public Coordinate getHead() {
+        return coordinate.right().get().left();
+    }
 
-		verifyDirection(direction);
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking fox!");
+        if (this == o) {return true;}
 
-		switch (direction) {
-			case DOWN:
-				newHead = new Coordinate(head.row + 1, head.column);
-				newTail = new Coordinate(tail.row + 1, tail.column);
-				break;
-			case UP:
-				newHead = new Coordinate(head.row - 1, head.column);
-				newTail = new Coordinate(tail.row - 1, tail.column);
-				break;
-			case RIGHT:
-				newHead = new Coordinate(head.row, head.column + 1);
-				newTail = new Coordinate(tail.row, tail.column + 1);
-				break;
-			case LEFT:
-				newHead = new Coordinate(head.row, head.column - 1);
-				newTail = new Coordinate(tail.row, tail.column - 1);
-				break;
-			default:
-				throw new IllegalArgumentException("invalid direction.");
-		}
+        if (o == null) {return false;}
 
-		newCoordinates.add(newHead);
-		newCoordinates.add(newTail);
+        if (this.getClass() != o.getClass()) {return false;}
 
-		ValidateSlide(newCoordinates, slice);
+        Fox fox = (Fox) o;
 
-		this.setCoordinates(newCoordinates);
+        if ((fox.coordinate.right().get().left().column ==
+                this.coordinate.right().get().left().column) &&
+                fox.coordinate.right().get().left().row ==
+                        this.coordinate.right().get().left().row) {
 
-		if (spaces == 1) {
-			return newCoordinates;
-		} else {
-			return performSlide(direction, spaces - 1, slice);
-		}
-	}
+            if ((fox.coordinate.right().get().right().row ==
+                    this.coordinate.right().get().right().row &&
+                    fox.coordinate.right().get().right().column ==
+                            this.coordinate.right().get().right().column)) {
+                logger.trace("Fox IS SAME!");
+                return true;
+            }
 
-	/**
-	 * Attempts to slide the fox in a specific direction along a slice.
-	 * Ensures the slice is correct, then uses performSlide for the actual slide logic.
-	 * @param direction The direction where the item should slide.
-	 * @param spaces The amount of spaces the item should slide.
-	 * @param slice The slide where the slide is being performed.
-	 * @return The new coordinates of the fox.
-	 * @throws SlideOutOfBoundsException If the slide would push the fox out of bounds.
-	 * @throws SlideHitObstacleException If the slide would cause the fox to collide with an obstacle.
-	 * @throws SlideHitElevatedException If the slide would cause the fox to hit an elevated item.
-	 */
-	@Override
-	public List<Coordinate> slide(Direction direction, int spaces, List<BoardItem> slice)
-			throws SlideOutOfBoundsException, SlideHitObstacleException, SlideHitElevatedException {
+        }
 
-		// Move zero spaces
-		if (spaces == 0) {
-			return this.getCoordinates();
-		}
+        return false;
+    }
 
-		if (slice.isEmpty()) {
-			throw new IllegalArgumentException("Cannot slide through an empty"
-					+ "slice.");
-		}
 
-		if (!slice.contains(this)) {
-			throw new IllegalArgumentException("Cannot slide through a slice"
-					+ "that does not contain this fox.");
-		}
-
-		// Store initial coordinates to rollback if an exception is thrown
-		List<Coordinate> initialCoordinates = this.getCoordinates();
-
-		try {
-			return this.performSlide(direction, spaces, slice);
-		} catch (SlideOutOfBoundsException | SlideHitObstacleException e) {
-			// Restore the coordinates
-			this.setCoordinates(initialCoordinates);
-
-			throw e;
-		}
-	}
 }

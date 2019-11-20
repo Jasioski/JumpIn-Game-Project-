@@ -1,55 +1,73 @@
-package project.model;
+package project.modelRefactored;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
 
-import java.util.List;
-
 /**
- * A class representing a mushroom item on the board.
+ * Represents a mushroom item on the board.
  */
-public class Mushroom extends BoardItem implements Containable {
+public final class Mushroom extends SingleBoardItem implements Containable {
 
     /**
-     * Creates the mushroom at a specific row and column on the board.
-     * @param row The row where the mushroom is being created.
-     * @param column The column where the mushroom is being created.
+     * The logger used to log errors.
+     */
+    private static Logger logger = LogManager.getLogger(Board.class);
+
+    /**
+     * Creates a mushroom at a specific row and column.
+     * @param row The row where the mushroom is located.
+     * @param column The colum where the mushroom is located.
      */
     public Mushroom(int row, int column) {
-        this(new Coordinate(row, column));
+        super(new Coordinate(row, column));
     }
 
     /**
-     * Creates the mushroom at a coordinate on the board.
-     * @param coordinate The coordinate where the mushroom is created.
+     * Creates a mushroom at a specific coordinate.
+     * @param coordinate The coordinate where the mushroom is located.
      */
-    public Mushroom (Coordinate coordinate) {
-        super(ItemUIRepresentation.MUSHROOM);
-        this.setCoordinate(coordinate);
+    public Mushroom(Coordinate coordinate) {
+        super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.MUSHROOM;
     }
 
     /**
-     * Setst the coordinates of the mushroom.
-     * @param coordinate The coordinates where the item is being placed.
-     */
-    @Override
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinates.clear();
-        this.coordinates.add(coordinate);
-    }
-
-    /**
-     * Sets the coordinates of the mushroom using a list of coordinates.
-     * @param coordinates A list of the item's coordinates.
-     * @throws IllegalArgumentException If there is more than one coordinate.
+     * Returns true, since mushrooms are obstacles.
+     * @return True.
      */
     @Override
-    public void setCoordinates(List<Coordinate> coordinates) throws
-            IllegalArgumentException {
-            if (coordinates.size() != 1) {
-                throw new IllegalArgumentException("can only add a coordinate "
-                        + "of length 1");
+    public boolean isObstacle() {
+        return true;
+    }
+
+    /**
+     * Checks if this object is equal to another.
+     * @param o The object being compared.
+     * @return True if they are equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking mushroom!");
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        Mushroom mushroom = (Mushroom) o;
+
+        if (mushroom.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (mushroom.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+                logger.trace("Mushroom IS SAME!");
+                return true;
             }
 
-        this.setCoordinate(coordinates.get(0));
+        }
+
+        return false;
     }
 }

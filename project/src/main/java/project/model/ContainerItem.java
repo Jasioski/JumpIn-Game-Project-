@@ -1,113 +1,50 @@
-package project.model;
+package project.modelRefactored;
 
-import project.tui.ItemUIRepresentation;
-import project.model.exceptions.HoleAlreadyHasRabbitException;
-import project.model.exceptions.HoleIsEmptyException;
-
-import java.util.List;
-import java.util.Optional;
+import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
+import org.pcollections.PMap;
+import project.model.Direction;
 
 /**
- * An item that can contain other items on the board.
+ * Represents a hole object on the board.
  */
-public abstract class ContainerItem extends BoardItem {
+public abstract class ContainerItem extends SingleBoardItem {
+    /**
+     * The item that the hole may contain.
+     */
+    public final Optional<Containable> containingItem;
 
-	/**
-	 * A containable object that this item contains.
-	 */
-	private Optional<Containable> containingItem;
+    /**
+     * Constructs a new hole with a coordinate and optional item.
+     * @param coordinate The coordinate where the hole is located.
+     * @param containingItem The optional item that it can contain.
+     */
+    protected ContainerItem(Coordinate coordinate, Optional<Containable> containingItem) {
+        super(coordinate);
+        this.containingItem = containingItem;
+    }
 
-	/**
-	 * Creates the container item with a specific coordinate and UI representation.
-	 * @param coordinate The item's coordinate.
-	 * @param emptyRepresentation The item's UI representation.
-	 */
-	public ContainerItem(Coordinate coordinate, ItemUIRepresentation emptyRepresentation) {
-		super(emptyRepresentation);
+    /**
+     * Returns true if the hole acts as an obstacle.
+     * @return True if the hole contains an item.
+     */
+    @Override
+    public boolean isObstacle() {
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof MaybeObstacle) {
+                return ((MaybeObstacle) containingItem.get()).isObstacle();
+            }
+        }
+        return false;
+    }
 
-		this.setCoordinate(coordinate);
-		this.containingItem = Optional.empty();
-	}
-
-	/**
-	 * Constructs the container item at a specific row and column.
-	 * @param row The item's row.
-	 * @param column The item's column.
-	 * @param emptyRepresentation The item's UI representation.
-	 */
-	public ContainerItem(int row, int column, ItemUIRepresentation emptyRepresentation) {
-		this(new Coordinate(row, column), emptyRepresentation);
-	}
-
-	/**
-	 * Sets the coordinates of the item.
-	 * @param coordinate The coordinate to be set.
-	 */
-	public void setCoordinate(Coordinate coordinate) {
-		this.coordinates.clear();
-		this.coordinates.add(coordinate);
-	}
-
-	/**
-	 * Sets the coordinates of the item using a list of coordinates.
-	 * @param coordinates The item's coordinates.
-	 * @throws IllegalArgumentException If there is more than one coordinate in the list.
-	 */
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) {
-		if (coordinates.size() != 1) {
-			throw new IllegalArgumentException("can only add a coordinate "
-					+ "of length 1");
-		}
-
-		this.setCoordinate(coordinates.get(0));
-	}
-
-	/**
-	 * Gets the coordinates of the item.
-	 * @return The item's coordinates.
-	 */
-	public Coordinate getCoordinate () {
-		return this.getCoordinates().get(0);
-	}
-
-	/**
-	 * Gets the item contained by this container.
-	 * @return The item contained by this one.
-	 */
-	public Optional<Containable> getContainingItem() {
-		return this.containingItem;
-	}
-
-	/**
-	 * Remove the item contained in this one.
-	 * @return The item being removed.
-	 * @throws HoleIsEmptyException if there is no item being contained.
-	 */
-	public Containable removeContainingItem() throws HoleIsEmptyException {
-		if (this.containingItem.isEmpty()) {
-			throw new HoleIsEmptyException("there is no item in the hole");
-		}
-
-		Containable containable = this.containingItem.get();
-		this.containingItem = Optional.empty();
-
-		return containable;
-	}
-
-	/**
-	 * Adds a containable item to the container.
-	 * @param containable The item being added.
-	 * @throws HoleAlreadyHasRabbitException If the contained item already has a containable item.
-	 */
-	public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
-		if (this.containingItem.isPresent()) {
-			throw new HoleAlreadyHasRabbitException("the hole already has a " +
-					"rabbit");
-		}
-
-		this.containingItem = Optional.of(containable);
-		containable.setCoordinate(this.getCoordinate());
-	}
-
+    /**
+     * Attempts to jump a rabbit out of a hole.
+     * @param direction The direction that the rabbit must jump.
+     * @param slice The slice where the jump occurs.
+     * @return A pair containing the new empty hole, and either the rabbit or the new hole it is found in.
+     * @throws InvalidMoveException If the hole is empty or the rabbit cannot jump.
+     */
+    public abstract Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException;
 }

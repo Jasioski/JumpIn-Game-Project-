@@ -1,64 +1,114 @@
-package project.model;
+package project.modelRefactored;
 
-import project.model.exceptions.HoleAlreadyHasRabbitException;
-import project.model.exceptions.HoleIsEmptyException;
+import com.google.common.base.Optional;
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.pcollections.PMap;
+import project.model.Direction;
 import project.tui.ItemUIRepresentation;
 
-import java.util.Optional;
-
 /**
- * An object representing an elevated piece on the board, which can contain another object.
+ * A space on the board that is elevated.
  */
-public class ElevatedBoardItem extends ContainerItem {
+public class ElevatedBoardItem extends ContainerItem implements Elevated {
 
     /**
-     * Creates the elevated item at a specific coordinate.
-     * @param coordinate The coordinate of the elevated item.
+     * The logger used to log errors.
      */
-    public ElevatedBoardItem(Coordinate coordinate) {
-        super(coordinate, ItemUIRepresentation.ELEVATED);
-    }
+    private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
-     * Creates the elevated item at a specific row and column.
-     * @param row The row of the elevated item.
-     * @param column The column of the elevated item.
+     * Constructs a new hole with a coordinate and optional item.
+     *
+     * @param coordinate     The coordinate where the hole is located.
+     * @param containingItem The optional item that it can contain.
      */
-    public ElevatedBoardItem(int row, int column) {
-        this(new Coordinate(row, column));
-    }
-
-    /**
-     * Removes and returns the item being contained.
-     * @return The item being contained.
-     * @throws HoleIsEmptyException If there is no item currently contained.
-     */
-    @Override
-    public Containable removeContainingItem() throws HoleIsEmptyException {
-        Containable containable = super.removeContainingItem();
-
-        this.UIRepresentation = ItemUIRepresentation.ELEVATED;
-
-        return containable;
-    }
-
-    public Optional<Containable> containsItem() {
-        return super.getContainingItem();
-    }
-
-    /**
-     * Adds an item being contained in the elevated object.
-     * @param containable The item being added.
-     * @throws HoleAlreadyHasRabbitException If there is already an object being contained.
-     */
-    @Override
-    public void contain(Containable containable) throws HoleAlreadyHasRabbitException {
-        super.contain(containable);
-
-        if (containable.getClass() == Rabbit.class) {
-            this.UIRepresentation = ItemUIRepresentation.ELEVATED_RABBIT;
-        } else if (containable.getClass() == Mushroom.class) {
-            this.UIRepresentation = ItemUIRepresentation.ELEVATED_MUSHROOM;
+    public ElevatedBoardItem(Coordinate coordinate, Optional<Containable> containingItem) {
+        super(coordinate, containingItem);
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof Rabbit) {
+                this.uIRepresentation =
+                        ItemUIRepresentation.ELEVATED_RABBIT;
+            }
+            else if (containingItem.get() instanceof Mushroom) {
+                this.uIRepresentation = ItemUIRepresentation.ELEVATED_MUSHROOM;
+            }
         }
+
+        else {
+            this.uIRepresentation = ItemUIRepresentation.ELEVATED;
+        }
+    }
+
+    /**
+     * Attempts to jump a board out of the elevated space.
+     * @param direction The direction that the rabbit must jump.
+     * @param slice The slice where the jump occurs.
+     * @return A pair containing the container and the result of the jump.
+     * @throws InvalidMoveException If the move is invalid.
+     */
+    public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
+        if (!containingItem.isPresent()){
+            if (! (containingItem.get() instanceof  Rabbit)) {
+                throw new InvalidMoveException("The hole does not contain a rabbit.");
+            }
+        }
+
+        //Jump the rabbit out of the hole
+        Rabbit jumpingRabbit = (Rabbit) this.containingItem.get();
+        Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
+
+        //Create a new empty hole in this one's place
+        ElevatedBoardItem emptyContainerItem = new ElevatedBoardItem(this.coordinate.left().get(), Optional.absent());
+
+        return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
+    }
+
+    /**
+     * Returns true of this object is the same as another ElevatedBoardItem.
+     * @param o The object being compared.
+     * @return True if they are the same.
+     */
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking elevated!");
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) o;
+
+        if (elevatedBoardItem.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (elevatedBoardItem.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+
+                if (elevatedBoardItem.containingItem.isPresent() &&
+                        this.containingItem.isPresent()) {
+
+                    if (elevatedBoardItem.containingItem.get().getClass() ==
+                            this.containingItem.get().getClass()) {
+                        logger.trace("Mushroom IS SAME!");
+                        return true;
+                    }
+
+                }
+
+                else if (!elevatedBoardItem.containingItem.isPresent() &&
+                        !elevatedBoardItem.containingItem.isPresent()) {
+                    logger.trace("Elevated IS SAME!");
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
     }
 }

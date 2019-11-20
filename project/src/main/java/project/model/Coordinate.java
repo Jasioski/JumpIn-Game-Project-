@@ -1,75 +1,76 @@
-package project.model;
+package project.modelRefactored;
 
 import java.util.Objects;
 
 /**
- * A coordinate on the board where an item can be located, consisting of its row and column.
+ * Represents a coordinate on the board, consisting of the item's row and column.
  */
 public class Coordinate {
-	/**
-	 * The row of the item.
-	 */
-	public int row;
+    /**
+     * The row of the coordinate.
+     */
+    public final int row;
 
-	/**
-	 * The column of the item.
-	 */
-	public int column;
+    /**
+     * The column of the coordinate.
+     */
+    public final int column;
 
-	/**
-	 * Constructs the coordinate with a specific row and column.
-	 * @param row The coordinate's row.
-	 * @param column The coordinate's column.
-	 */
-	public Coordinate(int row, int column) {
-		this.row = row;
-		this.column = column;
-	}
+    /**
+     * Creates a coordinate with a given row and column.
+     * @param row The row of the coordinate.
+     * @param column The column of the coordinate.
+     */
+    public Coordinate(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
 
-	/**
-	 * Constructs the coordinate with the same row and column.
-	 * @param coordinate The row and column used for the coordinate.
-	 */
-	public Coordinate(Coordinate coordinate) {
-		this.row = coordinate.row;
-		this.column = coordinate.column;
-	}
+    /**
+     * Creates a copy of a coordinate using another coordinate.
+     * @param coordinate The coordinate being copied.
+     */
+    public Coordinate(Coordinate coordinate) {
+        this.row = coordinate.row;
+        this.column = coordinate.column;
+    }
 
-	/**
-	 * Checks if this coordinate is equal to another.
-	 * @param o The object being compared to.
-	 * @return Boolean containing the object's equality.
-	 */
-	@Override
-	public boolean equals (Object o) {
-		if (this == o) return true;
+    /**
+     * Returns the hashcode of the coordinate.
+     * @return The coordinate's hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
 
-		if (o == null) return false;
+    /**
+     * Determines if this coordinate is equal to another.
+     * @param o The object being compared to.
+     * @return True if they are the same.
+     */
+    @Override
+    public boolean equals (Object o) {
+        if (this == o) return true;
 
-		if (this.getClass() != o.getClass())
-			return false;
+        if (o == null) return false;
 
-		Coordinate coordinate = (Coordinate) o;
+        if (this.getClass() != o.getClass())
+            return false;
 
-		return (this.row == coordinate.row &&
-				this.column == coordinate.column);
-	}
+        Coordinate coordinate = (Coordinate) o;
 
-	/**
-	 * Returns the hashcode of the coordinates.
-	 * @return The coordinate's hashcode.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(row, column);
-	}
+        return (this.row == coordinate.row &&
+                this.column == coordinate.column);
+    }
 
-	/**
-	 * Returns a string representation of the coordinate.
-	 * @return The string, in format row:column
-	 */
-	@Override
-	public String toString() {
-		return row + ":" + column;
-	}
+    /**
+     * Returns a string representation of the coordinate.
+     * @return The string representation.
+     */
+    @Override
+    public String toString() {
+        return row + ":" + column;
+    }
+
 }

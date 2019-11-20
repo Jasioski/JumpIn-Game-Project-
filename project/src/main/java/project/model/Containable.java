@@ -1,12 +1,7 @@
-package project.model;
+package project.modelRefactored;
 
 /**
- * Interface for items that can be contained in another item, eg. a Rabbit which can be contained in a hole.
+ * Represents board items that can be contained in others.
  */
 public interface Containable {
-    /**
-     * Sets the coordinates of the containable item.
-     * @param coordinate The coordinates where the item is being placed.
-     */
-    void setCoordinate (Coordinate coordinate);
 }

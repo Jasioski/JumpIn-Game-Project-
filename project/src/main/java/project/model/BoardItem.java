@@ -1,84 +1,68 @@
-package project.model;
+package project.modelRefactored;
 
+import io.atlassian.fugue.Either;
+import io.atlassian.fugue.Pair;
 import project.tui.ItemUIRepresentation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * An generic BoardItem which can be extended to describe anything placed on the board.
+ * Represents an item on the board.
  */
-public abstract class BoardItem {
+public abstract class BoardItem implements MaybeObstacle {
+    /**
+     *
+     */
+    public final Either<Coordinate, Pair<Coordinate, Coordinate>> coordinate;
 
-	/**
-	 * The coordinates of the item on the board.
-	 */
-	protected List<Coordinate> coordinates;
+    /**
+     * The item's UI representation (a character that represents the item).
+     */
+    protected ItemUIRepresentation uIRepresentation =
+            ItemUIRepresentation.EMPTY;
 
-	/**
-	 * The item's UI representation (a character that represents the item).
-	 */
-	protected ItemUIRepresentation UIRepresentation;
+    /**
+     * Creates the board item with a pair of coordinates.
+     * @param coordinate The pair of coordinates of the item.
+     */
+    public BoardItem(Pair<Coordinate, Coordinate> coordinate) {
+        this.coordinate = Either.right(coordinate);
+    }
 
-	/**
-	 * Constructor that creates the BoardItem with its UI representation.
-	 * @param UIRepresentation The item's UI representation.
-	 */
-	public BoardItem(ItemUIRepresentation UIRepresentation) {
-		this.coordinates = new ArrayList<Coordinate>();
-		this.UIRepresentation = UIRepresentation;
-	}
+    /**
+     * Creates the board item with a single coordinate.
+     * @param coordinate The coordinate of the board item.
+     */
+    public BoardItem(Coordinate coordinate) {
+        this.coordinate = Either.left(coordinate);
+    }
 
-	/**
-	 * Returns a copy of the item's coordinates, which prevents the coordinates from being written on.
-	 * @return A list containing the item's coordinates.
-	 */
-	public List<Coordinate> getCoordinates() {
-		return new ArrayList<Coordinate>(this.coordinates);
-	}
+    /**
+     * Returns the item's string representation.
+     * @return The string representation.
+     */
+    @Override
+    public String toString() {
+        return this.uIRepresentation.getRepresentation();
+    }
 
-	/**
-	 * Returns the item's UI representation.
-	 * @return The item's UI representation.
-	 */
-	public ItemUIRepresentation getUIRepresentation() {
-		return UIRepresentation;
-	}
+    /**
+     * Checks if this item is equal to another.
+     * @param o The object being compared.
+     * @return True if they represent the same board item.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-	/**
-	 * Returns a string representation of the item, which in this case is its UI representation character.
-	 * @return The item's UI representation character.
-	 */
-	@Override
-	public String toString() {
-		return this.UIRepresentation.getRepresentation();
-	}
+        if (o == null) return false;
 
-	/**
-	 * Sets the item's coordinates. Can contain one or multiple coordinates, for long items like the fox.
-	 * @param coordinates A list of the new coordinates.
-	 */
-	public abstract void setCoordinates(List<Coordinate> coordinates);
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
 
-	/**
-	 * Checks if the item is equal to another board item.
-	 * @param o The object being compared to.
-	 * @return Boolean containing the object's equality.
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
+        BoardItem boardItem = (BoardItem) o;
 
-		if (o == null) return false;
-
-		if (this.getClass() != o.getClass()) {
-			return false;
-		}
-
-		BoardItem boardItem = (BoardItem) o;
-
-		return (this.UIRepresentation.equals(boardItem.UIRepresentation) &&
-				this.coordinates.equals(boardItem.coordinates)
-		);
-	}
+        return (this.uIRepresentation.equals(boardItem.uIRepresentation) &&
+                this.coordinate.equals(boardItem.coordinate)
+        );
+    }
 }

@@ -1,56 +1,73 @@
-package project.model;
+package project.modelRefactored;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
 
-import java.util.List;
-
 /**
- * A board item that represents an empty space on the board.
+ * Represents an empty space on the board.
  */
-public class EmptyBoardItem extends BoardItem {
-	/**
-	 * Creates the empty board item with a specific row and column.
-	 * @param row The row where the empty item will be placed.
-	 * @param column The column where the empty item will be placed.
-	 */
-	public EmptyBoardItem(int row, int column) {
-		this(new Coordinate(row, column));
-	}
+public class EmptyBoardItem extends SingleBoardItem {
 
-	/**
-	 * Creates the empty board item with a coordinate on the board.
-	 * @param coordinate The coordinate where the empty space should be placed.
-	 */
-	public EmptyBoardItem(Coordinate coordinate) {
-		super(ItemUIRepresentation.EMPTY);
-		this.setCoordinate(coordinate);
-	}
+    /**
+     * The logger used to log errors.
+     */
+    private static Logger logger = LogManager.getLogger(Board.class);
 
-	/**
-	 * Sets a coordinate of the empty item.
-	 * @param coordinate The coordinate being set.
-	 */
-	public void setCoordinate(Coordinate coordinate) {
+    /**
+     * Creates the empty board item at a coordinate.
+     * @param coordinate The coordinate containing the empty space.
+     */
+    public EmptyBoardItem(Coordinate coordinate) {
+        super(coordinate);
+        this.uIRepresentation = ItemUIRepresentation.EMPTY;
+    }
 
-		this.coordinates.clear();
-		this.coordinates.add(coordinate);
-	}
+    /**
+     * Returns the string representation of the board item.
+     * @return The string representation.
+     */
+    @Override
+    public String toString() {
+        return ItemUIRepresentation.EMPTY.getRepresentation();
+    }
 
-	/**
-	 * Sets the coordinates of the empty board item.
-	 * @param coordinates The list containing the item's coordinates.
-	 * @throws IllegalArgumentException If there is more than one set of coordinates.
-	 */
-	@Override
-	public void setCoordinates(List<Coordinate> coordinates) throws
-			IllegalArgumentException {
-		if (coordinates.size() != 1) {
-			if (coordinates.size() != 1) {
-				throw new IllegalArgumentException("can only add a coordinate "
-						+ "of length 1");
-			}
-		}
+    /**
+     * This item is not an obstacle, so it returns false.
+     * @return False.
+     */
+    @Override
+    public boolean isObstacle() {
+        return false;
+    }
 
-		this.setCoordinate(coordinates.get(0));
-	}
+    /**
+     * Compares this item to another to determine if they are equal.
+     * @param o The object being compared.
+     * @return True if they are equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+        logger.trace("Checking empty!");
+        if (this == o) {return true;}
+
+        if (o == null) {return false;}
+
+        if (this.getClass() != o.getClass()) {return false;}
+
+        EmptyBoardItem empty = (EmptyBoardItem) o;
+
+        if (empty.coordinate.left().get().column ==
+                this.coordinate.left().get().column) {
+
+            if (empty.coordinate.left().get().row ==
+                    this.coordinate.left().get().row) {
+                logger.trace("Empty IS SAME!");
+                return true;
+            }
+
+        }
+
+        return false;
+    }
 }
