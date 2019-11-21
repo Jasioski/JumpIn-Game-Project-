@@ -48,6 +48,7 @@ public class ElevatedBoardItem extends ContainerItem {
      * @return A pair containing the container and the result of the jump.
      * @throws InvalidMoveException If the move is invalid.
      */
+    @Override
     public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
         if (!containingItem.isPresent()){
             if (! (containingItem.get() instanceof  Rabbit)) {

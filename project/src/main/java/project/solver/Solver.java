@@ -80,6 +80,8 @@ public class Solver {
                            PVector<Board> boardHistory,
                            int depth) {
 
+        PVector<Board> history = boardHistory;
+
         if (depth > MAX_DEPTH) {
             return null;
         }
@@ -93,11 +95,11 @@ public class Solver {
                 try {
                     Board newBoard = applyMove(board, move);
 
-                   if (!boardHistory.contains(newBoard)) {
+                   if (!history.contains(newBoard)) {
 
-                        boardHistory = boardHistory.plus(newBoard);
+                        history = history.plus(newBoard);
 
-                       PVector<Move> solution = solve(newBoard, boardHistory,
+                       PVector<Move> solution = solve(newBoard, history,
                                depth + 1);
 
                         if(solution != null) {

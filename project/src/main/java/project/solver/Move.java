@@ -53,6 +53,7 @@ public class Move {
      * @param o object move to compare to this move.
      * @return true or false based on if the moves are equal.
      */
+    @Override
     public boolean equals(Object o) {
         
         if (this == o) return true;
@@ -76,6 +77,7 @@ public class Move {
      * toString method returns the move object in a string format.
      * @return str, the string representation of the move.
      */
+    @Override
     public String toString()  {
         String str = "";
         str += "Item: " + item.getClass() + " from: " + initial + " to: " + ending;
