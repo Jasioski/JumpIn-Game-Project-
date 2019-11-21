@@ -18,13 +18,35 @@ import project.model.Board;
  */
 public class GuiOuterFrame {
 
+	/**
+	 * The frame that contains the gui.
+	 */
 	JFrame frame;
+
+	/**
+	 * The padding surrounding the panel's border layout.
+	 */
 	protected int padding;
-	
+
+	/**
+	 * The outer frame that contains the game.
+	 */
 	JPanel outerFrame;
+
+	/**
+	 * The toolbar containing the game's options.
+	 */
 	private JToolBar tools;
+
+	/**
+	 * The inner components of the gui.
+	 */
 	private GuiInnerComponents boardInnerComponents;
 
+	/**
+	 * Creates an outer frame gui using a board.
+	 * @param board The board that the gui will contain.
+	 */
 	GuiOuterFrame(Board board) {
 		tools = new JToolBar();
 		boardInnerComponents = new GuiInnerComponents(board);
@@ -49,6 +71,9 @@ public class GuiOuterFrame {
 		createFrame();
 	}
 
+	/**
+	 * Creates the Jframe that contains the gui.
+	 */
 	protected void createFrame() {
 
 		// Create the canvas

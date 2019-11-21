@@ -13,6 +13,9 @@ import project.solver.Solver;
 
 public class Main {
 
+    /**
+     * The Logger used to log useful debug statements and errors.
+     */
     public static Logger logger = LogManager.getLogger(Main.class);
 
     @SuppressWarnings("PMD")
