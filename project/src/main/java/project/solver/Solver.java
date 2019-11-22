@@ -29,10 +29,21 @@ public class Solver {
     final static int MAX_DEPTH = 10;
 
     /**
+     * Helpful debugging tool used to log the moves given.
+     * @param moves a list that contains valid moves
+     */
+    private static void printMoves(List<Move> moves) {
+        for (Move move: moves) {
+            logger.debug(move);
+        }
+    }
+
+    /**
      * Move a piece on the board.
      * @param board to be solved by moving all the rabbits in the holes.
      * @param move to be applied to the board and move an animal.
-     * @return board.move calls the move method of the board to perform the
+     * @return board.move calls the move method of the board to perform the a
+     * board with the applied move is then returned.
      * move given as a parameter.
      * @throws InvalidMoveException if the move is invalid.
      */
@@ -50,8 +61,8 @@ public class Solver {
     /**
      * Solve the board using the tree algorithm.
      * @param board to be solved.
-     * @return reversed, a list of the solutions to the board from the root
-     * node down.
+     * @return reversed, a list of moves to be executed that solve board from
+     * the root node moving down.
      */
     public static List<Move> solve (Board board) {
         PVector<Board> boardHistory = TreePVector.empty();
@@ -74,7 +85,8 @@ public class Solver {
      * @param boardHistory previous board states when trying to solve the
      *                     board to avoid duplicated moves.
      * @param depth of the branch so far to avoid going past the max depth.
-     * @return PVector of moves.
+     * @return list moves to be executed to solve the board in reverse order
+     * (starting from leaf node).
      */
     private static PVector<Move> solve (Board board,
                            PVector<Board> boardHistory,

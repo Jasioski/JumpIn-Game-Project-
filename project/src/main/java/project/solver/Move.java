@@ -5,7 +5,7 @@ import project.model.BoardItem;
 import project.model.Coordinate;
 
 /**
- * Used to create valid moves for a particular object.
+ * Used to store valid moves for a particular object.
  * These valid moves are used in the solver code.
  */
 public class Move {
