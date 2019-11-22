@@ -74,7 +74,7 @@ public class Application extends JFrame implements ItemClickListener {
 
     private void initializeGame() {
         this.board = new DefaultBoard().getBoard();
-        this.boardHistory = new BoardHistory();
+        this.boardHistory = new BoardHistory(this.board);
 
         setMessage("Make your move!");
         // TODO: send event of changing board

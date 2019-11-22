@@ -37,8 +37,9 @@ public class BoardHistory {
     /**
      * Creates a move history, taking in an initial board to set as its first state.
      */
-    public BoardHistory() {
+    public BoardHistory(Board board) {
         boardHistory = new ArrayList<>();
+        boardHistory.add(board);
         currentMove = 0;
     }
 
