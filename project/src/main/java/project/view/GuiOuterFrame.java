@@ -25,7 +25,7 @@ public class GuiOuterFrame {
 	private JToolBar tools;
 	private GuiInnerComponents boardInnerComponents;
 
-	GuiOuterFrame(Board board) {
+	public GuiOuterFrame(Board board) {
 		tools = new JToolBar();
 		boardInnerComponents = new GuiInnerComponents(board);
 		//padding value for the BorderLayout
