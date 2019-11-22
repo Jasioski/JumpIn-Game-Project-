@@ -1,17 +1,21 @@
 package project;
 
-import project.model.Board;
-import project.view.ImageResources;
-import project.model.DefaultBoard;
-import project.view.ApplicationPanel;
+import com.google.common.base.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import project.model.*;
+import project.view.*;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * GUI Application for JumpIn
  * This is the entrypoint for the GUI game
  */
-public class Application extends JFrame {
+public class Application extends JFrame implements ItemClickListener {
+
+    public static Logger logger = LogManager.getLogger(GuiInnerComponents.class);
 
     /**
      * State of the board
@@ -22,21 +26,69 @@ public class Application extends JFrame {
      */
     private ApplicationPanel frame;
 
+    private BoardHistory boardHistory;
+
+    /**
+     * Holds the buttons and label
+     */
+    private ToolBar toolBar;
+
+    private Optional<Coordinate> selectedItem;
+    private Optional<Coordinate> destinationItem;
+
+
+    private Action newGame = new AbstractAction("New") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            initializeGame();
+        }
+    };
+
+    private Action undo = new AbstractAction("Undo") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            undo();
+        }
+    };
+
+    private Action redo = new AbstractAction("Redo") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            redo();
+        }
+    };
+
+
     Application() {
         super("JumpIn");
 
         // Ensure resources are loaded;
         ImageResources.getInstance();
 
-        // Setup model
-        board = new DefaultBoard().getBoard();
+        this.selectedItem = Optional.absent();
+        this.destinationItem = Optional.absent();
 
         initializeFrame();
+        initializeGame();
+    }
+
+    private void initializeGame() {
+        this.board = new DefaultBoard().getBoard();
+        this.boardHistory = new BoardHistory();
+
+        setMessage("Make your move!");
+        // TODO: send event of changing board
+
+        this.frame.setBoard(board);
+        this.pack();
     }
 
     private void initializeFrame() {
+
+        toolBar = new ToolBar(this.newGame, this.undo, this.redo);
+
         // GUI Components
-        frame = new ApplicationPanel(board);
+        frame = new ApplicationPanel(toolBar, this);
 
         // Frame
         this.add(frame.getPanel());
@@ -45,14 +97,81 @@ public class Application extends JFrame {
         // Whether to use the native windowing systems default location
         this.setLocationByPlatform(true);
 
-        // Removes padding of the frame
         this.pack();
-
-        // Don't allow resizing
         this.setResizable(false);
-
-        // Show the application
         this.setVisible(true);
+    }
+
+    private void undo() {
+		Board recalledMove = boardHistory.getUndoBoard();
+		updateBoard(recalledMove);
+    }
+
+    private void redo() {
+        Board recalledMove = boardHistory.getRedoBoard();
+        updateBoard(recalledMove);
+    }
+
+
+    private void updateBoard (Board newBoard) {
+        this.boardHistory.addState(this.board);
+        this.board = newBoard;
+        this.frame.setBoard(newBoard);
+
+
+        if (board.currentGameState == GameState.SOLVED) {
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            JOptionPane.showMessageDialog(this, "Congratulations! \nYou Won!",
+                    "Victory!", 1);
+            int playAgain = JOptionPane.showConfirmDialog(this, "Do you want " +
+                    "to play again?", "Reset?", dialogButton);
+            if (playAgain == JOptionPane.YES_OPTION) {
+				this.initializeGame();
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(ItemClickEvent event) {
+        logger.debug("Received an item click");
+
+        // We haven't selected an item
+        if (!selectedItem.isPresent()) {
+            logger.trace("Selected item at coordinate " + event.coordinate);
+            selectedItem = Optional.of(event.coordinate);
+            return;
+        }
+
+        // We have selected an item
+        else {
+            // If this is the same item already selected
+            if (event.coordinate.equals(selectedItem.get())) {
+                logger.trace("Tried to select the same item twice");
+                return;
+            }
+
+            logger.trace("Destination item at coordinate " + event.coordinate);
+
+            destinationItem = Optional.of(event.coordinate);
+
+            // Apply to the board
+            try {
+                Board appliedBoard = this.board.move(selectedItem.get(),
+                        destinationItem.get());
+                updateBoard(appliedBoard);
+            } catch (InvalidMoveException e) {
+                logger.debug(e);
+            } finally {
+                // Clear selections
+                selectedItem = Optional.absent();
+                destinationItem = Optional.absent();
+            }
+        }
+    }
+
+
+    private void setMessage(String msg) {
+        toolBar.setMessage(msg);
     }
 
 

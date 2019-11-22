@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.border.EmptyBorder;
+import javax.tools.Tool;
 
 import project.model.Board;
 
@@ -28,36 +30,30 @@ public class ApplicationPanel {
 	 */
 	private	JPanel outerFrame;
 
-	public ApplicationPanel(Board board) {
+	private GuiInnerComponents boardInnerComponents;
 
-		GuiInnerComponents boardInnerComponents = new GuiInnerComponents(board);
+	public ApplicationPanel(ToolBar toolBar, ItemClickListener listener) {
+
+		boardInnerComponents = new GuiInnerComponents(listener);
 
 		outerFrame = new JPanel(new BorderLayout(PADDING, PADDING));
 
 		// TODO: this should not be changing here
 		// the inner components should not be affecting the outer
-		outerFrame.setBorder(boardInnerComponents.boardBorderSetup());
+		outerFrame.setBorder(new EmptyBorder(PADDING, PADDING, PADDING,
+				PADDING));
 
-		// Add the tools dialog to the beginning of the frame
+		outerFrame.add(toolBar, BorderLayout.PAGE_START);
 
-		// TODO: Refactor tool bar into its own classjK;w
-		JToolBar tools = new JToolBar();
-		tools.setFloatable(false);
-
-		outerFrame.add(tools, BorderLayout.PAGE_START);
-
-		tools.add(boardInnerComponents.newGameAction);
-		tools.add(boardInnerComponents.undoLastMove);
-		tools.add(boardInnerComponents.redoLastMove);
-
-		tools.addSeparator();
-
-		// TODO: this two way binding should not be happening
-		tools.add(boardInnerComponents.getMessage());
 		outerFrame.add(boardInnerComponents.boardPanel);
 	}
 
 	public JPanel getPanel() {
 		return this.outerFrame;
 	}
+
+	public void setBoard(Board board) {
+		this.boardInnerComponents.updateBoard(board);
+	}
+
 }
