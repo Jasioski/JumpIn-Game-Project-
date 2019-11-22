@@ -114,10 +114,8 @@ public class Application extends JFrame implements ItemClickListener {
 
 
     private void updateBoard (Board newBoard) {
-        this.boardHistory.addState(this.board);
         this.board = newBoard;
         this.frame.setBoard(newBoard);
-
 
         if (board.currentGameState == GameState.SOLVED) {
             int dialogButton = JOptionPane.YES_NO_OPTION;
@@ -158,6 +156,7 @@ public class Application extends JFrame implements ItemClickListener {
             try {
                 Board appliedBoard = this.board.move(selectedItem.get(),
                         destinationItem.get());
+                this.boardHistory.addState(appliedBoard);
                 updateBoard(appliedBoard);
             } catch (InvalidMoveException e) {
                 logger.debug(e);
