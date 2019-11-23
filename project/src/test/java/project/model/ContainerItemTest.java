@@ -17,7 +17,7 @@ public class ContainerItemTest {
         assertEquals(containerItem.containingItem, containable,
                 "the hole should have the item");
 
-        Coordinate instanceCoordinate = containerItem.coordinate.left().get();
+        Coordinate instanceCoordinate = containerItem.getSingleCoordinate();
 
         assertEquals(holeCoordinate, instanceCoordinate,
                 "the hole should have the correct coordinate");
@@ -36,12 +36,12 @@ public class ContainerItemTest {
         assertEquals(containerItem.containingItem, containable,
                 "the hole should have the item");
 
-        Coordinate instanceCoordinate = containerItem.coordinate.left().get();
+        Coordinate instanceCoordinate = containerItem.getSingleCoordinate();
 
         Containable item = containerItem.containingItem.get();
         BoardItem boardItem = (BoardItem) item;
 
-        assertEquals(holeCoordinate, boardItem.coordinate.left().get(),
+        assertEquals(holeCoordinate, boardItem.getCoordinate(),
                 "the containableItem should have the correct coordinate");
     }
 
@@ -98,7 +98,7 @@ public class ContainerItemTest {
         Rabbit newRabbit = (Rabbit) board.getItem(expectedJumpCoordinate);
         ContainerItem newContainerItem = (ContainerItem) board.getItem(initialCoordinate);
         // Make sure the initial rabbit has not been mutated
-        Coordinate initialRabbitCoordinate = initialRabbit.coordinate.left().get();
+        Coordinate initialRabbitCoordinate = initialRabbit.getSingleCoordinate();
         assertEquals(initialCoordinate, initialRabbitCoordinate, "the initial" +
                 " rabbit should not have been mutated" );
 
@@ -106,7 +106,7 @@ public class ContainerItemTest {
         assertNotNull(initialRabbit);
         assertNotEquals(initialRabbit, newRabbit, "the new rabbit should be " +
                 "different to the old coordinate");
-        Coordinate coordinate = newRabbit.coordinate.left().get();
+        Coordinate coordinate = newRabbit.getSingleCoordinate();
         assertEquals(expectedJumpCoordinate, coordinate, "we should have " +
                 "jumped to our expected coordinates");
 

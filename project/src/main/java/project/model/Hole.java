@@ -60,7 +60,7 @@ public class Hole extends ContainerItem {
         Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
 
         //Create a new empty hole in this one's place
-        Hole emptyContainerItem = new Hole(this.coordinate.left().get(), Optional.absent());
+        Hole emptyContainerItem = new Hole(this.getSingleCoordinate(), Optional.absent());
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
@@ -81,11 +81,11 @@ public class Hole extends ContainerItem {
 
         Hole hole = (Hole) o;
 
-        if (hole.coordinate.left().get().column ==
-                this.coordinate.left().get().column) {
+        if (hole.getSingleCoordinate().column ==
+                this.getSingleCoordinate().column) {
 
-            if (hole.coordinate.left().get().row ==
-                    this.coordinate.left().get().row) {
+            if (hole.getSingleCoordinate().row ==
+                    this.getSingleCoordinate().row) {
 
                 if (hole.containingItem.isPresent() &&
                         this.containingItem.isPresent()) {

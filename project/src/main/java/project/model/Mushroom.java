@@ -57,11 +57,11 @@ public final class Mushroom extends SingleBoardItem implements Containable {
 
         Mushroom mushroom = (Mushroom) o;
 
-        if (mushroom.coordinate.left().get().column ==
-                this.coordinate.left().get().column) {
+        if (mushroom.getSingleCoordinate().column ==
+                this.getSingleCoordinate().column) {
 
-            if (mushroom.coordinate.left().get().row ==
-                    this.coordinate.left().get().row) {
+            if (mushroom.getSingleCoordinate().row ==
+                    this.getSingleCoordinate().row) {
                 logger.trace("Mushroom IS SAME!");
                 return true;
             }

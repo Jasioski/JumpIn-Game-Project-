@@ -40,6 +40,8 @@ public class GuiOuterFrame {
 		tools.add(boardInnerComponents.newGameAction);
 		tools.add(boardInnerComponents.undoLastMove);
 		tools.add(boardInnerComponents.redoLastMove);
+		tools.add(boardInnerComponents.saveBoard);
+		tools.add(boardInnerComponents.loadBoard);
 
 		tools.addSeparator();
 

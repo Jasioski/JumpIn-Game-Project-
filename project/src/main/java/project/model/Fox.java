@@ -226,12 +226,15 @@ public class Fox extends BoardItem {
         return true;
     }
 
+    public ArrayList<Coordinate> getPairCoordinates(){
+        return this.getCoordinate().right().get();
+    }
     /**
      * gets tail coordinate for the fox.
      * @return coordinate.right().get().right().
      */
     public Coordinate getTail() {
-       return coordinate.right().get().right();
+       return getPairCoordinates().get(1);
     }
 
     /**
@@ -239,7 +242,7 @@ public class Fox extends BoardItem {
      * @return coordinate.right().get().left().
      */
     public Coordinate getHead() {
-        return coordinate.right().get().left();
+        return getPairCoordinates().get(0);
     }
 
     /**
@@ -258,15 +261,14 @@ public class Fox extends BoardItem {
 
         Fox fox = (Fox) o;
 
-        if ((fox.coordinate.right().get().left().column ==
-                this.coordinate.right().get().left().column) &&
-                fox.coordinate.right().get().left().row ==
-                        this.coordinate.right().get().left().row) {
+        if ((fox.getHead().column ==
+                this.getHead().column) &&
+                fox.getHead().row == this.getHead().row) {
 
-            if ((fox.coordinate.right().get().right().row ==
-                    this.coordinate.right().get().right().row &&
-                    fox.coordinate.right().get().right().column ==
-                            this.coordinate.right().get().right().column)) {
+            if ((fox.getTail().row ==
+                    this.getTail().row) &&
+                    fox.getTail().column ==
+                            this.getTail().column ){
                 logger.trace("Fox IS SAME!");
                 return true;
             }

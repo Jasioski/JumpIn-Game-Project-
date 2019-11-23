@@ -41,7 +41,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
      */
     private Coordinate computeCoordinateFromDirection(Direction direction) {
 
-        Coordinate current = this.coordinate.left().get();
+        Coordinate current = this.getSingleCoordinate();
 
         switch (direction) {
             case RIGHT:
@@ -171,11 +171,11 @@ public class Rabbit extends SingleBoardItem implements Containable {
 
         Rabbit rabbit = (Rabbit) o;
 
-        if (rabbit.coordinate.left().get().column ==
-                this.coordinate.left().get().column) {
+        if (rabbit.getSingleCoordinate().column ==
+                this.getSingleCoordinate().column) {
 
-            if (rabbit.coordinate.left().get().row ==
-                    this.coordinate.left().get().row) {
+            if (rabbit.getSingleCoordinate().row ==
+                    this.getSingleCoordinate().row) {
                 logger.trace("Rabbit IS SAME!");
                 return true;
             }

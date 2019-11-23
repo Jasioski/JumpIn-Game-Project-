@@ -57,11 +57,11 @@ public class EmptyBoardItem extends SingleBoardItem {
 
         EmptyBoardItem empty = (EmptyBoardItem) o;
 
-        if (empty.coordinate.left().get().column ==
-                this.coordinate.left().get().column) {
+        if (empty.getSingleCoordinate().column ==
+                this.getSingleCoordinate().column) {
 
-            if (empty.coordinate.left().get().row ==
-                    this.coordinate.left().get().row) {
+            if (empty.getSingleCoordinate().row ==
+                    this.getSingleCoordinate().row) {
                 logger.trace("Empty IS SAME!");
                 return true;
             }

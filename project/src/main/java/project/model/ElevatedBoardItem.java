@@ -60,7 +60,7 @@ public class ElevatedBoardItem extends ContainerItem {
         Either<Rabbit, ContainerItem> rabbitOrContainerItem = jumpingRabbit.jump(direction, slice);
 
         //Create a new empty hole in this one's place
-        ElevatedBoardItem emptyContainerItem = new ElevatedBoardItem(this.coordinate.left().get(), Optional.absent());
+        ElevatedBoardItem emptyContainerItem = new ElevatedBoardItem(this.getSingleCoordinate(), Optional.absent());
 
         return Pair.pair(emptyContainerItem, rabbitOrContainerItem);
     }
@@ -81,11 +81,11 @@ public class ElevatedBoardItem extends ContainerItem {
 
         ElevatedBoardItem elevatedBoardItem = (ElevatedBoardItem) o;
 
-        if (elevatedBoardItem.coordinate.left().get().column ==
-                this.coordinate.left().get().column) {
+        if (elevatedBoardItem.getSingleCoordinate().column ==
+                this.getSingleCoordinate().column) {
 
-            if (elevatedBoardItem.coordinate.left().get().row ==
-                    this.coordinate.left().get().row) {
+            if (elevatedBoardItem.getSingleCoordinate().row ==
+                    this.getSingleCoordinate().row) {
 
                 if (elevatedBoardItem.containingItem.isPresent() &&
                         this.containingItem.isPresent()) {

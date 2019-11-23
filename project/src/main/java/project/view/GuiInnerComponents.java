@@ -5,6 +5,9 @@ import project.model.GameState;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -190,6 +193,27 @@ public class GuiInnerComponents implements ItemClickListener {
 		}
 	}
 
+	/**
+	 * Saves the current board to a serialized file
+	 */
+	public void saveGame(){
+		try {
+			SaveGame.save(board, "filename");
+		}
+		catch (IOException e){
+			System.out.println(e);
+		}
+	}
+
+	public void loadGame(){
+		try{
+			board = SaveGame.load("filename");
+			updateBoard();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+	}
+
 	// Linked to the button to reset the board
 	Action newGameAction = new AbstractAction("New") {
 		@Override
@@ -213,6 +237,16 @@ public class GuiInnerComponents implements ItemClickListener {
 		public void actionPerformed(ActionEvent e) {
 			redoMove();
 		}
+	};
+
+	Action saveBoard = new AbstractAction("Save"){
+		@Override
+		public void actionPerformed(ActionEvent e) { saveGame();}
+	};
+
+	Action loadBoard = new AbstractAction("Load"){
+		@Override
+		public void actionPerformed(ActionEvent e) { loadGame();}
 	};
 
 }

@@ -1,5 +1,6 @@
 package project.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -7,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Board {
@@ -30,6 +33,10 @@ public class Board {
 	 * The persistent map containing the items in the board.
 	 */
 	private PMap<Coordinate, BoardItem> items;
+
+	public HashMap<Coordinate, BoardItem> getItems(){
+		return new HashMap<Coordinate, BoardItem>(items);
+	}
 
 	/**
 	 * The current gamestate of the board, either won or in progress.
@@ -117,17 +124,16 @@ public class Board {
 	public Board setItem(BoardItem item) {
 		Board modifiedBoard = new Board(this);
 
-		if (item.coordinate.isLeft()) {
-			Coordinate coordinate = item.coordinate.left().get();
-			modifiedBoard.items = modifiedBoard.items.plus(coordinate, item);
+		Either<Coordinate, ArrayList<Coordinate>> coordinate = item.getCoordinate();
+
+		if (coordinate.isLeft()) {
+			modifiedBoard.items = modifiedBoard.items.plus(coordinate.left().get(), item);
 		}
 
-		if (item.coordinate.isRight()) {
-			Pair<Coordinate,Coordinate> coordinate =
-					item.coordinate.right().get();
-
-			modifiedBoard.items = modifiedBoard.items.plus(coordinate.left(), item);
-			modifiedBoard.items = modifiedBoard.items.plus(coordinate.right(), item);
+		if (coordinate.isRight()) {
+			ArrayList<Coordinate> coordinates = coordinate.right().get();
+			modifiedBoard.items = modifiedBoard.items.plus(coordinates.get(0), item);
+			modifiedBoard.items = modifiedBoard.items.plus(coordinates.get(1), item);
 		}
 
 		return modifiedBoard;
@@ -142,13 +148,6 @@ public class Board {
 		return this.items.get(coordinate);
 	}
 
-	/**
-	 * Returns the persistent map containing the items in the board.
-	 * @return The items in the board.
-	 */
-	public PMap<Coordinate, BoardItem> getItems() {
-		return items;
-	}
 
 	/**
 	 * Returns the map of items in a specific slice along a column.
