@@ -23,6 +23,11 @@ public class EmptyBoardItem extends SingleBoardItem {
         this.uIRepresentation = ItemUIRepresentation.EMPTY;
     }
 
+    public EmptyBoardItem(int row, int column) {
+        super(new Coordinate(row, column));
+        this.uIRepresentation = ItemUIRepresentation.EMPTY;
+    }
+
     /**
      * Returns the string representation of the board item.
      * @return The string representation.
