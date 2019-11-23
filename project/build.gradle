@@ -56,12 +56,6 @@ dependencies {
 	// persistent data structures	
 		compile 'org.pcollections:pcollections:3.1.0'
 		compile 'io.atlassian.fugue:fugue:4.7.1'
-
-    // Serialization
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.10.0'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-pcollections:2.10.0'
-  	compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.0'
 }
 
 test {

@@ -1,14 +1,9 @@
 package project.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import project.tui.ItemUIRepresentation;
-import project.xml.BoardItemSerializer;
 
-import java.io.Serializable;
-
-@JsonSerialize(using = BoardItemSerializer.class)
 public abstract class BoardItem implements MaybeObstacle {
     /**
      * Coordinates for the board item

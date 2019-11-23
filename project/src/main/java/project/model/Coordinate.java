@@ -1,8 +1,5 @@
 package project.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 /**
@@ -12,12 +9,10 @@ public class Coordinate {
     /**
      * The row of the coordinate.
      */
-    @JsonProperty("row")
     public final int row;
     /**
      * The column of the coordinate.
      */
-    @JsonProperty("column")
     public final int column;
 
     /**
@@ -25,9 +20,7 @@ public class Coordinate {
      * @param row The row of the coordinate.
      * @param column The column of the coordinate.
      */
-    @JsonCreator
-    public Coordinate(@JsonProperty("row") int row,
-                      @JsonProperty("column") int column) {
+    public Coordinate(int row, int column) {
         this.row = row;
         this.column = column;
     }

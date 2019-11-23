@@ -1,7 +1,5 @@
 package project.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import org.apache.logging.log4j.LogManager;
@@ -20,8 +18,7 @@ public class Rabbit extends SingleBoardItem implements Containable {
      * coordinates using coordinate parameter.
      * @param coordinate coordinate used where rabbit will be placed.
      */
-    @JsonCreator
-    public Rabbit(@JsonProperty("coordinate") Coordinate coordinate) {
+    public Rabbit(Coordinate coordinate) {
         super(coordinate);
         this.uIRepresentation = ItemUIRepresentation.RABBIT;
     }

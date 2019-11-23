@@ -1,7 +1,5 @@
 package project.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
@@ -29,8 +27,7 @@ public final class Mushroom extends SingleBoardItem implements Containable {
      * Creates a mushroom at a specific coordinate.
      * @param coordinate The coordinate where the mushroom is located.
      */
-    @JsonCreator
-    public Mushroom(@JsonProperty("coordinate") Coordinate coordinate) {
+    public Mushroom(Coordinate coordinate) {
         super(coordinate);
         this.uIRepresentation = ItemUIRepresentation.MUSHROOM;
     }

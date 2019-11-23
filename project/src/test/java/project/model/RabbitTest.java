@@ -1,11 +1,8 @@
 package project.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import org.junit.jupiter.api.Test;
-import project.xml.Mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -580,49 +577,49 @@ public final class RabbitTest {
                 " empty");
     }
 
-    @Test
-    public void testSerialization() {
-        ObjectMapper mapper = new Mapper();
-
-        Rabbit rabbit = new Rabbit(0, 0);
-        String expectedXml = "<Rabbit><coordinate><row>0</row><column>0" +
-                "</column" +
-                "></coordinate></Rabbit>";
-
-        try {
-            String xml = mapper.writeValueAsString(rabbit);
-            assertEquals(expectedXml, xml, "should be the same");
-
-        } catch (JsonProcessingException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testDeserialization() {
-
-        ObjectMapper mapper = new Mapper();
-
-        Rabbit expectedRabbit = new Rabbit(1, 1);
-        String xml = "<Rabbit><coordinate><row>1</row><column>1" +
-                "</column" +
-                "></coordinate></Rabbit>";
-
-
-        try {
-            Rabbit deserializedRabbit = mapper.readValue(xml, Rabbit.class);
-            assertEquals(expectedRabbit, deserializedRabbit, "they should be " +
-                    "the same");
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-
-    }
-
-
-
-
+//    @Test
+//    public void testSerialization() {
+//        ObjectMapper mapper = new Mapper();
+//
+//        Rabbit rabbit = new Rabbit(0, 0);
+//        String expectedXml = "<Rabbit><coordinate><row>0</row><column>0" +
+//                "</column" +
+//                "></coordinate></Rabbit>";
+//
+//        try {
+//            String xml = mapper.writeValueAsString(rabbit);
+//            assertEquals(expectedXml, xml, "should be the same");
+//
+//        } catch (JsonProcessingException e) {
+//            fail();
+//        }
+//    }
+//
+//    @Test
+//    public void testDeserialization() {
+//
+//        ObjectMapper mapper = new Mapper();
+//
+//        Rabbit expectedRabbit = new Rabbit(1, 1);
+//        String xml = "<Rabbit><coordinate><row>1</row><column>1" +
+//                "</column" +
+//                "></coordinate></Rabbit>";
+//
+//
+//        try {
+//            Rabbit deserializedRabbit = mapper.readValue(xml, Rabbit.class);
+//            assertEquals(expectedRabbit, deserializedRabbit, "they should be " +
+//                    "the same");
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//            fail();
+//        }
+//
+//
+//    }
+//
+//
+//
+//
 }
