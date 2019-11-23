@@ -55,7 +55,10 @@ dependencies {
 		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
 	// persistent data structures	
 		compile 'org.pcollections:pcollections:3.1.0'
-		compile 'io.atlassian.fugue:fugue:4.7.1'	
+		compile 'io.atlassian.fugue:fugue:4.7.1'
+
+    compile group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
+
 }
 
 test {
