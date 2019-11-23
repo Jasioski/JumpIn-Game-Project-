@@ -2,13 +2,8 @@ package project.view;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
-import javax.tools.Tool;
-
-import project.model.Board;
 
 /**
  * 
@@ -30,11 +25,11 @@ public class ApplicationPanel {
 	 */
 	private	JPanel outerFrame;
 
-	private GuiInnerComponents boardInnerComponents;
+	private Board boardInnerComponents;
 
 	public ApplicationPanel(ToolBar toolBar, ItemClickListener listener) {
 
-		boardInnerComponents = new GuiInnerComponents(listener);
+		boardInnerComponents = new Board(listener);
 
 		outerFrame = new JPanel(new BorderLayout(PADDING, PADDING));
 
@@ -52,7 +47,7 @@ public class ApplicationPanel {
 		return this.outerFrame;
 	}
 
-	public void setBoard(Board board) {
+	public void setBoard(project.model.Board board) {
 		this.boardInnerComponents.updateBoard(board);
 	}
 

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.*;
 import project.view.*;
+import project.view.Board;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,12 +16,12 @@ import java.awt.event.ActionEvent;
  */
 public class Application extends JFrame implements ItemClickListener {
 
-    public static Logger logger = LogManager.getLogger(GuiInnerComponents.class);
+    public static Logger logger = LogManager.getLogger(Board.class);
 
     /**
      * State of the board
      */
-    private Board board;
+    private project.model.Board board;
     /**
      * Root GUI component
      */
@@ -103,17 +104,17 @@ public class Application extends JFrame implements ItemClickListener {
     }
 
     private void undo() {
-		Board recalledMove = boardHistory.getUndoBoard();
+		project.model.Board recalledMove = boardHistory.getUndoBoard();
 		updateBoard(recalledMove);
     }
 
     private void redo() {
-        Board recalledMove = boardHistory.getRedoBoard();
+        project.model.Board recalledMove = boardHistory.getRedoBoard();
         updateBoard(recalledMove);
     }
 
 
-    private void updateBoard (Board newBoard) {
+    private void updateBoard (project.model.Board newBoard) {
         this.board = newBoard;
         this.frame.setBoard(newBoard);
 
@@ -154,7 +155,7 @@ public class Application extends JFrame implements ItemClickListener {
 
             // Apply to the board
             try {
-                Board appliedBoard = this.board.move(selectedItem.get(),
+                project.model.Board appliedBoard = this.board.move(selectedItem.get(),
                         destinationItem.get());
                 this.boardHistory.addState(appliedBoard);
                 updateBoard(appliedBoard);

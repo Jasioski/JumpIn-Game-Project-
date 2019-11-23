@@ -16,13 +16,8 @@ import javax.swing.border.*;
  * GuiInnerComponents initializes with the inner components of the GUI i.e., the board setup
  *
  */
-public class GuiInnerComponents {
+public class Board {
 
-	//View layer
-	/**
-	 * Logger that logs results of moves.
-	 */
-	public static Logger logger = LogManager.getLogger(GuiInnerComponents.class);
 	private ItemClickListener listener;
 	/**
 	 * Panel for the view layer.
@@ -30,28 +25,21 @@ public class GuiInnerComponents {
 	JPanel boardPanel;
 
 	/**
-	 * The border surrounding the board.
-	 */
-	private EmptyBorder border;
-
-	/**
 	 * Creates a gui for the inner components using an initial board state.
 	 */
-	public GuiInnerComponents(ItemClickListener listener) {
-		boardInnerComponents();
+	public Board(ItemClickListener listener) {
 		this.listener = listener;
-	}
 
-	private void boardInnerComponents() {
 		boardPanel = new JPanel(new GridLayout(6, 6));
 		boardPanel.setBorder(new LineBorder(Color.BLACK));
 		boardPanel.setLayout(new GridLayout(5, 5));
 	}
 
-	// update method
-	public void updateBoard(Board board) {
+	public void updateBoard(project.model.Board board) {
+		// Clear GUI State
 		boardPanel.removeAll();
 
+		// Rebuild GUI
 		for (int row = 0; row < board.numberOfRows; row++) {
 			for (int column = 0; column < board.numberOfColumns; column++) {
 				BoardItem modelItem = board.getItem(new Coordinate(row, column));
@@ -61,8 +49,8 @@ public class GuiInnerComponents {
 			}
 		}
 
+		// Render changes
 		boardPanel.repaint();
 		boardPanel.revalidate();
-		// updates the visuals
 	}
 }
