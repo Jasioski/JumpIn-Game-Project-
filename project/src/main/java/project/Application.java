@@ -160,6 +160,8 @@ public class Application extends JFrame implements ItemClickListener {
                 updateBoard(appliedBoard);
             } catch (InvalidMoveException e) {
                 logger.debug(e);
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Exception!"
+                        , 0);
             } finally {
                 // Clear selections
                 selectedItem = Optional.absent();
