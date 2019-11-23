@@ -1,13 +1,17 @@
 package project.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.pcollections.PMap;
+import project.xml.ContainerItemSerializer;
 
 /**
  * Represents a hole object on the board.
  */
+@JsonSerialize(using = ContainerItemSerializer.class)
 public abstract class ContainerItem extends SingleBoardItem {
     /**
      * The item that the hole may contain.
