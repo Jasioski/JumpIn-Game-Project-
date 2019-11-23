@@ -42,6 +42,9 @@ public class Application extends JFrame implements ItemClickListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             initializeGame();
+
+            setMessage("Make your move!");
+            updateBoard();
         }
     };
 
@@ -69,30 +72,27 @@ public class Application extends JFrame implements ItemClickListener {
         this.selectedItem = Optional.absent();
         this.destinationItem = Optional.absent();
 
-        initializeFrame();
         initializeGame();
+        initializeFrame();
+        setMessage("Make your move!");
     }
+
+    // TODO: Switch to event model
+    // this is fine for now, will address in other GUI tasks
 
     private void initializeGame() {
         this.board = new DefaultBoard().getBoard();
         this.boardHistory = new BoardHistory(this.board);
-
-        setMessage("Make your move!");
-        // TODO: send event of changing board
-
-        this.frame.setBoard(board);
-        this.pack();
     }
 
     private void initializeFrame() {
-
         toolBar = new ToolBar(this.newGame, this.undo, this.redo);
 
         // GUI Components
-        frame = new ApplicationPanel(toolBar, this);
+        frame = new ApplicationPanel(toolBar, this, this.board);
 
         // Frame
-        this.add(frame.getPanel());
+        this.add(frame);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Whether to use the native windowing systems default location
@@ -113,6 +113,9 @@ public class Application extends JFrame implements ItemClickListener {
         updateBoard(recalledMove);
     }
 
+    private void updateBoard () {
+        updateBoard(this.board);
+    }
 
     private void updateBoard (project.model.Board newBoard) {
         this.board = newBoard;

@@ -16,28 +16,32 @@ import javax.swing.border.*;
  * GuiInnerComponents initializes with the inner components of the GUI i.e., the board setup
  *
  */
-public class Board {
+public class Board extends JPanel {
 
 	private ItemClickListener listener;
-	/**
-	 * Panel for the view layer.
-	 */
-	JPanel boardPanel;
+	private project.model.Board board;
 
 	/**
 	 * Creates a gui for the inner components using an initial board state.
 	 */
-	public Board(ItemClickListener listener) {
-		this.listener = listener;
+	public Board(ItemClickListener listener, project.model.Board board) {
+		super(new GridLayout(board.numberOfRows,
+				board.numberOfColumns));
 
-		boardPanel = new JPanel(new GridLayout(6, 6));
-		boardPanel.setBorder(new LineBorder(Color.BLACK));
-		boardPanel.setLayout(new GridLayout(5, 5));
+		this.listener = listener;
+		this.board = board;
+
+		this.setBorder(new LineBorder(Color.BLACK));
+		this.setLayout(new GridLayout(board.numberOfRows,
+				board.numberOfColumns + 1));
+
+		render();
 	}
 
-	public void updateBoard(project.model.Board board) {
+	private void render() {
+
 		// Clear GUI State
-		boardPanel.removeAll();
+		this.removeAll();
 
 		// Rebuild GUI
 		for (int row = 0; row < board.numberOfRows; row++) {
@@ -45,12 +49,19 @@ public class Board {
 				BoardItem modelItem = board.getItem(new Coordinate(row, column));
 				JComponent viewItem = new GUIBoardItem(new Coordinate(row,
 						column), modelItem, this.listener);
-				this.boardPanel.add(viewItem);
+				this.add(viewItem);
 			}
 		}
 
 		// Render changes
-		boardPanel.repaint();
-		boardPanel.revalidate();
+		repaint();
+		revalidate();
+	}
+
+
+	public void updateBoard(project.model.Board board) {
+		this.board = board;
+
+		render();
 	}
 }

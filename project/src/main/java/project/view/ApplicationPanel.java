@@ -13,42 +13,33 @@ import javax.swing.border.EmptyBorder;
  * 
  *
  */
-public class ApplicationPanel {
+public class ApplicationPanel extends JPanel {
 
 	/**
 	 * Used for visual layout
 	 */
 	private static final int PADDING = 3;
 
-	/**
-	 * Root panel to be attached to a higher level component
-	 */
-	private	JPanel outerFrame;
+	private Board boardView;
 
-	private Board boardInnerComponents;
+	public ApplicationPanel(ToolBar toolBar,
+							ItemClickListener listener,
+							project.model.Board board) {
 
-	public ApplicationPanel(ToolBar toolBar, ItemClickListener listener) {
-
-		boardInnerComponents = new Board(listener);
-
-		outerFrame = new JPanel(new BorderLayout(PADDING, PADDING));
-
-		// TODO: this should not be changing here
-		// the inner components should not be affecting the outer
-		outerFrame.setBorder(new EmptyBorder(PADDING, PADDING, PADDING,
+		super(new BorderLayout(PADDING, PADDING));
+		this.setBorder(new EmptyBorder(PADDING, PADDING, PADDING,
 				PADDING));
 
-		outerFrame.add(toolBar, BorderLayout.PAGE_START);
+		// Create board
+		boardView = new Board(listener, board);
 
-		outerFrame.add(boardInnerComponents.boardPanel);
-	}
-
-	public JPanel getPanel() {
-		return this.outerFrame;
+		// Add board and toolbar
+		this.add(toolBar, BorderLayout.PAGE_START);
+		this.add(boardView);
 	}
 
 	public void setBoard(project.model.Board board) {
-		this.boardInnerComponents.updateBoard(board);
+		this.boardView.updateBoard(board);
 	}
 
 }
