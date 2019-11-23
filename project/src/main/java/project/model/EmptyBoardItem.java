@@ -1,5 +1,7 @@
 package project.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.tui.ItemUIRepresentation;
@@ -18,7 +20,8 @@ public class EmptyBoardItem extends SingleBoardItem {
      * Creates the empty board item at a coordinate.
      * @param coordinate The coordinate containing the empty space.
      */
-    public EmptyBoardItem(Coordinate coordinate) {
+    @JsonCreator
+    public EmptyBoardItem(@JsonProperty("coordinate") Coordinate coordinate) {
         super(coordinate);
         this.uIRepresentation = ItemUIRepresentation.EMPTY;
     }

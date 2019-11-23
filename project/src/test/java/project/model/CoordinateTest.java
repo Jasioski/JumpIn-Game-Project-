@@ -26,4 +26,25 @@ public class CoordinateTest  {
             fail();
         }
     }
+
+
+    @Test
+    public void testDeserialize() {
+        ObjectMapper mapper = new Mapper();
+
+        Coordinate expectedCoordinate = new Coordinate(1,1);
+        String xml = "<Coordinate><row>1</row><column>1</column>" +
+                "</Coordinate>";
+
+        try {
+            Coordinate deserializedCoordinate = mapper.readValue(xml,
+                    Coordinate.class);
+
+            assertNotNull(deserializedCoordinate, "should not be null");
+            assertEquals(expectedCoordinate, deserializedCoordinate, "should " +
+                    "be equal");
+        } catch (JsonProcessingException e) {
+            fail();
+        }
+    }
 }
