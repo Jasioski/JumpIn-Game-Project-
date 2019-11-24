@@ -32,6 +32,7 @@ public class Solver {
      * Helpful debugging tool used to log the moves given.
      * @param moves a list that contains valid moves
      */
+    @SuppressWarnings("PMD")
     private static void printMoves(List<Move> moves) {
         for (Move move: moves) {
             logger.debug(move);

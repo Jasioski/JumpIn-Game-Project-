@@ -250,20 +250,13 @@ public class BoardHistoryTest {
 
             assertEquals(history.getUndoBoard(), compareBoard1);
             assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
-            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
-            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
             assertEquals(history.getRedoBoard(), compareBoard1);
-            assertEquals(history.getRedoBoard(), board1);
-            assertEquals(history.getRedoBoard(), board1);
             assertEquals(history.getRedoBoard(), board1);
             assertEquals(history.getUndoBoard(), compareBoard1);
             assertEquals(history.getRedoBoard(), board1);
             assertEquals(history.getUndoBoard(), compareBoard1);
             assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
-            assertEquals(history.getUndoBoard(), defaultBoard.getBoard());
             assertEquals(history.getRedoBoard(), compareBoard1);
-            assertEquals(history.getRedoBoard(), board1);
-            assertEquals(history.getRedoBoard(), board1);
             assertEquals(history.getRedoBoard(), board1);
         }
         catch(Exception e){
