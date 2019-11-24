@@ -82,13 +82,16 @@ public class BoardHistoryTest {
             Board compareBoard1 = defaultBoard.getBoard();
             Board compareBoard2 = defaultBoard.getBoard();
 
-            board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
-            compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
-            compareBoard2.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            board1 = board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            compareBoard1 = compareBoard1.move(new Coordinate(3, 3),
+                    new Coordinate(3, 1));
+            compareBoard2 = compareBoard2.move(new Coordinate(3, 3),
+                    new Coordinate(3, 1));
             history.addState(board1);
 
-            board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
-            compareBoard2.move(new Coordinate(1, 1), new Coordinate(2, 1));
+            board1 = board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
+            compareBoard2 = compareBoard2.move(new Coordinate(1, 1),
+                    new Coordinate(2, 1));
             history.addState(board1);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
@@ -115,13 +118,18 @@ public class BoardHistoryTest {
             Board compareBoard1 = defaultBoard.getBoard();
             Board compareBoard2 = defaultBoard.getBoard();
 
-            board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
-            compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
-            compareBoard2.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            board1 = board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            compareBoard1 = compareBoard1.move(new Coordinate(3, 3),
+                    new Coordinate(3,
+                    1));
+            compareBoard2 = compareBoard2.move(new Coordinate(3, 3),
+                    new Coordinate(3,
+                    1));
             history.addState(board1);
 
-            board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
-            compareBoard2.move(new Coordinate(1, 1), new Coordinate(2, 1));
+            board1 = board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
+            compareBoard2 = compareBoard2.move(new Coordinate(1, 1),
+                    new Coordinate(2, 1));
             history.addState(board1);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
@@ -144,11 +152,12 @@ public class BoardHistoryTest {
 
             Board compareBoard1 = defaultBoard.getBoard();
 
-            board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
-            compareBoard1.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            board1 = board1.move(new Coordinate(3, 3), new Coordinate(3, 1));
+            compareBoard1 = compareBoard1.move(new Coordinate(3, 3),
+                    new Coordinate(3, 1));
             history.addState(board1);
 
-            board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
+            board1 = board1.move(new Coordinate(1, 1), new Coordinate(2, 1));
             history.addState(board1);
 
             assertEquals(history.getUndoBoard(), compareBoard1);
