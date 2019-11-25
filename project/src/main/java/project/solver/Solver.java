@@ -71,6 +71,9 @@ public class Solver {
 
         List<Move> reversed =  new ArrayList<>();
 
+        logger.debug("generated moves");
+        printMoves(reversed);
+
 
         for (int i = solutions.size() - 1; i >= 0; i--) {
             reversed.add(solutions.get(i));

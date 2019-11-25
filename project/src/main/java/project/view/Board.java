@@ -1,12 +1,8 @@
 package project.view;
 
 import project.model.*;
-import project.model.GameState;
 
 import java.awt.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.*;
