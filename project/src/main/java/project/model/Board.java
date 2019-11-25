@@ -9,6 +9,11 @@ import org.pcollections.PMap;
 
 import java.util.Objects;
 
+/**
+ * Creates and manages the state of the board by performing operations through
+ * various methods.
+ * Has methods to delegate slide and jump commands to the animals on the board.
+ */
 public class Board {
 
 	/**

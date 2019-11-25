@@ -502,8 +502,7 @@ class SolverTest {
 
         assertNotNull(moves);
 
-        for (int i = 0; i < moves.size(); i++) {
-            Move move = moves.get(i);
+        for (Move move : moves) {
             try {
                 board = board.move(move.initial, move.ending);
             } catch (Exception e) {

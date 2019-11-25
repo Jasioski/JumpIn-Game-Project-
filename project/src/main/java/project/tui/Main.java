@@ -13,6 +13,9 @@ import project.solver.Solver;
 
 public class Main {
 
+    /**
+     * The Logger used to log useful debug statements and errors.
+     */
     public static Logger logger = LogManager.getLogger(Main.class);
 
     @SuppressWarnings("PMD")
@@ -37,13 +40,13 @@ public class Main {
         print("Starting JumpIn");
         DefaultBoard defBoard = new DefaultBoard();
         Board board = defBoard.getBoard();
-        System.out.println(board.currentGameState);
-        System.out.println(board.getItem(new Coordinate(0,3)));
-        System.out.println(board.getItem(new Coordinate(4,2)));
-        System.out.println(board.getItem(new Coordinate(1,1)));
+        logger.debug(board.currentGameState);
+        logger.debug(board.getItem(new Coordinate(0,3)));
+        logger.debug(board.getItem(new Coordinate(4,2)));
+        logger.debug(board.getItem(new Coordinate(1,1)));
         Fox fox = (Fox) board.getItem(new Coordinate(1,1));
-        System.out.println(fox.orientation);
-        System.out.println(board.getItem(new Coordinate(3,2)));
+        logger.debug(fox.orientation);
+        logger.debug(board.getItem(new Coordinate(3,2)));
         // JumpIn client
         Scanner scanner = new Scanner(System.in);
 
@@ -62,20 +65,20 @@ public class Main {
                 }
 
                 if (command instanceof JumpInClient.FoxCommand) {
-                    System.out.println("In Fox");
+                    logger.trace("In Fox");
                     JumpInClient.FoxCommand foxCommand =
                             (JumpInClient.FoxCommand) command;
 
-                    System.out.println("Parsed Command");
+                    logger.trace("Parsed Command");
                     board = board.slide(foxCommand.direction,
                             foxCommand.moveSpaces,
                             foxCommand.coordinate);
-                    System.out.println("No error");
+                    logger.trace("No error");
                 }
                 solver.solve(board);
             }
             catch(Exception e) {
-                System.out.println(e);
+                logger.error(e);
             }
 
         }
