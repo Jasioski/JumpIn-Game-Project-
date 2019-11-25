@@ -36,11 +36,10 @@ public class BoardHistory {
 
     /**
      * Creates a move history, taking in an initial board to set as its first state.
-     * @param firstBoard The first board to be placed in the move history.
      */
-    public BoardHistory(Board firstBoard) {
+    public BoardHistory(Board board) {
         boardHistory = new ArrayList<>();
-        boardHistory.add(firstBoard);
+        boardHistory.add(board);
         currentMove = 0;
     }
 
