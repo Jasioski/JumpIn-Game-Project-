@@ -139,6 +139,9 @@ public class Application extends JFrame implements ItemClickListener {
 
         // We haven't selected an item
         if (!selectedItem.isPresent()) {
+            if (!(board.getItem(event.coordinate) instanceof Movable)) {
+                logger.debug("Non-movable selected");
+            }
             logger.trace("Selected item at coordinate " + event.coordinate);
             selectedItem = Optional.of(event.coordinate);
             return;

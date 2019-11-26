@@ -307,6 +307,7 @@ public class Board {
 
 		if (item instanceof Rabbit || item instanceof ContainerItem)  {
 			board = this.jump(direction, itemSelected);
+			return board;
 		}
 		if (item instanceof Fox) {
 			int moveSpaces = deltaCoordinate.row ;
@@ -315,8 +316,9 @@ public class Board {
 			}
 
 			board = this.slide(direction, Math.abs(moveSpaces), itemSelected);
+			return board;
 		}
-		return board;
+		throw new InvalidMoveException("Invalid move!");
 	}
 
 	/**
