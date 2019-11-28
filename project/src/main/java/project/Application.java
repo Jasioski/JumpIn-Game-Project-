@@ -128,7 +128,10 @@ public class Application extends JFrame implements ItemClickListener {
             int playAgain = JOptionPane.showConfirmDialog(this, "Do you want " +
                     "to play again?", "Reset?", dialogButton);
             if (playAgain == JOptionPane.YES_OPTION) {
+                logger.debug("Restart game");
 				this.initializeGame();
+                setMessage("Make your move!");
+                updateBoard();
             }
         }
     }
