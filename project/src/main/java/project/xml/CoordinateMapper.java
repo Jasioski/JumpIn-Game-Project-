@@ -18,8 +18,8 @@ public class CoordinateMapper {
 
     }
 
-    public static Coordinate deserialize(String xml) {
-
-    }
+//    public static Coordinate deserialize(String xml) {
+//
+//    }
 
 }

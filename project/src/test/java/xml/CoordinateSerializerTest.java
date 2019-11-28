@@ -3,31 +3,27 @@ package xml;
 import org.junit.jupiter.api.Test;
 import project.model.Coordinate;
 import project.xml.CoordinateMapper;
+import project.xml.Node;
+import project.xml.XMLParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CoordinateSerializerTest {
-
-    @Test
-    public void testSerialize () {
-        Coordinate coordinate = new Coordinate(0, 0);
-        String expectedXML ="<coordinate><row>0</row><column>0</column>" +
-                "</coordinate>";
-
-        String xml = CoordinateMapper.serialize(coordinate);
-
-        assertEquals(expectedXML, xml, "shouldb be the same");
-    }
 
 
     @Test
     public void testDeserializer() {
-        Coordinate coordinate = new Coordinate(0, 0);
-        String expectedXML ="<coordinate><row>0</row><column>0</column>" +
+        String xml ="<coordinate pair=true>"+
+                "<row>0</row>"+
+                "<column>2</column>"+
                 "</coordinate>";
 
+        XMLParser parser = new XMLParser(xml);
 
+        Node parsedNode = parser.deserialize();
 
-        assertEquals(expectedXML, xml, "shouldb be the same");
+        assertNotNull(parsedNode);
+
     }
 }
