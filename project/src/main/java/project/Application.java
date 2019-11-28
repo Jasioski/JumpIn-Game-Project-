@@ -41,10 +41,7 @@ public class Application extends JFrame implements ItemClickListener {
     private Action newGame = new AbstractAction("New") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            initializeGame();
-
-            setMessage("Make your move!");
-            updateBoard();
+            newGame();
         }
     };
 
@@ -62,8 +59,14 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    private void newGame() {
+        initializeGame();
+        setMessage("Make your move!");
+        updateBoard();
+    }
 
-    Application() {
+
+    private Application() {
         super("JumpIn");
 
         // Ensure resources are loaded;
@@ -129,9 +132,7 @@ public class Application extends JFrame implements ItemClickListener {
                     "to play again?", "Reset?", dialogButton);
             if (playAgain == JOptionPane.YES_OPTION) {
                 logger.debug("Restart game");
-				this.initializeGame();
-                setMessage("Make your move!");
-                updateBoard();
+				newGame();
             }
         }
     }
