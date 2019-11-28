@@ -403,6 +403,13 @@ public class Board {
 		return board;
 	}
 
+	public boolean isMovable(Coordinate coordinate) {
+		if (this.getItem(coordinate) instanceof Movable) {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Returns a string representation of the board.
 	 * @return The string representation.
