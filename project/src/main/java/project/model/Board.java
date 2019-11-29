@@ -403,9 +403,21 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Returns true if the object can move.
+	 * @param coordinate of where the object is on the board
+	 * @return true if the object is movable.
+	 */
 	public boolean isMovable(Coordinate coordinate) {
 		if (this.getItem(coordinate) instanceof Movable) {
 			return true;
+		}
+
+		if (this.getItem(coordinate) instanceof ContainerItem) {
+			ContainerItem item = (ContainerItem) this.getItem(coordinate);
+			if (item.isMovable()) {
+				return true;
+			}
 		}
 		return false;
 	}

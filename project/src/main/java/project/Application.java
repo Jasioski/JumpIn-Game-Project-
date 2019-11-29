@@ -147,6 +147,7 @@ public class Application extends JFrame implements ItemClickListener {
             //(board.getItem(event.coordinate) instanceof Movable)
             if (!board.isMovable(event.coordinate)) {
                 logger.debug("Non-movable selected");
+                return;
             }
             logger.trace("Selected item at coordinate " + event.coordinate);
             selectedItem = Optional.of(event.coordinate);
