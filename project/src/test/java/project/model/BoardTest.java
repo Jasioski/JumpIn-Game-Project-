@@ -222,4 +222,12 @@ public class BoardTest {
             fail();
         }
     }
+
+    @Test
+    void testXMLEmptyBoard() {
+        Board board = new Board(0, 0);
+
+        assertEquals("<Board></Board>", board.toXML(),
+                "Should be empty board XML.");
+    }
 }

@@ -184,4 +184,10 @@ public class Rabbit extends SingleBoardItem implements Containable, Movable {
 
         return false;
     }
+
+    @Override
+    public String toXML() {
+        //todo: xml representation.
+        return null;
+    }
 }

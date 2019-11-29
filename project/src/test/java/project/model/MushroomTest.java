@@ -8,14 +8,14 @@ public class MushroomTest {
 
     @Test
     void testMushroomMovable () {
-        Mushroom mushroom = new Mushroom(0,0);
+        Mushroom mushroom = new Mushroom(0, 0);
         BoardItem item = mushroom;
         assertFalse(item instanceof Movable);
     }
 
     @Test
     void testMushroomObstacle () {
-        Mushroom mushroom = new Mushroom(0,0);
+        Mushroom mushroom = new Mushroom(0, 0);
         BoardItem item = mushroom;
         assertTrue(item.isObstacle());
     }

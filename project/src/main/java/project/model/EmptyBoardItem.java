@@ -70,4 +70,10 @@ public class EmptyBoardItem extends SingleBoardItem {
 
         return false;
     }
+
+    @Override
+    public String toXML() {
+        //TODO: xml representation.
+        return null;
+    }
 }

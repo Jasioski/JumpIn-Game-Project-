@@ -111,4 +111,10 @@ public class Hole extends ContainerItem {
 
         return false;
     }
+
+    @Override
+    public String toXML() {
+        //TODO: xml representation.
+        return null;
+    }
 }

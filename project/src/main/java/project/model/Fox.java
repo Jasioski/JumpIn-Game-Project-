@@ -278,5 +278,9 @@ public class Fox extends BoardItem implements Movable {
         return false;
     }
 
-
+    @Override
+    public String toXML() {
+        //TODO: xml representation.
+        return null;
+    }
 }

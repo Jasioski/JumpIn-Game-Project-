@@ -536,4 +536,23 @@ public class Board {
 
 		return true;
 	}
+
+	/**
+	 * Will return the XML representation of the entire board and all the items
+	 * contained in the board.
+	 * @return the XML representation of the whole board.
+	 */
+	public String toXML() {
+		String xml = "<Board>";
+
+		//iterate through the map containing the items on the board.
+		for (Coordinate coordinate : items.keySet()) {
+			//append the string representation of the items on the board.
+			xml = xml + items.get(coordinate).toXML();
+		}
+
+		xml = xml + "</Board>";
+
+		return xml;
+	}
 }
