@@ -280,7 +280,16 @@ public class Fox extends BoardItem implements Movable {
 
     @Override
     public String toXML() {
-        //TODO: xml representation.
-        return null;
+        //<CoordinatePair headRow=0 headColumn=0 tailRow=1 tailColumn=1/>
+        String xml = "<Fox>";
+        Pair<Coordinate, Coordinate> coordinates = this.coordinate.right().get();
+
+        xml = xml + "<CoordinatePair headRow=" + coordinates.left().row +
+                " headColumn=" + coordinates.left().column + " tailRow=" +
+                coordinates.right().row + " tailColumn=" +
+                coordinates.right().column + "/>";
+
+        xml = xml + "</Fox>";
+        return xml;
     }
 }

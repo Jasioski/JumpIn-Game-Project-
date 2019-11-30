@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -545,10 +546,18 @@ public class Board {
 	public String toXML() {
 		String xml = "<Board>";
 
+		HashSet<BoardItem> items = new HashSet<>();
+
 		//iterate through the map containing the items on the board.
-		for (Coordinate coordinate : items.keySet()) {
+		for (Coordinate coordinate : this.items.keySet()) {
+			//remove duplicates if the item has more than 1 coordinate.
+			items.add(this.items.get(coordinate));
+		}
+
+		//iterate through the set containing the items on the board removing
+		for (BoardItem item : items) {
 			//append the string representation of the items on the board.
-			xml = xml + items.get(coordinate).toXML();
+			xml = xml + item.toXML();
 		}
 
 		xml = xml + "</Board>";

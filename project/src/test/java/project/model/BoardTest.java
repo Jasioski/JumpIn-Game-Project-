@@ -1,5 +1,6 @@
 package project.model;
 
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -253,5 +254,23 @@ public class BoardTest {
         assertEquals("<Board><Rabbit><Coordinate row=0 " +
                 "column=0/></Rabbit></Board>", board.toXML(), "XML " +
                 "representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithFox() {
+        Board board = new Board(1, 2);
+        Coordinate head = new Coordinate(0, 0);
+        Coordinate tail = new Coordinate(0, 1);
+
+        Pair<Coordinate, Coordinate> coordinates = Pair.pair(head, tail);
+
+        Fox fox = new Fox(coordinates);
+        BoardItem item = fox;
+
+        board = board.setItem(item);
+
+        assertEquals("<Board><Fox><CoordinatePair headRow=0 " +
+                "headColumn=0 tailRow=0 tailColumn=1/></Fox></Board>",
+                board.toXML(), "XML representations should be equal");
     }
 }
