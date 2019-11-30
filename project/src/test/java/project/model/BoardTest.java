@@ -230,4 +230,16 @@ public class BoardTest {
         assertEquals("<Board></Board>", board.toXML(),
                 "Should be empty board XML.");
     }
+
+    @Test
+    void testXMLBoardWithMushroom() {
+        Board board = new Board(1, 1);
+        Mushroom mushroom = new Mushroom(0, 0);
+
+        board = board.setItem(mushroom);
+
+        assertEquals("<Board><Mushroom><Coordinate row=0 " +
+                "column=0/></Mushroom></Board>", board.toXML(), "XML " +
+                "representations should be equal");
+    }
 }
