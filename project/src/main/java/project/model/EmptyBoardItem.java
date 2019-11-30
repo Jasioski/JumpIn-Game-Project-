@@ -73,7 +73,13 @@ public class EmptyBoardItem extends SingleBoardItem {
 
     @Override
     public String toXML() {
-        //TODO: xml representation.
-        return null;
+        String xml = "<Empty>";
+        Coordinate coordinate = this.coordinate.left().get();
+
+        xml = xml + "<Coordinate row=" + coordinate.row +
+                " column=" + coordinate.column + "/>";
+
+        xml = xml + "</Empty>";
+        return xml;
     }
 }

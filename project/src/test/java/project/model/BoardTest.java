@@ -257,6 +257,19 @@ public class BoardTest {
     }
 
     @Test
+    void testXMLBoardWithEmpty() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        EmptyBoardItem empty = new EmptyBoardItem(coordinate);
+
+        board = board.setItem(empty);
+
+        assertEquals("<Board><Empty><Coordinate row=0 " +
+                "column=0/></Empty></Board>", board.toXML(), "XML " +
+                "representations should be equal");
+    }
+
+    @Test
     void testXMLBoardWithFox() {
         Board board = new Board(1, 2);
         Coordinate head = new Coordinate(0, 0);
