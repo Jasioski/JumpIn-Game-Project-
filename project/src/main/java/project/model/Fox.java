@@ -278,6 +278,10 @@ public class Fox extends BoardItem implements Movable {
         return false;
     }
 
+    /**
+     * Will return the XML representation of this fox.
+     * @return the XML representation of the fox.
+     */
     @Override
     public String toXML() {
         //<CoordinatePair headRow=0 headColumn=0 tailRow=1 tailColumn=1/>
