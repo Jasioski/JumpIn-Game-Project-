@@ -112,9 +112,25 @@ public class Hole extends ContainerItem {
         return false;
     }
 
+    /**
+     * Will return the XML representation of this hole and any items inside
+     * of it.
+     * @return the XML representation of the elevated board item.
+     */
     @Override
     public String toXML() {
-        //TODO: xml representation.
-        return null;
+        String xml = "<Hole>";
+        Coordinate coordinate = this.coordinate.left().get();
+
+        xml = xml + "<Coordinate row=" + coordinate.row + " column=" +
+                coordinate.column + "/>";
+
+        if (containingItem.isPresent()) {
+            BoardItem item = (BoardItem) containingItem.get();
+            xml = xml + item.toXML();
+        }
+
+        xml = xml + "</Hole>";
+        return xml;
     }
 }

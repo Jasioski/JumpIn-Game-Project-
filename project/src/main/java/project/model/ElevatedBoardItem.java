@@ -114,7 +114,7 @@ public class ElevatedBoardItem extends ContainerItem {
 
     /**
      * Will return the XML representation of this elevated board item and
-     * aanyy items elevated by this item.
+     * anyy items elevated by this item.
      * @return the XML representation of the elevated board item.
      */
     @Override

@@ -286,4 +286,64 @@ public class BoardTest {
                 "headColumn=0 tailRow=0 tailColumn=1/></Fox></Board>",
                 board.toXML(), "XML representations should be equal");
     }
+
+    @Test
+    void testXMLBoardWithEmptyElevated() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        ElevatedBoardItem elevatedBoardItem =
+                new ElevatedBoardItem(coordinate, Optional.absent());
+
+        board = board.setItem(elevatedBoardItem);
+
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=0 " +
+                "column=0/></ElevatedBoardItem></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithRabbitOcuppyingElevated() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Rabbit rabbit = new Rabbit(coordinate);
+
+        ElevatedBoardItem elevatedBoardItem =
+                new ElevatedBoardItem(coordinate, Optional.of(rabbit));
+
+        board = board.setItem(elevatedBoardItem);
+
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=0 " +
+                        "column=0/><Rabbit><Coordinate row=0 column=0/>" +
+                        "</Rabbit></ElevatedBoardItem></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithEmptyHole() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Hole hole = new Hole(coordinate, Optional.absent());
+
+        board = board.setItem(hole);
+
+        assertEquals("<Board><Hole><Coordinate row=0 " +
+                        "column=0/></Hole></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithRabbitOcuppyingHole() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Rabbit rabbit = new Rabbit(coordinate);
+
+        Hole hole = new Hole(coordinate, Optional.of(rabbit));
+
+        board = board.setItem(hole);
+
+        assertEquals("<Board><Hole><Coordinate row=0 " +
+                        "column=0/><Rabbit><Coordinate row=0 column=0/>" +
+                        "</Rabbit></Hole></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
 }
