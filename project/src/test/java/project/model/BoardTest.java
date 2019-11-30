@@ -346,4 +346,27 @@ public class BoardTest {
                         "</Rabbit></Hole></Board>", board.toXML(),
                 "XML representations should be equal");
     }
+
+    @Test
+    void testXMLWriterWithHoleAndRabbit() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Rabbit rabbit = new Rabbit(coordinate);
+
+        Hole hole = new Hole(coordinate, Optional.of(rabbit));
+
+        board = board.setItem(hole);
+        String fileName = "testXMLWithHoleAndRabbit";
+
+        try {
+            board.writeToXMLFile(fileName);
+            assertEquals("<Board><Hole><Coordinate row=0 " +
+                            "column=0/><Rabbit><Coordinate row=0 column=0/>" +
+                            "</Rabbit></Hole></Board>",
+                    Board.readFromXMLFile(fileName),
+                    "XML representations should be equal");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        }
+    }
 }

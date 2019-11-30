@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.io.*;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -563,5 +564,48 @@ public class Board {
 		xml = xml + "</Board>";
 
 		return xml;
+	}
+
+	/**
+	 *
+	 * @param fileName
+	 * @throws IOException
+	 */
+	public void writeToXMLFile(String fileName) throws IOException {
+		//TODO: decide should this be static or not. Should it throw an
+		// Exception or should exception be handled here?
+		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName +
+				".XML"));
+		writer.write(this.toXML());
+		writer.close();
+	}
+
+	public static String readFromXMLFile(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(fileName +
+				".XML"));
+
+		String xmlRepresentation = "";
+		String currentLine = "";
+
+		while((currentLine = reader.readLine()) != null) {
+			xmlRepresentation = xmlRepresentation + currentLine;
+		}
+
+		return xmlRepresentation;
+	}
+
+	public static void main(String[] args) {
+		//TODO: delete this main.
+		Board board = new Board(2, 2);
+		Rabbit rabbit = new Rabbit(new Coordinate(0, 0));
+		board = board.setItem(rabbit);
+		try {
+			String fileName = "testXML";
+			board.writeToXMLFile(fileName);
+			System.out.println(Board.readFromXMLFile(fileName));
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
+
 	}
 }
