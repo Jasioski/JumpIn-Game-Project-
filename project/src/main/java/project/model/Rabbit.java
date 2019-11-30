@@ -185,9 +185,19 @@ public class Rabbit extends SingleBoardItem implements Containable, Movable {
         return false;
     }
 
+    /**
+     * Will return the XML representation of this rabbit.
+     * @return the XML representation of the rabbit.
+     */
     @Override
     public String toXML() {
-        //todo: xml representation.
-        return null;
+        String xml = "<Rabbit>";
+        Coordinate coordinate = this.coordinate.left().get();
+
+        xml = xml + "<Coordinate row=" + coordinate.row +
+                " column=" + coordinate.column + "/>";
+
+        xml = xml + "</Rabbit>";
+        return xml;
     }
 }

@@ -242,4 +242,16 @@ public class BoardTest {
                 "column=0/></Mushroom></Board>", board.toXML(), "XML " +
                 "representations should be equal");
     }
+
+    @Test
+    void testXMLBoardWithRabbit() {
+        Board board = new Board(1, 1);
+        Rabbit rabbit = new Rabbit(0, 0);
+
+        board = board.setItem(rabbit);
+
+        assertEquals("<Board><Rabbit><Coordinate row=0 " +
+                "column=0/></Rabbit></Board>", board.toXML(), "XML " +
+                "representations should be equal");
+    }
 }
