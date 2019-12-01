@@ -9,7 +9,7 @@ import project.tui.ItemUIRepresentation;
 
 import java.util.HashSet;
 
-public class Rabbit extends SingleBoardItem implements Containable {
+public class Rabbit extends SingleBoardItem implements Containable, Movable {
 
     private static Logger logger = LogManager.getLogger(Board.class);
 

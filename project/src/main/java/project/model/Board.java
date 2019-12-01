@@ -307,6 +307,7 @@ public class Board {
 
 		if (item instanceof Rabbit || item instanceof ContainerItem)  {
 			board = this.jump(direction, itemSelected);
+			return board;
 		}
 		if (item instanceof Fox) {
 			int moveSpaces = deltaCoordinate.row ;
@@ -315,8 +316,9 @@ public class Board {
 			}
 
 			board = this.slide(direction, Math.abs(moveSpaces), itemSelected);
+			return board;
 		}
-		return board;
+		throw new InvalidMoveException("Invalid move!");
 	}
 
 	/**
@@ -399,6 +401,25 @@ public class Board {
 		Board board = new Board(this, currentGameState);
 
 		return board;
+	}
+
+	/**
+	 * Returns true if the object can move.
+	 * @param coordinate of where the object is on the board
+	 * @return true if the object is movable.
+	 */
+	public boolean isMovable(Coordinate coordinate) {
+		if (this.getItem(coordinate) instanceof Movable) {
+			return true;
+		}
+
+		if (this.getItem(coordinate) instanceof ContainerItem) {
+			ContainerItem item = (ContainerItem) this.getItem(coordinate);
+			if (item.isMovable()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

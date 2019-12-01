@@ -69,6 +69,43 @@ public class ContainerItemTest {
     }
 
     @Test
+    void testIsMovableWithoutItem() {
+
+        Coordinate holeCoordinate = new Coordinate(0, 0);
+        ContainerItem containerItem = new Hole(holeCoordinate,
+                Optional.absent());
+
+        assertFalse(containerItem.isMovable(),
+                "the hole is not a movable when empty");
+    }
+
+    @Test
+    void testIsMovableWithItemThatIsMovable() {
+        Rabbit rabbit = new Rabbit(new Coordinate(0,0));
+        Optional<Containable>  containableRabbit = Optional.of(rabbit);
+
+        Coordinate holeCoordinate = new Coordinate(0, 0);
+        ContainerItem containerItem = new Hole(holeCoordinate,
+                containableRabbit);
+
+        assertTrue(containerItem.isMovable(),
+                "the hole is a movable when containing a rabbit");
+    }
+
+    @Test
+    void testIsMovableWithItemThatIsNotMovable() {
+        Mushroom mushroom = new Mushroom(new Coordinate(0,0));
+        Optional<Containable>  containableMushroom = Optional.of(mushroom);
+
+        Coordinate holeCoordinate = new Coordinate(0, 0);
+        ContainerItem containerItem = new Hole(holeCoordinate,
+                containableMushroom);
+
+        assertFalse(containerItem.isMovable(),
+                "the hole is not a movable when containing a mushroom");
+    }
+
+    @Test
     void testJumpRabbitOutOfHole(){
         // Slice setup
         // H(R) M E
