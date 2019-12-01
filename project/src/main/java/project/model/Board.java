@@ -594,15 +594,16 @@ public class Board {
 		return xmlRepresentation;
 	}
 
+	@SuppressWarnings("PMD.UseVarargs")
 	public static void main(String[] args) {
-		//TODO: delete this main.
-		Board board = new Board(2, 2);
-		Rabbit rabbit = new Rabbit(new Coordinate(0, 0));
-		board = board.setItem(rabbit);
+		//TODO: Helpful main used to test out the xml writer. Delete before
+		// merging to master.
+		DefaultBoard defaultBoard = new DefaultBoard();
+		Board board = new Board(defaultBoard.getBoard());
 		try {
 			String fileName = "testXML";
 			board.writeToXMLFile(fileName);
-			System.out.println(Board.readFromXMLFile(fileName));
+			logger.debug(Board.readFromXMLFile(fileName));
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 		}
