@@ -58,6 +58,18 @@ public class Application extends JFrame implements ItemClickListener {
             redo();
         }
     };
+    private Action save = new AbstractAction("Save") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            save();
+        }
+    };
+    private Action load = new AbstractAction("Load") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            load();
+        }
+    };
 
     private void newGame() {
         initializeGame();
@@ -89,7 +101,7 @@ public class Application extends JFrame implements ItemClickListener {
     }
 
     private void initializeFrame() {
-        toolBar = new ToolBar(this.newGame, this.undo, this.redo);
+        toolBar = new ToolBar(this.newGame, this.save, this.load, this.undo, this.redo);
 
         // GUI Components
         frame = new ApplicationPanel(toolBar, this, this.board);
@@ -115,6 +127,15 @@ public class Application extends JFrame implements ItemClickListener {
         project.model.Board recalledMove = boardHistory.getRedoBoard();
         updateBoard(recalledMove);
     }
+    private void save() {
+     //   project.model.Board recalledMove = boardHistory.getRedoBoard();
+    //    updateBoard(recalledMove);
+    }
+    private void load() {
+     //   project.model.Board recalledMove = boardHistory.getRedoBoard();
+      //  updateBoard(recalledMove);
+    }
+
 
     private void updateBoard () {
         updateBoard(this.board);

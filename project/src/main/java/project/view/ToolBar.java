@@ -7,7 +7,7 @@ public class ToolBar extends JPanel {
 
     private JLabel message;
 
-    public ToolBar(Action newGame, Action undo, Action redo) {
+    public ToolBar(Action newGame, Action save, Action load, Action undo, Action redo) {
 
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
@@ -15,8 +15,11 @@ public class ToolBar extends JPanel {
         tools.addSeparator();
 
         tools.add(newGame);
+        tools.add(save);
+        tools.add(load);
         tools.add(undo);
         tools.add(redo);
+
 
         message = new JLabel();
         tools.add(message);
