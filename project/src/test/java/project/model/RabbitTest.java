@@ -581,9 +581,11 @@ public final class RabbitTest {
     void testXML () {
         Rabbit rabbit = new Rabbit(1, 3);
         BoardItem item = rabbit;
-        assertEquals("<Rabbit><Coordinate row=1 column=3/></Rabbit>",
+        assertEquals("<Rabbit><Coordinate row=" + '"' + 1 + '"' + " column=" + '"' + 3 + '"' +
+                        "/></Rabbit>",
                 rabbit.toXML(), "The XML representation should be equal");
-        assertEquals("<Rabbit><Coordinate row=1 column=3/></Rabbit>",
+        assertEquals("<Rabbit><Coordinate row=" + '"' + 1 + '"' + " column=" + '"' + 3 + '"' +
+                        "/></Rabbit>",
                 item.toXML(), "The XML representation should be equal");
     }
 }

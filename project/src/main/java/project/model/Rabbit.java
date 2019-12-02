@@ -194,8 +194,8 @@ public class Rabbit extends SingleBoardItem implements Containable, Movable {
         String xml = "<Rabbit>";
         Coordinate coordinate = this.coordinate.left().get();
 
-        xml = xml + "<Coordinate row=" + coordinate.row +
-                " column=" + coordinate.column + "/>";
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' +
+                " column=" + '"' + coordinate.column + '"' + "/>";
 
         xml = xml + "</Rabbit>";
         return xml;

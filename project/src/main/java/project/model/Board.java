@@ -814,7 +814,7 @@ public class Board {
 				System.out.println("--------------------------");
 				board = board.setItem(Board.itemFromXML(boardElements.item(count)));
 
-				//TODO: Delete thisi test adding items to the new board from
+				//TODO: Delete this test adding items to the new board from
 				// XML.
 				System.out.println(board.toString());
 			}

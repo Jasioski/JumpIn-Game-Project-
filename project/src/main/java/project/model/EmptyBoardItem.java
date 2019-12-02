@@ -80,8 +80,8 @@ public class EmptyBoardItem extends SingleBoardItem {
         String xml = "<Empty>";
         Coordinate coordinate = this.coordinate.left().get();
 
-        xml = xml + "<Coordinate row=" + coordinate.row +
-                " column=" + coordinate.column + "/>";
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' +
+                " column=" + '"' + coordinate.column + '"' + "/>";
 
         xml = xml + "</Empty>";
         return xml;

@@ -241,11 +241,13 @@ public class FoxTest {
         Fox fox = new Fox(coordinates);
         BoardItem item = fox;
 
-        assertEquals("<Fox><CoordinatePair headRow=0 headColumn=0 " +
-                        "tailRow=0 tailColumn=1/></Fox>",
+        assertEquals("<Fox><CoordinatePair headRow=" + '"' + 0 + '"' + " " +
+                        "headColumn=" + '"' + 0 + '"' +
+                        " tailRow=" + '"' + 0 + '"' + " tailColumn=" + '"' + 1 + '"' + "/></Fox>",
                 fox.toXML(), "The XML representation should be equal");
-        assertEquals("<Fox><CoordinatePair headRow=0 headColumn=0 " +
-                        "tailRow=0 tailColumn=1/></Fox>",
+        assertEquals("<Fox><CoordinatePair headRow=" + '"' + 0 + '"' +
+                        " headColumn=" + '"' + 0 + '"' + " tailRow=" + '"' + 0 + '"' +
+                        " tailColumn=" + '"' + 1 + '"' + "/></Fox>",
                 item.toXML(), "The XML representation should be equal");
     }
 }

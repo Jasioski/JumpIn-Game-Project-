@@ -13,8 +13,9 @@ public class ElevatedBoardItemTest {
         ElevatedBoardItem elevatedBoardItem =
                 new ElevatedBoardItem(coordinate, Optional.absent());
 
-        assertEquals("<ElevatedBoardItem><Coordinate row=0 " +
-                "column=0/></ElevatedBoardItem>", elevatedBoardItem.toXML(),
+        assertEquals("<ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></ElevatedBoardItem>",
+                elevatedBoardItem.toXML(),
                 "The xml representations should be the same.");
 
     }
@@ -27,9 +28,10 @@ public class ElevatedBoardItemTest {
         ElevatedBoardItem elevatedBoardItem =
                 new ElevatedBoardItem(coordinate, Optional.of(rabbit));
 
-        assertEquals("<ElevatedBoardItem><Coordinate row=0 " +
-                        "column=0/><Rabbit><Coordinate row=0 " +
-                        "column=0/></Rabbit></ElevatedBoardItem>",
+        assertEquals("<ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/><Rabbit><Coordinate " +
+                        "row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' + "/>" +
+                        "</Rabbit></ElevatedBoardItem>",
                 elevatedBoardItem.toXML(),
                 "The xml representations should be the same.");
 
