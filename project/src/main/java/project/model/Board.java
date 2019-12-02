@@ -619,11 +619,15 @@ public class Board {
 
 					//If it has more than 1 child, its containable item
 					if (node.getChildNodes().getLength() != 1) {
+
+						System.out.println("CONTAINER!");
+
 						Optional<Containable> optional =
 								Optional.of(new Rabbit(-1, -1));
 						Coordinate containableCoordinate =
 								Board.coordinateFromXML(node.getChildNodes());
 
+						System.out.println("Coords: " + containableCoordinate.toString());
 						for (int i = 0; i < node.getChildNodes().getLength(); i++) {
 
 							if (node.getChildNodes().item(i).getNodeName().equals("Rabbit")) {
@@ -646,6 +650,13 @@ public class Board {
 							//if optional is -1, -1 coordinate. This is broken.
 							itemToAdd =
 									new ElevatedBoardItem(containableCoordinate, optional);
+						}
+
+						if (node.getNodeName().equals(
+								"Hole")) {
+							//if optional is -1, -1 coordinate. This is broken.
+							itemToAdd =
+									new Hole(containableCoordinate, optional);
 						}
 
 					} else {
@@ -878,12 +889,19 @@ public class Board {
 	public static void main(String[] args) {
 		//TODO: Helpful main used to test out the xml writer. Delete before
 		// merging to master.
-		DefaultBoard defaultBoard = new DefaultBoard();
+
+		DefaultBoard def = new DefaultBoard();
+
+		Board defaultBoard = new Board(def.getBoard());
+
 		Board board = new Board(1, 1);
 		Rabbit rabbit = new Rabbit(0, 0);
 		board = board.setItem(rabbit);
 		try {
-			String fileName = "testXML";
+			defaultBoard.writeToXMLFile("DefaultBoard");
+
+
+			String fileName = "testXMLContainable";
 		//	board.writeToXMLFile(fileName);
 			Board.boardFromXML(fileName);
 			logger.debug(Board.readFromXMLFile(fileName));

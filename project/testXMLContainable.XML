@@ -1,1 +1,1 @@
-<Board><Rabbit><Coordinate row="0" column="0"/></Rabbit><Hole><Coordinate row="1" column="2"/><Rabbit><Coordinate row="1" column="2"/></Rabbit></Hole><Fox><CoordinatePair headRow="2" headColumn="2" tailRow="2" tailColumn="3"/></Fox></Board>
+<Board><Rabbit><Coordinate row="0" column="0"/></Rabbit><Hole><Coordinate row="1" column="2"/><Rabbit><Coordinate row="1" column="2"/></Rabbit></Hole></Board>
