@@ -8,8 +8,17 @@ import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
+
+
+
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.*;
 
 /**
  * Creates and manages the state of the board by performing operations through
@@ -594,15 +603,265 @@ public class Board {
 		return xmlRepresentation;
 	}
 
+	private static BoardItem itemsFromXML(NodeList nodeList) {
+
+		for (int count = 0; count < nodeList.getLength(); count++) {
+			Node tempNode = nodeList.item(count);
+
+			//make sure its an element
+			if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				if (!tempNode.getNodeName().equals("Coordinate")) {
+
+					if (tempNode.getChildNodes().getLength() != 1) {
+						//Containables could contain an element meaning they
+						// have more than 1 child node.
+						return itemsFromXML(tempNode.getChildNodes());
+					}
+
+					if (tempNode.getNodeName().equals("Fox")) {
+						//returns the fox object to add. Must get a pair of
+						// coordinates to create the fox
+						Pair<Coordinate, Coordinate> coordinates =
+								Board.foxCoordinateFromXML(tempNode.getChildNodes());
+
+						Fox fox = new Fox(coordinates);
+						return fox;
+
+					} else {
+						//returns the object to add. Only 1 coordinate needed
+						// to construct object.
+						Coordinate coordinate =
+								Board.coordinateFromXML(tempNode.getChildNodes());
+
+						if (tempNode.getNodeName().equals("Empty")) {
+							return new EmptyBoardItem(coordinate);
+						}
+
+						//todo: continue logic. Figure out how to deal with
+						// optionals...
+
+
+					}
+
+				}
+
+			}
+		}
+
+		return new EmptyBoardItem(new Coordinate(-1, -1));
+	}
+
+	private static Pair<Coordinate, Coordinate> foxCoordinateFromXML(NodeList nodeList) {
+		int headRow = -1;
+		int headColumn = -1;
+		int tailRow = -1;
+		int tailColumn = -1;
+
+		for (int count = 0; count < nodeList.getLength(); count++) {
+			Node tempNode = nodeList.item(count);
+
+			if (tempNode.getNodeName().equals("Coordinate")) {
+				// get attributes names and values
+				NamedNodeMap nodeMap = tempNode.getAttributes();
+
+
+				for (int i = 0; i < nodeMap.getLength(); i++) {
+
+					Node node = nodeMap.item(i);
+
+					if (node.getNodeName().equals("headRow")) {
+						headRow = Integer.parseInt(node.getNodeValue());
+					}
+
+					if (node.getNodeName().equals("headColumn")) {
+						headColumn = Integer.parseInt(node.getNodeValue());
+					}
+
+					if (node.getNodeName().equals("tailRow")) {
+						tailRow = Integer.parseInt(node.getNodeValue());
+					}
+
+					if (node.getNodeName().equals("tailColumn")) {
+						tailColumn = Integer.parseInt(node.getNodeValue());
+					}
+
+				}
+			}
+		}
+
+		if (headRow == -1 || headColumn == -1 || tailRow == -1 || tailColumn == -1) {
+			throw new RuntimeException("Getting coordinate is broken!");
+		}
+
+		Coordinate head = new Coordinate(headRow, headColumn);
+		Coordinate tail = new Coordinate(tailRow, tailColumn);
+
+		return Pair.pair(head, tail);
+
+	}
+
+	private static Coordinate coordinateFromXML(NodeList nodeList) {
+
+		int row = -1;
+		int column = -1;
+
+		for (int count = 0; count < nodeList.getLength(); count++) {
+			Node tempNode = nodeList.item(count);
+
+			if (tempNode.getNodeName().equals("Coordinate")) {
+				// get attributes names and values
+				NamedNodeMap nodeMap = tempNode.getAttributes();
+
+
+				for (int i = 0; i < nodeMap.getLength(); i++) {
+
+					Node node = nodeMap.item(i);
+
+					if (node.getNodeName().equals("row")) {
+						row = Integer.parseInt(node.getNodeValue());
+					}
+
+					if (node.getNodeName().equals("column")) {
+						column = Integer.parseInt(node.getNodeValue());
+					}
+
+				}
+			}
+		}
+
+		if (row == -1 || column == -1) {
+			throw new RuntimeException("Getting coordinate is broken!");
+		}
+		return new Coordinate(row, column);
+	}
+
+	private static void printNote(NodeList nodeList) {
+
+		//TODO: Delete this method once parsing is finished. Use for
+		// reference only!!!
+		for (int count = 0; count < nodeList.getLength(); count++) {
+
+			Node tempNode = nodeList.item(count);
+
+			// make sure it's element node.
+			if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				// get node name and value
+				System.out.println("\nNode Name =" + tempNode.getNodeName() + " [OPEN]");
+				System.out.println("Node Value =" + tempNode.getTextContent());
+
+				if (tempNode.hasAttributes()) {
+
+					// get attributes names and values
+					NamedNodeMap nodeMap = tempNode.getAttributes();
+
+					for (int i = 0; i < nodeMap.getLength(); i++) {
+
+						Node node = nodeMap.item(i);
+						System.out.println("attr name : " + node.getNodeName());
+						System.out.println("attr value : " + node.getNodeValue());
+
+					}
+
+				}
+
+				if (tempNode.hasChildNodes()) {
+
+					// loop again if has child nodes
+					printNote(tempNode.getChildNodes());
+
+				}
+
+				System.out.println("Node Name =" + tempNode.getNodeName() + " [CLOSE]");
+
+			}
+
+		}
+
+	}
+
+	public static Board boardFromXML(String fileName) {
+
+		try {
+
+			File file = new File(fileName + ".XML");
+
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+
+			Document doc = dBuilder.parse(file);
+
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+			if (doc.hasChildNodes()) {
+
+				printNote(doc.getChildNodes());
+
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+
+/*
+		try {
+
+			File fXmlFile = new File(fileName + ".XML");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+			//optional, but recommended
+			//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+			NodeList nList = doc.getElementsByTagName("Coordinate");
+
+			System.out.println("----------------------------");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					System.out.println(eElement);
+
+					System.out.println("First Name : " + eElement.getElementsByTagName("Rabbit").item(0));
+					System.out.println("Last Name : " + eElement.getElementsByTagName("Coordinate").item(0));
+					System.out.println("Staff id : " + eElement.getAttribute("row"));
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		*/
+		//TODO: Logic for this method.
+		return new Board(-1, -1);
+	}
+
+
 	@SuppressWarnings("PMD.UseVarargs")
 	public static void main(String[] args) {
 		//TODO: Helpful main used to test out the xml writer. Delete before
 		// merging to master.
 		DefaultBoard defaultBoard = new DefaultBoard();
-		Board board = new Board(defaultBoard.getBoard());
+		Board board = new Board(1, 1);
+		Rabbit rabbit = new Rabbit(0, 0);
+		board = board.setItem(rabbit);
 		try {
 			String fileName = "testXML";
-			board.writeToXMLFile(fileName);
+		//	board.writeToXMLFile(fileName);
+			Board.boardFromXML(fileName);
 			logger.debug(Board.readFromXMLFile(fileName));
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
