@@ -1,5 +1,6 @@
 package project.model;
 
+import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -603,53 +604,100 @@ public class Board {
 		return xmlRepresentation;
 	}
 
-	private static BoardItem itemsFromXML(NodeList nodeList) {
+	private static BoardItem itemFromXML(Node node) {
+		Coordinate failCoord = new Coordinate(-1, -1);
+		BoardItem itemToAdd = new EmptyBoardItem(failCoord);
 
-		for (int count = 0; count < nodeList.getLength(); count++) {
-			Node tempNode = nodeList.item(count);
+			System.out.println("Looping through childs" + " : " + node);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
 
-			//make sure its an element
-			if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+				System.out.println("ELEMENTNODE!!!!!!!!!!!!! : " +
+						node.getNodeName());
+				if (!node.getNodeName().equals("Coordinate")) {
 
-				if (!tempNode.getNodeName().equals("Coordinate")) {
+					System.out.println("COOOOOOORDINATES!!!!!!!!!!!!!");
 
-					if (tempNode.getChildNodes().getLength() != 1) {
-						//Containables could contain an element meaning they
-						// have more than 1 child node.
-						return itemsFromXML(tempNode.getChildNodes());
-					}
+					//If it has more than 1 child, its containable item
+					if (node.getChildNodes().getLength() != 1) {
+						Optional<Containable> optional =
+								Optional.of(new Rabbit(-1, -1));
+						Coordinate containableCoordinate =
+								Board.coordinateFromXML(node.getChildNodes());
 
-					if (tempNode.getNodeName().equals("Fox")) {
-						//returns the fox object to add. Must get a pair of
-						// coordinates to create the fox
-						Pair<Coordinate, Coordinate> coordinates =
-								Board.foxCoordinateFromXML(tempNode.getChildNodes());
+						for (int i = 0; i < node.getChildNodes().getLength(); i++) {
 
-						Fox fox = new Fox(coordinates);
-						return fox;
+							if (node.getChildNodes().item(i).getNodeName().equals("Rabbit")) {
+								Rabbit rabbit = new Rabbit (containableCoordinate);
+								optional = Optional.of(rabbit);
+							}
 
-					} else {
-						//returns the object to add. Only 1 coordinate needed
-						// to construct object.
-						Coordinate coordinate =
-								Board.coordinateFromXML(tempNode.getChildNodes());
+							if (node.getChildNodes().item(i).getNodeName().equals("Mushroom")) {
+								Mushroom mushroom =
+										new Mushroom(containableCoordinate);
+								optional = Optional.of(mushroom);
+							}
 
-						if (tempNode.getNodeName().equals("Empty")) {
-							return new EmptyBoardItem(coordinate);
+
+
 						}
 
-						//todo: continue logic. Figure out how to deal with
-						// optionals...
+						if (node.getNodeName().equals(
+								"ElevatedBoardItem")) {
+							//if optional is -1, -1 coordinate. This is broken.
+							itemToAdd =
+									new ElevatedBoardItem(containableCoordinate, optional);
+						}
 
+					} else {
+						System.out.println(node.getNodeName() + " <----");
+						//not containable
+						if (node.getNodeName().equals("Fox")) {
+							Pair<Coordinate, Coordinate> coordinates =
+									Board.foxCoordinateFromXML(node.getChildNodes());
+
+							itemToAdd = new Fox(coordinates);
+
+						} else {
+
+							System.out.println(node.getNodeName() + " <----");
+							//Only 1 coordinate
+							Coordinate coordinate =
+									Board.coordinateFromXML(node.getChildNodes());
+
+							if (node.getNodeName().equals("Empty")) {
+								itemToAdd = new EmptyBoardItem(coordinate);
+							}
+
+							else if (node.getNodeName().equals("Hole")) {
+								itemToAdd = new Hole(coordinate,
+									Optional.absent());
+							}
+
+							else if (node.getNodeName().equals(
+									"ElevatedBoardItem")) {
+								itemToAdd = new ElevatedBoardItem(coordinate,
+										Optional.absent());
+							}
+
+							else if (node.getNodeName().equals("Rabbit")) {
+								itemToAdd = new Rabbit(coordinate);
+							}
+
+							else if (node.getNodeName().equals(
+									"Mushroom")) {
+								itemToAdd = new Mushroom(coordinate);
+							}
+
+						}
 
 					}
 
 				}
 
 			}
-		}
 
-		return new EmptyBoardItem(new Coordinate(-1, -1));
+		System.out.println(itemToAdd);
+		return itemToAdd;
 	}
 
 	private static Pair<Coordinate, Coordinate> foxCoordinateFromXML(NodeList nodeList) {
@@ -660,8 +708,9 @@ public class Board {
 
 		for (int count = 0; count < nodeList.getLength(); count++) {
 			Node tempNode = nodeList.item(count);
+			System.out.println(tempNode);
 
-			if (tempNode.getNodeName().equals("Coordinate")) {
+			if (tempNode.getNodeName().equals("CoordinatePair")) {
 				// get attributes names and values
 				NamedNodeMap nodeMap = tempNode.getAttributes();
 
@@ -691,6 +740,7 @@ public class Board {
 		}
 
 		if (headRow == -1 || headColumn == -1 || tailRow == -1 || tailColumn == -1) {
+			System.out.println(headRow);
 			throw new RuntimeException("Getting coordinate is broken!");
 		}
 
@@ -703,11 +753,14 @@ public class Board {
 
 	private static Coordinate coordinateFromXML(NodeList nodeList) {
 
+		System.out.println("testing coordinates");
 		int row = -1;
 		int column = -1;
 
 		for (int count = 0; count < nodeList.getLength(); count++) {
 			Node tempNode = nodeList.item(count);
+
+			System.out.println(tempNode.getNodeName());
 
 			if (tempNode.getNodeName().equals("Coordinate")) {
 				// get attributes names and values
@@ -731,9 +784,48 @@ public class Board {
 		}
 
 		if (row == -1 || column == -1) {
+			System.out.println(row + " : " + column);
 			throw new RuntimeException("Getting coordinate is broken!");
 		}
+		System.out.println("returning coords:" + row);
 		return new Coordinate(row, column);
+	}
+
+
+	public static Board boardFromXML(String fileName) {
+
+		try {
+
+			File file = new File(fileName + ".XML");
+
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+
+			Document doc = dBuilder.parse(file);
+
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+			Board board = new Board(5, 5);
+
+			NodeList boardElements = doc.getDocumentElement().getChildNodes();
+			for (int count = 0; count < boardElements.getLength(); count++) {
+				//loop through the items and add them to the board
+
+				System.out.println("--------------------------");
+				board = board.setItem(Board.itemFromXML(boardElements.item(count)));
+
+				//TODO: Delete thisi test adding items to the new board from
+				// XML.
+				System.out.println(board.toString());
+			}
+
+			return board;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			throw new IllegalArgumentException("BoardFromXML broken!");
+		}
+
 	}
 
 	private static void printNote(NodeList nodeList) {
@@ -779,74 +871,6 @@ public class Board {
 
 		}
 
-	}
-
-	public static Board boardFromXML(String fileName) {
-
-		try {
-
-			File file = new File(fileName + ".XML");
-
-			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-
-			Document doc = dBuilder.parse(file);
-
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-			if (doc.hasChildNodes()) {
-
-				printNote(doc.getChildNodes());
-
-			}
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-
-
-/*
-		try {
-
-			File fXmlFile = new File(fileName + ".XML");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-
-			//optional, but recommended
-			//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-			doc.getDocumentElement().normalize();
-
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-			NodeList nList = doc.getElementsByTagName("Coordinate");
-
-			System.out.println("----------------------------");
-
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-
-				Node nNode = nList.item(temp);
-
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-					Element eElement = (Element) nNode;
-					System.out.println(eElement);
-
-					System.out.println("First Name : " + eElement.getElementsByTagName("Rabbit").item(0));
-					System.out.println("Last Name : " + eElement.getElementsByTagName("Coordinate").item(0));
-					System.out.println("Staff id : " + eElement.getAttribute("row"));
-
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		*/
-		//TODO: Logic for this method.
-		return new Board(-1, -1);
 	}
 
 
