@@ -130,10 +130,12 @@ public class Application extends JFrame implements ItemClickListener {
     private void save() {
      //   project.model.Board recalledMove = boardHistory.getRedoBoard();
     //    updateBoard(recalledMove);
+        //TODO: Add impl.
     }
     private void load() {
      //   project.model.Board recalledMove = boardHistory.getRedoBoard();
       //  updateBoard(recalledMove);
+        //TODO: Add impl
     }
 
 
