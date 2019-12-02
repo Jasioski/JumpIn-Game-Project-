@@ -33,6 +33,13 @@ public abstract class BoardItem implements MaybeObstacle {
     }
 
     /**
+     * Generic to XML declaration. Will return the XML representation of the
+     * board item.
+     * @return the XML representation of the board item.
+     */
+    public abstract String toXML();
+
+    /**
      * Returns the item's string representation.
      * @return The string representation.
      */

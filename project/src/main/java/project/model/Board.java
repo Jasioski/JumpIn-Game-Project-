@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.io.*;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -535,5 +537,76 @@ public class Board {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Will return the XML representation of the entire board and all the items
+	 * contained in the board.
+	 * @return the XML representation of the whole board.
+	 */
+	public String toXML() {
+		String xml = "<Board>";
+
+		HashSet<BoardItem> items = new HashSet<>();
+
+		//iterate through the map containing the items on the board.
+		for (Coordinate coordinate : this.items.keySet()) {
+			//remove duplicates if the item has more than 1 coordinate.
+			items.add(this.items.get(coordinate));
+		}
+
+		//iterate through the set containing the items on the board removing
+		for (BoardItem item : items) {
+			//append the string representation of the items on the board.
+			xml = xml + item.toXML();
+		}
+
+		xml = xml + "</Board>";
+
+		return xml;
+	}
+
+	/**
+	 *
+	 * @param fileName
+	 * @throws IOException
+	 */
+	public void writeToXMLFile(String fileName) throws IOException {
+		//TODO: decide should this be static or not. Should it throw an
+		// Exception or should exception be handled here?
+		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName +
+				".XML"));
+		writer.write(this.toXML());
+		writer.close();
+	}
+
+	public static String readFromXMLFile(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(fileName +
+				".XML"));
+
+		String xmlRepresentation = "";
+		String currentLine = "";
+
+		while((currentLine = reader.readLine()) != null) {
+			xmlRepresentation = xmlRepresentation + currentLine;
+		}
+
+		return xmlRepresentation;
+	}
+
+	@SuppressWarnings("PMD.UseVarargs")
+	public static void main(String[] args) {
+		//TODO: Helpful main used to test out the xml writer. Delete before
+		// merging to master.
+		DefaultBoard defaultBoard = new DefaultBoard();
+		Board board = new Board(defaultBoard.getBoard());
+		try {
+			String fileName = "testXML";
+			board.writeToXMLFile(fileName);
+			logger.debug(Board.readFromXMLFile(fileName));
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
+
 	}
 }
