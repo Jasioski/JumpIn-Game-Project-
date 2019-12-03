@@ -217,7 +217,13 @@ public class Application extends JFrame implements ItemClickListener {
     private void save(){
         try {
             String filename = JOptionPane.showInputDialog("What would you like to call your board");
-            XMLParser.writeToXMLFile(board, filename);
+            if (filename.equals("null") || filename.equals("")) {
+                filename = "defaultSaveFile";
+            }
+
+            if (!(filename == null)) {
+                XMLParser.writeToXMLFile(board, filename);
+            }
         }
         catch(IOException e){
             logger.error(e.getMessage());
@@ -230,8 +236,15 @@ public class Application extends JFrame implements ItemClickListener {
     private void load(){
         try{
             String filename = JOptionPane.showInputDialog("What board would you like to load?");
-            board = XMLParser.boardFromXML(filename);
-            boardHistory = new BoardHistory(board);
+            if (filename.equals("null") || filename.equals("")) {
+                filename = "defaultSaveFile";
+            }
+
+            if (!(filename == null)) {
+                board = XMLParser.boardFromXML(filename);
+                boardHistory = new BoardHistory(board);
+            }
+            
             updateBoard();
         }
         catch (Exception e){
