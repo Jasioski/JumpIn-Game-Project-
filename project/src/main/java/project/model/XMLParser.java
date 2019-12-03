@@ -243,6 +243,13 @@ public class XMLParser {
      */
     public static Board boardFromXML(String fileName) throws IOException, ParserConfigurationException, SAXException {
 
+        //If user did not enter a value, save to file called "default.XML".
+        System.out.println("FILENAME: " + fileName);
+        if (fileName.equals("")) {
+            System.out.println(fileName);
+            fileName = "default";
+        }
+
         File file = new File(fileName + ".XML");
 
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
