@@ -153,8 +153,24 @@ The other mode is the level builder. This will allow you to click positions and 
 To switch between the different modes press the switch button. You can also save your levels. We advise pressing the solver button and waiting until the game has been proved to be solvable, before saving any custom levels. This makes sure you do not try to save a level that cannot be solved. The solver has been tuned to use certain parameters so that it aborts after a certain amount of time, reporting that a solution cannot be found.
 
 
-## Contributions
+## Changes Since Milestone 3
 
+### Added a level builder
+This milestone involved a level builder add-on. We chose to implement this as A GUI. Much of the behaviour was re-used from the existing gameplay GUI version. We adapted Application so that it handles inputs differently depending on the application mode. For example, in the game play mode you can press items to move them around. In the level builder mode you instead select items to replace them with other items. 
+
+We chose to re-use the Application GUI because there are a lot of similar patterns in the way the user interacts with the GUI. This allowed us to rapidly build the interface for level building. Also, it is simple from the user's perspective for there to be a lot of similarity in the interface.
+
+
+### Loading and saving
+Loading and saving works by using XML serialization. Our software has been extended so that each of the models know how to serialize their state to XML. And a parser is able to create boards from XML. We chose this design for separation of responbilities. This adheres to good OOP practice.
+
+The GUI for loading and saving uses a text box to prompt the user for a file name for saving and loading the data. We also handle IO exceptions where files fail to write, or fail to be read from.
+
+### Added more tests
+We have strived to add more tests as we found edge cases. This was done to make our software more robust, and to ensure regression testing.
+
+
+## Contributions
 - Source Code Development: Rafi, Kamran, John, Anton, Christopher
 - Documentation: Anton, Kamran, Christopher, John
 - Project Management / CI: Rafi, John
