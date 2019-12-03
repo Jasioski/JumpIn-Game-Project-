@@ -58,9 +58,28 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    private Action switchMode = new AbstractAction("Switch modes") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (applicationMode == ApplicationMode.GAME_PLAY) {
+                initializeBuilder();
+                setMessage(levelBuilderMessage);
+            } else if (applicationMode == ApplicationMode.LEVEL_BUILDER) {
+                initializeGame();
+                setMessage(gameMessage);
+            }
+            updateBoard();
+        }
+    };
+
     private Action undo = new AbstractAction("Undo") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            if (applicationMode != ApplicationMode.GAME_PLAY) {
+                showError("Cannot undo in level builder");
+                return;
+            }
+
             undo();
         }
     };
@@ -68,6 +87,10 @@ public class Application extends JFrame implements ItemClickListener {
     private Action redo = new AbstractAction("Redo") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            if (applicationMode != ApplicationMode.GAME_PLAY) {
+                showError("Cannot redo in level builder");
+                return;
+            }
             redo();
         }
     };
@@ -75,9 +98,6 @@ public class Application extends JFrame implements ItemClickListener {
 
     Application() {
         super("JumpIn");
-
-        // TODO: remove this
-        applicationMode = ApplicationMode.LEVEL_BUILDER;
 
         // Ensure resources are loaded;
         ImageResources.getInstance();
@@ -100,12 +120,12 @@ public class Application extends JFrame implements ItemClickListener {
     }
 
     private void initializeBuilder() {
-        this.applicationMode = ApplicationMode.LEVEL_BUILDER
+        this.applicationMode = ApplicationMode.LEVEL_BUILDER;
     }
 
-
     private void initializeFrame() {
-        toolBar = new ToolBar(this.newGame, this.undo, this.redo);
+        toolBar = new ToolBar(this.newGame, this.undo, this.redo,
+                this.switchMode, this.applicationMode);
 
         // GUI Components
         frame = new ApplicationPanel(toolBar, this, this.board);
@@ -304,6 +324,12 @@ public class Application extends JFrame implements ItemClickListener {
 
     private void setMessage(String msg) {
         toolBar.setMessage(msg);
+    }
+
+    public void showError(String msg) {
+
+        JOptionPane.showMessageDialog(null, msg, "Exception!"
+                , 0);
     }
 
 
