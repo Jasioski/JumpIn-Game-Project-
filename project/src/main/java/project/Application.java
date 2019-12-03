@@ -6,13 +6,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.*;
 import project.model.Fox;
+import project.solver.Move;
+import project.solver.Solver;
 import project.view.*;
 import project.view.Board;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * GUI Application for JumpIn
@@ -135,7 +140,7 @@ public class Application extends JFrame implements ItemClickListener {
     /**
      * Action that solves the current board.
      */
-    private Action solve = new AbstractAction("Is it Solvable in 60 seconds") {
+    private Action solve = new AbstractAction("solve") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             solve();
@@ -146,14 +151,33 @@ public class Application extends JFrame implements ItemClickListener {
      * Solves the game.
      */
     private void solve() {
-        int howManySeconds = Integer.parseInt(JOptionPane.showInputDialog("How " +
-                "many seconds would you like to run the algorithm for?"));
-        JOptionPane.showInputDialog("Trying to solve game in " + howManySeconds + " seconds.");
+        if (applicationMode != ApplicationMode.LEVEL_BUILDER) {
+            showError("Solver button is meant for checking level builder, not" +
+                    " for the game");
+            return;
+        }
+        int defaultTimeSeconds = 30;
 
-        Date currentDate = new Date();
-        long endDate = new Date().getTime();
+        final ExecutorService service = Executors.newSingleThreadExecutor();
 
+        showMessage("attempting to solve the board");
 
+        try {
+            final Future<List<Move>> f = service.submit(() -> {
+                return Solver.solve(board);
+            });
+
+            List<Move> moves = f.get(defaultTimeSeconds, TimeUnit.SECONDS);
+            logger.debug("solved in time");
+            showMessage("This level can be solved.");
+        } catch (final TimeoutException e) {
+            showError("the board could not be solved in the default settings," +
+                    " it may not be solvable");
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            service.shutdown();
+        }
 
     }
 
@@ -203,7 +227,8 @@ public class Application extends JFrame implements ItemClickListener {
      */
     private void initializeFrame() {
 
-        toolBar = new ToolBar(this.newGame, this.undo, this.redo, this.save, this.load,
+        toolBar = new ToolBar(this.newGame, this.solve, this.undo, this.redo,
+            this.save, this.load,
                 this.switchMode, this.applicationMode);
 
         // GUI Components
@@ -458,14 +483,18 @@ public class Application extends JFrame implements ItemClickListener {
      */
     private void setMessage(String msg) {
         toolBar.setMessage(msg);
+        pack();
     }
 
     private void showError(String msg) {
-
         JOptionPane.showMessageDialog(null, msg, "Exception!"
-                , 0);
+                , JOptionPane.ERROR_MESSAGE);
     }
 
+    private void showMessage(String msg) {
+        JOptionPane.showMessageDialog(null, msg, "Exception!"
+                , JOptionPane.INFORMATION_MESSAGE);
+    }
 
     @SuppressWarnings("PMD")
     public static void main(String[] args) {

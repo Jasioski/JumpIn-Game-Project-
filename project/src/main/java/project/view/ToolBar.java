@@ -23,21 +23,19 @@ public class ToolBar extends JPanel {
      * @param save The save action.
      * @param load The load action.
      */
-    public ToolBar(Action newGame, Action undo, Action redo, Action save, Action load, Action switchMode, ApplicationMode mode) {
+    public ToolBar(Action newGame, Action solve, Action undo, Action redo,
+                   Action save,
+                   Action load, Action switchMode, ApplicationMode mode) {
 
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
 
 
-        if (mode != ApplicationMode.GAME_PLAY) {
-            undo.setEnabled(false);
-            redo.setEnabled(false);
-        }
-
         tools.add(newGame);
         tools.add(undo);
         tools.add(redo);
         tools.add(switchMode);
+        tools.add(solve);
         tools.add(save);
         tools.add(load);
 
