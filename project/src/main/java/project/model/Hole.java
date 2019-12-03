@@ -41,6 +41,10 @@ public class Hole extends ContainerItem {
         }
     }
 
+    public Hole(Coordinate coordinate) {
+        this(coordinate, Optional.absent());
+    }
+
     /**
      * Attempts to jump a rabbit out of the hole.
      * @param direction The direction that the rabbit must jump.

@@ -18,6 +18,8 @@ public class Application extends JFrame implements ItemClickListener {
 
     public static Logger logger = LogManager.getLogger(Board.class);
 
+    private ApplicationMode applicationMode;
+
     /**
      * State of the board
      */
@@ -68,6 +70,11 @@ public class Application extends JFrame implements ItemClickListener {
 
     private Application() {
         super("JumpIn");
+
+        applicationMode = ApplicationMode.GAME_PLAY;
+
+        // TODO: remove this
+        applicationMode = ApplicationMode.LEVEL_BUILDER;
 
         // Ensure resources are loaded;
         ImageResources.getInstance();
@@ -139,7 +146,22 @@ public class Application extends JFrame implements ItemClickListener {
 
     @Override
     public void onItemClick(ItemClickEvent event) {
+
         logger.debug("Received an item click");
+        if (applicationMode == ApplicationMode.GAME_PLAY) {
+        }
+         else if (applicationMode == ApplicationMode.LEVEL_BUILDER) {
+             Optional<BoardItem> changedItem = ItemSelection.show(this,
+                     event.coordinate);
+
+             if (changedItem.isPresent()) {
+                 this.board = board.setItem(changedItem.get());
+                 this.updateBoard(board);
+             }
+        }
+    }
+
+    private void onItemClickGamePlay(ItemClickEvent event) {
 
         // We haven't selected an item
         if (!selectedItem.isPresent()) {
@@ -181,7 +203,10 @@ public class Application extends JFrame implements ItemClickListener {
                 destinationItem = Optional.absent();
             }
         }
+
     }
+
+
 
 
     private void setMessage(String msg) {

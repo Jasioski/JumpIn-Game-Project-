@@ -41,6 +41,10 @@ public class ElevatedBoardItem extends ContainerItem {
         }
     }
 
+    public ElevatedBoardItem(Coordinate coordinate) {
+        this(coordinate, Optional.absent());
+    }
+
     /**
      * Attempts to jump a board out of the elevated space.
      * @param direction The direction that the rabbit must jump.
