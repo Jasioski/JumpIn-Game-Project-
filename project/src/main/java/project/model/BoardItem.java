@@ -4,6 +4,9 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import project.tui.ItemUIRepresentation;
 
+/**
+ * Represents any item on the board, which can be extended for specific items.
+ */
 public abstract class BoardItem implements MaybeObstacle {
     /**
      * Coordinates for the board item
@@ -31,6 +34,13 @@ public abstract class BoardItem implements MaybeObstacle {
     public BoardItem(Coordinate coordinate) {
         this.coordinate = Either.left(coordinate);
     }
+
+    /**
+     * Generic to XML declaration. Will return the XML representation of the
+     * board item.
+     * @return the XML representation of the board item.
+     */
+    public abstract String toXML();
 
     /**
      * Returns the item's string representation.

@@ -1,5 +1,6 @@
 package project.model;
 
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -222,4 +223,163 @@ public class BoardTest {
             fail();
         }
     }
+
+    @Test
+    void testXMLEmptyBoard() {
+        Board board = new Board(0, 0);
+
+        assertEquals("<Board></Board>", board.toXML(),
+                "Should be empty board XML.");
+    }
+
+    @Test
+    void testXMLBoardWithMushroom() {
+        Board board = new Board(1, 1);
+        Mushroom mushroom = new Mushroom(0, 0);
+
+        board = board.setItem(mushroom);
+
+        assertEquals("<Board><Mushroom><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></Mushroom></Board>",
+                board.toXML(), "XML " +
+                "representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithRabbit() {
+        Board board = new Board(1, 1);
+        Rabbit rabbit = new Rabbit(0, 0);
+
+        board = board.setItem(rabbit);
+
+        assertEquals("<Board><Rabbit><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></Rabbit></Board>",
+                board.toXML(), "XML " +
+                "representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithEmpty() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        EmptyBoardItem empty = new EmptyBoardItem(coordinate);
+
+        board = board.setItem(empty);
+
+        assertEquals("<Board><Empty><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0  + '"' + "/></Empty></Board>",
+                board.toXML()
+                , "XML " +
+                "representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithFox() {
+        Board board = new Board(1, 2);
+        Coordinate head = new Coordinate(0, 0);
+        Coordinate tail = new Coordinate(0, 1);
+
+        Pair<Coordinate, Coordinate> coordinates = Pair.pair(head, tail);
+
+        Fox fox = new Fox(coordinates);
+        BoardItem item = fox;
+
+        board = board.setItem(item);
+
+        assertEquals("<Board><Fox><CoordinatePair headRow=" + '"' + 0 + '"' +
+                " headColumn=" + '"' + 0 + '"' + " tailRow=" + '"' + 0 + '"' + " tailColumn=" + '"' + 1 + '"' + "/></Fox></Board>",
+                board.toXML(), "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithEmptyElevated() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        ElevatedBoardItem elevatedBoardItem =
+                new ElevatedBoardItem(coordinate, Optional.absent());
+
+        board = board.setItem(elevatedBoardItem);
+
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></ElevatedBoardItem></Board>",
+                board.toXML(), "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithRabbitOcuppyingElevated() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Rabbit rabbit = new Rabbit(coordinate);
+
+        ElevatedBoardItem elevatedBoardItem =
+                new ElevatedBoardItem(coordinate, Optional.of(rabbit));
+
+        board = board.setItem(elevatedBoardItem);
+
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/><Rabbit><Coordinate " +
+                        "row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' +
+                        "/>" +
+                        "</Rabbit></ElevatedBoardItem></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithEmptyHole() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Hole hole = new Hole(coordinate, Optional.absent());
+
+        board = board.setItem(hole);
+
+        assertEquals("<Board><Hole><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/></Hole></Board>",
+                board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void testXMLBoardWithRabbitOcuppyingHole() {
+        Board board = new Board(1, 1);
+        Coordinate coordinate = new Coordinate(0, 0);
+        Rabbit rabbit = new Rabbit(coordinate);
+
+        Hole hole = new Hole(coordinate, Optional.of(rabbit));
+
+        board = board.setItem(hole);
+
+        assertEquals("<Board><Hole><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/><Rabbit><Coordinate " +
+                        "row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' +
+                        "/></Rabbit></Hole></Board>", board.toXML(),
+                "XML representations should be equal");
+    }
+
+    @Test
+    void xmlParsingFromFile() {
+        DefaultBoard def = new DefaultBoard();
+
+        Board defaultBoard = new Board(def.getBoard());
+
+        try {
+            XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
+
+            String fileName = "DefaultBoard";
+            Board board = XMLParser.boardFromXML(fileName);
+
+            defaultBoard = defaultBoard.setItem(new Rabbit(3, 4));
+
+            logger.debug(board.toString());
+
+            XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
+
+            board = XMLParser.boardFromXML(fileName);
+
+            logger.debug(board.toString());
+
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        }
+    }
+
 }

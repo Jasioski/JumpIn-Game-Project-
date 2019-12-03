@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A class that represents a fox on the board, which can slide across the board to move.
  */
-public class Fox extends BoardItem {
+public class Fox extends BoardItem implements Movable {
 
     private static Logger logger = LogManager.getLogger(Fox.class);
 
@@ -278,5 +278,22 @@ public class Fox extends BoardItem {
         return false;
     }
 
+    /**
+     * Will return the XML representation of this fox.
+     * @return the XML representation of the fox.
+     */
+    @Override
+    public String toXML() {
+        //<CoordinatePair headRow=0 headColumn=0 tailRow=1 tailColumn=1/>
+        String xml = "<Fox>";
+        Pair<Coordinate, Coordinate> coordinates = this.coordinate.right().get();
 
+        xml = xml + "<CoordinatePair headRow=" + '"' + coordinates.left().row + '"' +
+                " headColumn=" + '"' + coordinates.left().column + '"' + " tailRow=" + '"' +
+                coordinates.right().row + '"' + " tailColumn=" + '"' +
+                coordinates.right().column + '"' + "/>";
+
+        xml = xml + "</Fox>";
+        return xml;
+    }
 }

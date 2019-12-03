@@ -230,4 +230,24 @@ public class FoxTest {
         //Test that the old fox tail did not change
         assertEquals(originalTail, slidingFox.getTail());
     }
+
+    @Test
+    void testXML () {
+        Coordinate head = new Coordinate(0, 0);
+        Coordinate tail = new Coordinate(0, 1);
+
+        Pair<Coordinate, Coordinate> coordinates = Pair.pair(head, tail);
+
+        Fox fox = new Fox(coordinates);
+        BoardItem item = fox;
+
+        assertEquals("<Fox><CoordinatePair headRow=" + '"' + 0 + '"' + " " +
+                        "headColumn=" + '"' + 0 + '"' +
+                        " tailRow=" + '"' + 0 + '"' + " tailColumn=" + '"' + 1 + '"' + "/></Fox>",
+                fox.toXML(), "The XML representation should be equal");
+        assertEquals("<Fox><CoordinatePair headRow=" + '"' + 0 + '"' +
+                        " headColumn=" + '"' + 0 + '"' + " tailRow=" + '"' + 0 + '"' +
+                        " tailColumn=" + '"' + 1 + '"' + "/></Fox>",
+                item.toXML(), "The XML representation should be equal");
+    }
 }

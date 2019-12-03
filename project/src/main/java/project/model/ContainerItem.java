@@ -8,7 +8,8 @@ import org.pcollections.PMap;
 /**
  * Represents a hole object on the board.
  */
-public abstract class ContainerItem extends SingleBoardItem {
+public abstract class ContainerItem extends SingleBoardItem implements
+        MaybeMovable {
     /**
      * The item that the hole may contain.
      */
@@ -35,6 +36,21 @@ public abstract class ContainerItem extends SingleBoardItem {
                 return ((MaybeObstacle) containingItem.get()).isObstacle();
             }
         }
+        return false;
+    }
+
+    /**
+     * Returns true if a movable item is contained
+     * @return true if the object inside ContainerItem is movable
+     */
+    @Override
+    public boolean isMovable() {
+        if (containingItem.isPresent()) {
+            if (containingItem.get() instanceof Movable) {
+                return true;
+            }
+        }
+
         return false;
     }
 

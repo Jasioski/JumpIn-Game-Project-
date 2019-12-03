@@ -70,4 +70,20 @@ public class EmptyBoardItem extends SingleBoardItem {
 
         return false;
     }
+
+    /**
+     * Will return the XML representation of this empty tile.
+     * @return the XML representation of the empty tile.
+     */
+    @Override
+    public String toXML() {
+        String xml = "<Empty>";
+        Coordinate coordinate = this.coordinate.left().get();
+
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' +
+                " column=" + '"' + coordinate.column + '"' + "/>";
+
+        xml = xml + "</Empty>";
+        return xml;
+    }
 }

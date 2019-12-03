@@ -5,6 +5,10 @@ package project.model;
  */
 public abstract class SingleBoardItem extends BoardItem{
 
+    /**
+     * Creates a single board item at a coordinate.
+     * @param coordinate The coordinate containing the board item.
+     */
     public SingleBoardItem(Coordinate coordinate) {
         super(coordinate);
     }

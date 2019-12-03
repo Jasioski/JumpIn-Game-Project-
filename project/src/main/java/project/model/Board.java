@@ -1,5 +1,6 @@
 package project.model;
 
+import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -7,7 +8,17 @@ import org.apache.logging.log4j.Logger;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.io.*;
+import java.util.HashSet;
 import java.util.Objects;
+
+
+
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.*;
 
 /**
  * Creates and manages the state of the board by performing operations through
@@ -92,7 +103,7 @@ public class Board {
 	 * Creates a new board using another board.
 	 * @param board The board that should be copied.
 	 */
-	private Board(Board board) {
+	public Board(Board board) {
 		this.currentGameState = GameState.IN_PROGRESS;
 		this.numberOfRows = board.numberOfRows;
 		this.numberOfColumns = board.numberOfColumns;
@@ -307,6 +318,7 @@ public class Board {
 
 		if (item instanceof Rabbit || item instanceof ContainerItem)  {
 			board = this.jump(direction, itemSelected);
+			return board;
 		}
 		if (item instanceof Fox) {
 			int moveSpaces = deltaCoordinate.row ;
@@ -315,8 +327,9 @@ public class Board {
 			}
 
 			board = this.slide(direction, Math.abs(moveSpaces), itemSelected);
+			return board;
 		}
-		return board;
+		throw new InvalidMoveException("Invalid move!");
 	}
 
 	/**
@@ -399,6 +412,25 @@ public class Board {
 		Board board = new Board(this, currentGameState);
 
 		return board;
+	}
+
+	/**
+	 * Returns true if the object can move.
+	 * @param coordinate of where the object is on the board
+	 * @return true if the object is movable.
+	 */
+	public boolean isMovable(Coordinate coordinate) {
+		if (this.getItem(coordinate) instanceof Movable) {
+			return true;
+		}
+
+		if (this.getItem(coordinate) instanceof ContainerItem) {
+			ContainerItem item = (ContainerItem) this.getItem(coordinate);
+			if (item.isMovable()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -514,5 +546,32 @@ public class Board {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Will return the XML representation of the entire board and all the items
+	 * contained in the board.
+	 * @return the XML representation of the whole board.
+	 */
+	public String toXML() {
+		String xml = "<Board>";
+
+		HashSet<BoardItem> items = new HashSet<>();
+
+		//iterate through the map containing the items on the board.
+		for (Coordinate coordinate : this.items.keySet()) {
+			//remove duplicates if the item has more than 1 coordinate.
+			items.add(this.items.get(coordinate));
+		}
+
+		//iterate through the set containing the items on the board removing
+		for (BoardItem item : items) {
+			//append the string representation of the items on the board.
+			xml = xml + item.toXML();
+		}
+
+		xml = xml + "</Board>";
+
+		return xml;
 	}
 }

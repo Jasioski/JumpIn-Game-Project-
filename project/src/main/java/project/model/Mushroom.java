@@ -70,4 +70,20 @@ public final class Mushroom extends SingleBoardItem implements Containable {
 
         return false;
     }
+
+    /**
+     * Will return the XML representation of this mushroom.
+     * @return the XML representation of the mushroom.
+     */
+    @Override
+    public String toXML() {
+        String xml = "<Mushroom>";
+        Coordinate coordinate = this.coordinate.left().get();
+
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' +
+                " column=" + '"' + coordinate.column + '"' + "/>";
+
+        xml = xml + "</Mushroom>";
+        return xml;
+    }
 }
