@@ -61,6 +61,13 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    private Action createBoard = new AbstractAction("Toggle Mode") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            createBoard();
+        }
+    };
+
     private void newGame() {
         initializeGame();
         setMessage("Make your move!");
@@ -72,9 +79,6 @@ public class Application extends JFrame implements ItemClickListener {
         super("JumpIn");
 
         applicationMode = ApplicationMode.GAME_PLAY;
-
-        // TODO: remove this
-        applicationMode = ApplicationMode.LEVEL_BUILDER;
 
         // Ensure resources are loaded;
         ImageResources.getInstance();
@@ -96,7 +100,7 @@ public class Application extends JFrame implements ItemClickListener {
     }
 
     private void initializeFrame() {
-        toolBar = new ToolBar(this.newGame, this.undo, this.redo);
+        toolBar = new ToolBar(this.newGame, this.undo, this.redo, this.createBoard);
 
         // GUI Components
         frame = new ApplicationPanel(toolBar, this, this.board);
@@ -121,6 +125,15 @@ public class Application extends JFrame implements ItemClickListener {
     private void redo() {
         project.model.Board recalledMove = boardHistory.getRedoBoard();
         updateBoard(recalledMove);
+    }
+
+    private void createBoard() {
+        if (applicationMode == ApplicationMode.GAME_PLAY) {
+            applicationMode = ApplicationMode.LEVEL_BUILDER;
+        } else {
+            applicationMode = ApplicationMode.GAME_PLAY;
+        }
+
     }
 
     private void updateBoard () {
@@ -149,6 +162,7 @@ public class Application extends JFrame implements ItemClickListener {
 
         logger.debug("Received an item click");
         if (applicationMode == ApplicationMode.GAME_PLAY) {
+            onItemClickGamePlay(event);
         }
          else if (applicationMode == ApplicationMode.LEVEL_BUILDER) {
              Optional<BoardItem> changedItem = ItemSelection.show(this,
