@@ -73,7 +73,7 @@ public class GUIBoardItem extends JPanel implements ActionListener, MouseListene
         }
 
         this.setBackground(GuiColor.DARK_GREEN);
-        this.setSize(100,100);
+        this.setSize(200,200);
         this.setListeners(this);
     }
 
