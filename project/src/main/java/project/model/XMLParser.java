@@ -8,11 +8,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
+/**
+ * Handles saving and parsing a board to an XML file.
+ */
 public class XMLParser {
 
     /**
@@ -21,33 +26,23 @@ public class XMLParser {
     private static Logger logger = LogManager.getLogger(Board.class);
 
     /**
-     *
-     * @param fileName
-     * @throws IOException
+     * Writes a board into an XML encoded file.
+     * @param board The board being saved.
+     * @param fileName The name of the file it is saved to.
+     * @throws IOException If the buffered writer fails.
      */
     public static void writeToXMLFile(Board board, String fileName) throws IOException {
-        //TODO: decide should this be static or not. Should it throw an
-        // Exception or should exception be handled here?
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName +
                 ".XML"));
         writer.write(board.toXML());
         writer.close();
     }
 
-    public static String readFromXMLFile(String fileName) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(fileName +
-                ".XML"));
-
-        String xmlRepresentation = "";
-        String currentLine = "";
-
-        while((currentLine = reader.readLine()) != null) {
-            xmlRepresentation = xmlRepresentation + currentLine;
-        }
-
-        return xmlRepresentation;
-    }
-
+    /**
+     * Returns a BoardItem described by an XML node?
+     * @param node The current element.
+     * @return The BoardItem contained in the node.
+     */
     private static BoardItem itemFromXML(Node node) {
         Coordinate failCoord = new Coordinate(-1, -1);
         BoardItem itemToAdd = new EmptyBoardItem(failCoord);
@@ -139,6 +134,11 @@ public class XMLParser {
         return itemToAdd;
     }
 
+    /**
+     * Returns the pair of coordinates of a fox in an xml file.
+     * @param nodeList The two nodes containing the fox.
+     * @return The pair of coordinates of the fox.
+     */
     private static Pair<Coordinate, Coordinate> foxCoordinateFromXML(NodeList nodeList) {
         int headRow = -1;
         int headColumn = -1;
@@ -191,6 +191,11 @@ public class XMLParser {
 
     }
 
+    /**
+     * Returns the coordinate of the current element.
+     * @param nodeList The node containing the current element's coordinates.
+     * @return The coordinate of the element.
+     */
     private static Coordinate coordinateFromXML(NodeList nodeList) {
 
         int row = -1;
@@ -228,35 +233,32 @@ public class XMLParser {
         return new Coordinate(row, column);
     }
 
+    /**
+     * Reads a board from a given XML file and returns the board constructed from the file.
+     * @param fileName The name of the file containing the board's XML representation.
+     * @return The board represented by the xml file.
+     * @throws IOException If the document reader fails.
+     * @throws ParserConfigurationException If the document parser fails.
+     * @throws SAXException If the SAX parser fails.
+     */
+    public static Board boardFromXML(String fileName) throws IOException, ParserConfigurationException, SAXException {
 
-    public static Board boardFromXML(String fileName) {
+        File file = new File(fileName + ".XML");
 
-        try {
+        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder();
 
-            File file = new File(fileName + ".XML");
+        Document doc = dBuilder.parse(file);
 
-            DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
+        Board board = new Board(5, 5);
 
-            Document doc = dBuilder.parse(file);
-
-            Board board = new Board(5, 5);
-
-            NodeList boardElements = doc.getDocumentElement().getChildNodes();
-            for (int count = 0; count < boardElements.getLength(); count++) {
-                //loop through the items and add them to the board
-
-                board =
-                        board.setItem(XMLParser.itemFromXML(boardElements.item(count)));
-
-            }
-
-            return board;
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+        NodeList boardElements = doc.getDocumentElement().getChildNodes();
+        for (int count = 0; count < boardElements.getLength(); count++) {
+            //loop through the items and add them to the board
+            board =
+                    board.setItem(XMLParser.itemFromXML(boardElements.item(count)));
         }
 
-        throw new RuntimeException("Did not return a board from XML file");
+        return board;
     }
 }

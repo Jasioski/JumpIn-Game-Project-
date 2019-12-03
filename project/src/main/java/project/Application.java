@@ -9,6 +9,7 @@ import project.view.Board;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 /**
  * GUI Application for JumpIn
@@ -16,6 +17,9 @@ import java.awt.event.ActionEvent;
  */
 public class Application extends JFrame implements ItemClickListener {
 
+    /**
+     * The logger used to log errors.
+     */
     public static Logger logger = LogManager.getLogger(Board.class);
 
     /**
@@ -27,6 +31,9 @@ public class Application extends JFrame implements ItemClickListener {
      */
     private ApplicationPanel frame;
 
+    /**
+     * The history of boards in this application.
+     */
     private BoardHistory boardHistory;
 
     /**
@@ -34,10 +41,19 @@ public class Application extends JFrame implements ItemClickListener {
      */
     private ToolBar toolBar;
 
+    /**
+     * The coordinates of the currently selected item.
+     */
     private Optional<Coordinate> selectedItem;
+
+    /**
+     * The coordinates where the selected item will go.
+     */
     private Optional<Coordinate> destinationItem;
 
-
+    /**
+     * Action that creates a new game.
+     */
     private Action newGame = new AbstractAction("New") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -45,6 +61,9 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    /**
+     * Action that undoes the current move.
+     */
     private Action undo = new AbstractAction("Undo") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -52,6 +71,9 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    /**
+     * Action that redoes the current move.
+     */
     private Action redo = new AbstractAction("Redo") {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -59,13 +81,38 @@ public class Application extends JFrame implements ItemClickListener {
         }
     };
 
+    /**
+     * Action that saves the current board.
+     */
+    private Action save = new AbstractAction("Save") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            save();
+        }
+    };
+
+    /**
+     * Action that loads the current board.
+     */
+    private Action load = new AbstractAction("Load") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            load();
+        }
+    };
+
+    /**
+     * Creates a new game.
+     */
     private void newGame() {
         initializeGame();
         setMessage("Make your move!");
         updateBoard();
     }
 
-
+    /**
+     * Creates the application, initializing the board and the frame.
+     */
     private Application() {
         super("JumpIn");
 
@@ -80,16 +127,13 @@ public class Application extends JFrame implements ItemClickListener {
         setMessage("Make your move!");
     }
 
-    // TODO: Switch to event model
-    // this is fine for now, will address in other GUI tasks
-
     private void initializeGame() {
         this.board = new DefaultBoard().getBoard();
         this.boardHistory = new BoardHistory(this.board);
     }
 
     private void initializeFrame() {
-        toolBar = new ToolBar(this.newGame, this.undo, this.redo);
+        toolBar = new ToolBar(this.newGame, this.undo, this.redo, this.save, this.load);
 
         // GUI Components
         frame = new ApplicationPanel(toolBar, this, this.board);
@@ -116,6 +160,28 @@ public class Application extends JFrame implements ItemClickListener {
         updateBoard(recalledMove);
     }
 
+    private void save(){
+        try {
+            String filename = JOptionPane.showInputDialog("What would you like to call your board");
+            XMLParser.writeToXMLFile(board, filename);
+        }
+        catch(IOException e){
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void load(){
+        try{
+            String filename = JOptionPane.showInputDialog("What board would you like to load?");
+            board = XMLParser.boardFromXML(filename);
+            boardHistory = new BoardHistory(board);
+            updateBoard();
+        }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(
+                    null, "This file was not found.", "Failure", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void updateBoard () {
         updateBoard(this.board);
     }

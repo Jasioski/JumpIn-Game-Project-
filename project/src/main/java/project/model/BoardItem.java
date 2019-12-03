@@ -4,6 +4,9 @@ import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import project.tui.ItemUIRepresentation;
 
+/**
+ * Represents any item on the board, which can be extended for specific items.
+ */
 public abstract class BoardItem implements MaybeObstacle {
     /**
      * Coordinates for the board item

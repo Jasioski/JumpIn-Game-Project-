@@ -574,28 +574,4 @@ public class Board {
 
 		return xml;
 	}
-
-	@SuppressWarnings("PMD.UseVarargs")
-	public static void main(String[] args) {
-		//TODO: Helpful main used to test out the xml writer. Delete before
-		// merging to master.
-
-		DefaultBoard def = new DefaultBoard();
-
-		Board defaultBoard = new Board(def.getBoard());
-
-		Board board = new Board(1, 1);
-		Rabbit rabbit = new Rabbit(0, 0);
-		board = board.setItem(rabbit);
-		try {
-			XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
-
-			String fileName = "DefaultBoard";
-			XMLParser.boardFromXML(fileName);
-			logger.debug(XMLParser.readFromXMLFile(fileName));
-		} catch (Exception e) {
-			logger.debug(e.getMessage());
-		}
-
-	}
 }
