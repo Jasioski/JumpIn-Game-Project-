@@ -44,6 +44,9 @@ public class Application extends JFrame implements ItemClickListener {
     private Optional<Coordinate> selectedItem;
     private Optional<Coordinate> destinationItem;
 
+    private String levelBuilderMessage = "Select an item to change";
+    private String gameMessage = "Make your move!";
+
 
     private Action newGame = new AbstractAction("New") {
         @Override
@@ -73,8 +76,6 @@ public class Application extends JFrame implements ItemClickListener {
     Application() {
         super("JumpIn");
 
-        applicationMode = ApplicationMode.GAME_PLAY;
-
         // TODO: remove this
         applicationMode = ApplicationMode.LEVEL_BUILDER;
 
@@ -86,16 +87,22 @@ public class Application extends JFrame implements ItemClickListener {
 
         initializeGame();
         initializeFrame();
-        setMessage("Make your move!");
+        setMessage(gameMessage);
     }
 
     // TODO: Switch to event model
     // this is fine for now, will address in other GUI tasks
 
     private void initializeGame() {
+        this.applicationMode = ApplicationMode.GAME_PLAY;
         this.board = new DefaultBoard().getBoard();
         this.boardHistory = new BoardHistory(this.board);
     }
+
+    private void initializeBuilder() {
+        this.applicationMode = ApplicationMode.LEVEL_BUILDER
+    }
+
 
     private void initializeFrame() {
         toolBar = new ToolBar(this.newGame, this.undo, this.redo);
@@ -255,6 +262,7 @@ public class Application extends JFrame implements ItemClickListener {
 
     private void onItemClickGamePlay(ItemClickEvent event) {
 
+        setMessage(levelBuilderMessage);
         // We haven't selected an item
         if (!selectedItem.isPresent()) {
             logger.trace("Selected item at coordinate " + event.coordinate);
