@@ -36,11 +36,10 @@ public class BoardHistory {
 
     /**
      * Creates a move history, taking in an initial board to set as its first state.
-     * @param firstBoard The first board to be placed in the move history.
      */
-    public BoardHistory(Board firstBoard) {
+    public BoardHistory(Board board) {
         boardHistory = new ArrayList<>();
-        boardHistory.add(firstBoard);
+        boardHistory.add(board);
         currentMove = 0;
     }
 
@@ -50,10 +49,8 @@ public class BoardHistory {
      */
     public void addState(Board boardState) {
         currentMove++;
-        System.out.println(currentMove);
         if (!(boardHistory.size() == currentMove)) {
             for (int i = boardHistory.size() - 1; i >= currentMove; i--){
-                System.out.println("Wahoo");
                 boardHistory.remove(i);
             }
         }

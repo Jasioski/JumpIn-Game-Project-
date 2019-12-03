@@ -97,7 +97,8 @@ public class JumpInClient {
             logger.trace(matcher.group());
 
             RabbitCommand command = new RabbitCommand(coordinate, direction);
-            System.out.println(command.coordinate + " : " + command.direction);
+            logger.debug("Command coordinate: " + command.coordinate +
+                    "\nCommand direction: " + command.direction);
             return command;
         }
         else {

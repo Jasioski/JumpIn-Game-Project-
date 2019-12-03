@@ -36,8 +36,6 @@ public class ContainerItemTest {
         assertEquals(containerItem.containingItem, containable,
                 "the hole should have the item");
 
-        Coordinate instanceCoordinate = containerItem.coordinate.left().get();
-
         Containable item = containerItem.containingItem.get();
         BoardItem boardItem = (BoardItem) item;
 
@@ -65,8 +63,6 @@ public class ContainerItemTest {
         Coordinate holeCoordinate = new Coordinate(0, 0);
         ContainerItem containerItem = new Hole(holeCoordinate,
                 containableRabbit);
-
-        Containable item = containerItem.containingItem.get();
 
         assertTrue(containerItem.isObstacle(),
                 "the hole is an obstacle when containing a rabbit");

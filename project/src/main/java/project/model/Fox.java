@@ -145,6 +145,8 @@ public class Fox extends BoardItem {
         Pair<Coordinate, Coordinate> nextCoordinates =
                 this.computeNextCoordinates(direction);
 
+        int spacesToMove = moveSpaces;
+
         // Create new Fox
         Fox fox = new Fox(nextCoordinates);
 
@@ -163,8 +165,8 @@ public class Fox extends BoardItem {
                     "obstacle");
         }
 
-        if (moveSpaces > 1) {
-            return fox.performSlide(slice, --moveSpaces, direction);
+        if (spacesToMove > 1) {
+            return fox.performSlide(slice, --spacesToMove, direction);
         }
 
         return fox;

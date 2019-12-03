@@ -11,18 +11,42 @@ import project.model.*;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Solver class contains the logic for an algorithm that solves the board
+ * from any position.
+ */
 public class Solver {
+
+    /**
+     * Logger used to log helpful debug statements and errors.
+     */
     public static Logger logger = LogManager.getLogger(Solver.class);
+
+    /**
+     *Max depth of the "tree" branches used in the algorithm.
+     * Number of generations from the root node that the "tree" can contain.
+     */
     final static int MAX_DEPTH = 10;
 
+    /**
+     * Helpful debugging tool used to log the moves given.
+     * @param moves a list that contains valid moves
+     */
     private static void printMoves(List<Move> moves) {
         for (Move move: moves) {
             logger.debug(move);
         }
     }
 
-
-    // TODO: delete ALLL THe old code
+    /**
+     * Move a piece on the board.
+     * @param board to be solved by moving all the rabbits in the holes.
+     * @param move to be applied to the board and move an animal.
+     * @return board.move calls the move method of the board to perform the a
+     * board with the applied move is then returned.
+     * move given as a parameter.
+     * @throws InvalidMoveException if the move is invalid.
+     */
     private static Board applyMove(Board board, Move move) throws
             InvalidMoveException {
         try {
@@ -34,12 +58,21 @@ public class Solver {
     }
 
 
+    /**
+     * Solve the board using the tree algorithm.
+     * @param board to be solved.
+     * @return reversed, a list of moves to be executed that solve board from
+     * the root node moving down.
+     */
     public static List<Move> solve (Board board) {
         PVector<Board> boardHistory = TreePVector.empty();
 
         List<Move> solutions = solve(board, boardHistory, 0);
 
         List<Move> reversed =  new ArrayList<>();
+
+        logger.debug("generated moves");
+        printMoves(reversed);
 
 
         for (int i = solutions.size() - 1; i >= 0; i--) {
@@ -49,9 +82,20 @@ public class Solver {
         return reversed;
     }
 
+    /**
+     * applies algorithm to solve the board using a brute force tree solution.
+     * @param board to be solved.
+     * @param boardHistory previous board states when trying to solve the
+     *                     board to avoid duplicated moves.
+     * @param depth of the branch so far to avoid going past the max depth.
+     * @return list moves to be executed to solve the board in reverse order
+     * (starting from leaf node).
+     */
     private static PVector<Move> solve (Board board,
                            PVector<Board> boardHistory,
                            int depth) {
+
+        PVector<Board> history = boardHistory;
 
         if (depth > MAX_DEPTH) {
             return null;
@@ -66,11 +110,11 @@ public class Solver {
                 try {
                     Board newBoard = applyMove(board, move);
 
-                   if (!boardHistory.contains(newBoard)) {
+                   if (!history.contains(newBoard)) {
 
-                        boardHistory = boardHistory.plus(newBoard);
+                        history = history.plus(newBoard);
 
-                       PVector<Move> solution = solve(newBoard, boardHistory,
+                       PVector<Move> solution = solve(newBoard, history,
                                depth + 1);
 
                         if(solution != null) {
@@ -97,6 +141,11 @@ public class Solver {
         return null;
     }
 
+    /**
+     * Generate the legal moves for items on a particular board.
+     * @param board to have the legal moves generated on.
+     * @return legalMoves, a list of the legal moves generated.
+     */
     public static List<Move> generateMoves(Board board) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
@@ -144,6 +193,12 @@ public class Solver {
         return legalMoves;
     }
 
+    /**
+     * Generate the legal moves for the fox piece
+     * @param board to be solved.
+     * @param coordinate the coordinate the fox to be moved is initially at.
+     * @return legalMoves, list of legal moves generated for the fox item.
+     */
     public static List<Move> generateMovesFox(Board board,
                                             Coordinate coordinate) {
         logger.trace("generate moves");
@@ -156,7 +211,6 @@ public class Solver {
             int nextColumn;
 
             //check slide left
-            //todo: bug to slide right fox piece left
             for (nextColumn = coordinate.column - 1; nextColumn >= 0; nextColumn--) {
                 destination = new Coordinate(coordinate.row, nextColumn);
 
@@ -171,7 +225,6 @@ public class Solver {
             }
 
             //check slide right
-            //todo: bug to slide left fox piece right
             for (nextColumn = coordinate.column + 1; nextColumn < board.numberOfColumns; nextColumn++) {
                 destination = new Coordinate(coordinate.row, nextColumn);
 
@@ -188,7 +241,6 @@ public class Solver {
             int nextRow;
             //check slide up
             for (nextRow = coordinate.row - 1; nextRow >= 0; nextRow--) {
-                //todo: bug to slide up fox piece down
                 destination = new Coordinate(nextRow, coordinate.column);
 
                 if (!board.getItem(destination).isObstacle()) {
@@ -202,7 +254,6 @@ public class Solver {
 
             //check slide down
             for (nextRow = coordinate.row + 1; nextRow < board.numberOfRows; nextRow++) {
-                //todo: bug to slide down fox piece up
                 destination = new Coordinate(nextRow, coordinate.column);
 
                 if (!board.getItem(destination).isObstacle()) { //can't slide
@@ -219,6 +270,12 @@ public class Solver {
         return legalMoves;
     }
 
+    /**
+     * Verify that coordinate is in bounds of the board.
+     * @param coordinate to be checked.
+     * @param board used to calculate legal bounds.
+     * @return true or false based on if the coordinate is in bounds or not.
+     */
     private static boolean isCoordinateInBoard(Coordinate coordinate,
                                             Board board) {
         // Subtract 1 for zero indexing
@@ -239,15 +296,18 @@ public class Solver {
         return true;
     }
 
-
+    /**
+     * Generate legal moves for a rabbit object on the board.
+     * @param board to be solved.
+     * @param coordinate the rabbit is initially at.
+     * @return legalMoves, list of legal moves generated for the rabbit item.
+     */
     public static List<Move> generateMovesRabbit(Board board,
                                             Coordinate coordinate) {
         logger.trace("generate moves");
         List<Move> legalMoves = new ArrayList<>();
         BoardItem item = board.getItem(coordinate);
         Coordinate nextItem;
-
-        // TODO: make sure we don't fall off the board
 
         //check up jump
         nextItem = new Coordinate(coordinate.row - 1, coordinate.column);

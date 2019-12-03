@@ -48,6 +48,7 @@ public class Hole extends ContainerItem {
      * @return A pair containing the hole and the result of the jump.
      * @throws InvalidMoveException If the jump is an invalid move.
      */
+    @Override
     public Pair<ContainerItem, Either<Rabbit, ContainerItem>> jump(Direction direction, PMap<Coordinate, BoardItem> slice) throws InvalidMoveException {
         if (!containingItem.isPresent()){
             if (! (containingItem.get() instanceof  Rabbit)) {

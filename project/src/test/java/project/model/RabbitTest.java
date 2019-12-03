@@ -110,7 +110,6 @@ public final class RabbitTest {
 
         Coordinate initialCoordinate = new Coordinate(0, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
-        Coordinate expectedJumpCoordinate = new Coordinate(0, 2);
 
         ContainerItem containerItem = new Hole(new Coordinate(0,2), Optional.absent());
 
@@ -393,7 +392,6 @@ public final class RabbitTest {
 
         Coordinate initialCoordinate = new Coordinate(0, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
-        Coordinate expectedJumpCoordinate = new Coordinate(2, 0);
 
         Hole hole = new Hole(new Coordinate(2,0), Optional.absent());
 
@@ -538,7 +536,6 @@ public final class RabbitTest {
 
         Coordinate initialCoordinate = new Coordinate(2, 0);
         Rabbit initialRabbit = new Rabbit(initialCoordinate);
-        Coordinate expectedJumpCoordinate = new Coordinate(0, 0);
 
         Hole hole = new Hole(new Coordinate(0,0), Optional.absent());
 
