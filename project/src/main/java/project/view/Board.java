@@ -8,13 +8,18 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- * 
- * GuiInnerComponents initializes with the inner components of the GUI i.e., the board setup
- *
+ * Implements the inner part of the gui, containing the board.
  */
 public class Board extends JPanel {
 
+	/**
+	 * Listens for events sent by items.
+	 */
 	private ItemClickListener listener;
+
+	/**
+	 * The model that the board gui is based on.
+	 */
 	private project.model.Board board;
 
 	/**
@@ -34,6 +39,9 @@ public class Board extends JPanel {
 		render();
 	}
 
+	/**
+	 * Renders the gui with the model of the board.
+	 */
 	private void render() {
 
 		// Clear GUI State
@@ -54,7 +62,10 @@ public class Board extends JPanel {
 		revalidate();
 	}
 
-
+	/**
+	 * Updates the board with a new model to render.
+	 * @param board The board model to render.
+	 */
 	public void updateBoard(project.model.Board board) {
 		this.board = board;
 

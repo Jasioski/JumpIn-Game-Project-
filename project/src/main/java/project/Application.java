@@ -127,11 +127,17 @@ public class Application extends JFrame implements ItemClickListener {
         setMessage("Make your move!");
     }
 
+    /**
+     * Initializes the game with a new board and boardhistory
+     */
     private void initializeGame() {
         this.board = new DefaultBoard().getBoard();
         this.boardHistory = new BoardHistory(this.board);
     }
 
+    /**
+     * Initializes the frame of the gui.
+     */
     private void initializeFrame() {
         toolBar = new ToolBar(this.newGame, this.undo, this.redo, this.save, this.load);
 
@@ -150,16 +156,25 @@ public class Application extends JFrame implements ItemClickListener {
         this.setVisible(true);
     }
 
+    /**
+     * Undoes the last move on the board.
+     */
     private void undo() {
 		project.model.Board recalledMove = boardHistory.getUndoBoard();
 		updateBoard(recalledMove);
     }
 
+    /**
+     * Redoes the last move that was undone.
+     */
     private void redo() {
         project.model.Board recalledMove = boardHistory.getRedoBoard();
         updateBoard(recalledMove);
     }
 
+    /**
+     * Saves the current board into a filename given by the user.
+     */
     private void save(){
         try {
             String filename = JOptionPane.showInputDialog("What would you like to call your board");
@@ -170,6 +185,9 @@ public class Application extends JFrame implements ItemClickListener {
         }
     }
 
+    /**
+     * Loads the board contained in a filename given by the user.
+     */
     private void load(){
         try{
             String filename = JOptionPane.showInputDialog("What board would you like to load?");
@@ -182,10 +200,18 @@ public class Application extends JFrame implements ItemClickListener {
                     null, "This file was not found.", "Failure", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    /**
+     * Updates the board displayed by the gui.
+     */
     private void updateBoard () {
         updateBoard(this.board);
     }
 
+    /**
+     * Updates the board using a given board.
+     * @param newBoard The board that the gui should be updated to model.
+     */
     private void updateBoard (project.model.Board newBoard) {
         this.board = newBoard;
         this.frame.setBoard(newBoard);
@@ -203,6 +229,10 @@ public class Application extends JFrame implements ItemClickListener {
         }
     }
 
+    /**
+     * Sends an event when an item on the gui is clicked.
+     * @param event The event sent by the clicked item.
+     */
     @Override
     public void onItemClick(ItemClickEvent event) {
         logger.debug("Received an item click");
@@ -249,11 +279,13 @@ public class Application extends JFrame implements ItemClickListener {
         }
     }
 
-
+    /**
+     * Sets the message in the toolbar.
+     * @param msg The message that the toolbar should contain.
+     */
     private void setMessage(String msg) {
         toolBar.setMessage(msg);
     }
-
 
     @SuppressWarnings("PMD")
     public static void main(String[] args) {
