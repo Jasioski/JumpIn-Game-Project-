@@ -9,7 +9,6 @@ import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -608,26 +607,19 @@ public class Board {
 		Coordinate failCoord = new Coordinate(-1, -1);
 		BoardItem itemToAdd = new EmptyBoardItem(failCoord);
 
-			System.out.println("Looping through childs" + " : " + node);
+			logger.debug("Looping through childs" + " : " + node);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 
-				System.out.println("ELEMENTNODE!!!!!!!!!!!!! : " +
-						node.getNodeName());
 				if (!node.getNodeName().equals("Coordinate")) {
-
-					System.out.println("COOOOOOORDINATES!!!!!!!!!!!!!");
 
 					//If it has more than 1 child, its containable item
 					if (node.getChildNodes().getLength() != 1) {
-
-						System.out.println("CONTAINER!");
 
 						Optional<Containable> optional =
 								Optional.of(new Rabbit(-1, -1));
 						Coordinate containableCoordinate =
 								Board.coordinateFromXML(node.getChildNodes());
 
-						System.out.println("Coords: " + containableCoordinate.toString());
 						for (int i = 0; i < node.getChildNodes().getLength(); i++) {
 
 							if (node.getChildNodes().item(i).getNodeName().equals("Rabbit")) {
@@ -645,22 +637,19 @@ public class Board {
 
 						}
 
-						if (node.getNodeName().equals(
-								"ElevatedBoardItem")) {
+						if (node.getNodeName().equals("ElevatedBoardItem")) {
 							//if optional is -1, -1 coordinate. This is broken.
 							itemToAdd =
 									new ElevatedBoardItem(containableCoordinate, optional);
 						}
 
-						if (node.getNodeName().equals(
-								"Hole")) {
+						if (node.getNodeName().equals("Hole")) {
 							//if optional is -1, -1 coordinate. This is broken.
 							itemToAdd =
 									new Hole(containableCoordinate, optional);
 						}
 
 					} else {
-						System.out.println(node.getNodeName() + " <----");
 						//not containable
 						if (node.getNodeName().equals("Fox")) {
 							Pair<Coordinate, Coordinate> coordinates =
@@ -669,8 +658,6 @@ public class Board {
 							itemToAdd = new Fox(coordinates);
 
 						} else {
-
-							System.out.println(node.getNodeName() + " <----");
 							//Only 1 coordinate
 							Coordinate coordinate =
 									Board.coordinateFromXML(node.getChildNodes());
@@ -684,8 +671,7 @@ public class Board {
 									Optional.absent());
 							}
 
-							else if (node.getNodeName().equals(
-									"ElevatedBoardItem")) {
+							else if (node.getNodeName().equals("ElevatedBoardItem")) {
 								itemToAdd = new ElevatedBoardItem(coordinate,
 										Optional.absent());
 							}
@@ -694,8 +680,7 @@ public class Board {
 								itemToAdd = new Rabbit(coordinate);
 							}
 
-							else if (node.getNodeName().equals(
-									"Mushroom")) {
+							else if (node.getNodeName().equals("Mushroom")) {
 								itemToAdd = new Mushroom(coordinate);
 							}
 
@@ -707,7 +692,7 @@ public class Board {
 
 			}
 
-		System.out.println(itemToAdd);
+		logger.debug(itemToAdd.toString());
 		return itemToAdd;
 	}
 
@@ -719,7 +704,6 @@ public class Board {
 
 		for (int count = 0; count < nodeList.getLength(); count++) {
 			Node tempNode = nodeList.item(count);
-			System.out.println(tempNode);
 
 			if (tempNode.getNodeName().equals("CoordinatePair")) {
 				// get attributes names and values
@@ -751,7 +735,9 @@ public class Board {
 		}
 
 		if (headRow == -1 || headColumn == -1 || tailRow == -1 || tailColumn == -1) {
-			System.out.println(headRow);
+			Coordinate head = new Coordinate(headRow, headColumn);
+			Coordinate tail = new Coordinate(tailRow, tailColumn);
+			logger.error("ERROR: " + Pair.pair(head, tail));
 			throw new RuntimeException("Getting coordinate is broken!");
 		}
 
@@ -764,14 +750,13 @@ public class Board {
 
 	private static Coordinate coordinateFromXML(NodeList nodeList) {
 
-		System.out.println("testing coordinates");
 		int row = -1;
 		int column = -1;
 
 		for (int count = 0; count < nodeList.getLength(); count++) {
 			Node tempNode = nodeList.item(count);
 
-			System.out.println(tempNode.getNodeName());
+			logger.debug(tempNode.getNodeName());
 
 			if (tempNode.getNodeName().equals("Coordinate")) {
 				// get attributes names and values
@@ -795,10 +780,11 @@ public class Board {
 		}
 
 		if (row == -1 || column == -1) {
-			System.out.println(row + " : " + column);
+			logger.error(row + " : " + column);
 			throw new RuntimeException("Getting coordinate is broken!");
 		}
-		System.out.println("returning coords:" + row);
+
+		logger.debug("returning coords:" + row);
 		return new Coordinate(row, column);
 	}
 
@@ -814,7 +800,7 @@ public class Board {
 
 			Document doc = dBuilder.parse(file);
 
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+			logger.debug("Root element :" + doc.getDocumentElement().getNodeName());
 
 			Board board = new Board(5, 5);
 
@@ -822,68 +808,19 @@ public class Board {
 			for (int count = 0; count < boardElements.getLength(); count++) {
 				//loop through the items and add them to the board
 
-				System.out.println("--------------------------");
 				board = board.setItem(Board.itemFromXML(boardElements.item(count)));
 
-				//TODO: Delete this test adding items to the new board from
-				// XML.
-				System.out.println(board.toString());
+				logger.debug(board.toString());
 			}
 
 			return board;
 
 		} catch (Exception e) {
-			System.out.println(e);
-			throw new IllegalArgumentException("BoardFromXML broken!");
+			logger.error(e.getMessage());
 		}
 
+		throw new RuntimeException("Did not return a board from XML file");
 	}
-
-	private static void printNote(NodeList nodeList) {
-
-		//TODO: Delete this method once parsing is finished. Use for
-		// reference only!!!
-		for (int count = 0; count < nodeList.getLength(); count++) {
-
-			Node tempNode = nodeList.item(count);
-
-			// make sure it's element node.
-			if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
-
-				// get node name and value
-				System.out.println("\nNode Name =" + tempNode.getNodeName() + " [OPEN]");
-				System.out.println("Node Value =" + tempNode.getTextContent());
-
-				if (tempNode.hasAttributes()) {
-
-					// get attributes names and values
-					NamedNodeMap nodeMap = tempNode.getAttributes();
-
-					for (int i = 0; i < nodeMap.getLength(); i++) {
-
-						Node node = nodeMap.item(i);
-						System.out.println("attr name : " + node.getNodeName());
-						System.out.println("attr value : " + node.getNodeValue());
-
-					}
-
-				}
-
-				if (tempNode.hasChildNodes()) {
-
-					// loop again if has child nodes
-					printNote(tempNode.getChildNodes());
-
-				}
-
-				System.out.println("Node Name =" + tempNode.getNodeName() + " [CLOSE]");
-
-			}
-
-		}
-
-	}
-
 
 	@SuppressWarnings("PMD.UseVarargs")
 	public static void main(String[] args) {
@@ -900,9 +837,7 @@ public class Board {
 		try {
 			defaultBoard.writeToXMLFile("DefaultBoard");
 
-
-			String fileName = "testXMLContainable";
-		//	board.writeToXMLFile(fileName);
+			String fileName = "DefaultBoard";
 			Board.boardFromXML(fileName);
 			logger.debug(Board.readFromXMLFile(fileName));
 		} catch (Exception e) {
