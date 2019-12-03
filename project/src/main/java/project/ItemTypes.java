@@ -9,7 +9,8 @@ public enum ItemTypes {
     HoleRabbit("Hole with a Rabbit"),
     ElevatedRabbit("Elevated with a rabbit"),
     HoleMushroom("Hole with a mushroom"),
-    ElevatedMushroom("Elevated with a mushroom");
+    ElevatedMushroom("Elevated with a mushroom"),
+    Fox("Fox");
 
     private String type;
 

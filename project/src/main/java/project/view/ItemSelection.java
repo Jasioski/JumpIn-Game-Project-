@@ -30,12 +30,14 @@ public class ItemSelection {
 
         String result = (String) JOptionPane.showInputDialog(frame, "What board piece " +
                         "would you like " +
-                "to place here?", "Item selector", JOptionPane.PLAIN_MESSAGE,
+                "to place here?. \nNote: if placing a fox select the head " +
+                        "position",
+                "Item selector",
+                JOptionPane.PLAIN_MESSAGE,
                 null, possibilities.toArray(), "Empty Item");
 
         if (result == null) {
             logger.debug("user selected null");
-            return Optional.absent();
         }
         else {
             logger.debug("user selected: \"" + result + "\'");
@@ -83,11 +85,14 @@ public class ItemSelection {
                             Optional.of (mushroomE);
 
                     return Optional.of(new ElevatedBoardItem(coordinate, mushroomOptionalE));
+                case Fox:
+                    // Using the absent to signal a fox creation
+                    return Optional.absent();
                 default:
                     throw new IllegalArgumentException("Unknown type");
             }
         }
-
+        throw new IllegalArgumentException("Unknown type");
     }
 
 }

@@ -1,9 +1,11 @@
 package project;
 
 import com.google.common.base.Optional;
+import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.model.*;
+import project.model.Fox;
 import project.view.*;
 import project.view.Board;
 
@@ -36,6 +38,9 @@ public class Application extends JFrame implements ItemClickListener {
      */
     private ToolBar toolBar;
 
+    /**
+     * Stores first and second selection, when playing games or setting foxes
+     */
     private Optional<Coordinate> selectedItem;
     private Optional<Coordinate> destinationItem;
 
@@ -140,20 +145,111 @@ public class Application extends JFrame implements ItemClickListener {
         }
     }
 
+    /**
+     * This method handles level edits to positions that are currently a fox
+     * @param coordinate
+     */
+    private void onItemClickBuilderFox(Coordinate coordinate) {
+        logger.trace("clear the fox off the board");
+
+        BoardItem currentItem = (Fox)
+                board.getItem(coordinate);
+
+        Coordinate left =
+                currentItem.coordinate.right().get().left();
+        Coordinate right =
+                currentItem.coordinate.right().get().right();
+
+        // Set both spots to empty
+        this.board = this.board.setItem(new EmptyBoardItem(left));
+        this.board = this.board.setItem(new EmptyBoardItem(right));
+
+
+    }
+
     @Override
     public void onItemClick(ItemClickEvent event) {
 
         logger.debug("Received an item click");
         if (applicationMode == ApplicationMode.GAME_PLAY) {
+            onItemClickGamePlay(event);
         }
          else if (applicationMode == ApplicationMode.LEVEL_BUILDER) {
-             Optional<BoardItem> changedItem = ItemSelection.show(this,
-                     event.coordinate);
+             onItemClickBulider(event);
+        }
+    }
 
-             if (changedItem.isPresent()) {
-                 this.board = board.setItem(changedItem.get());
-                 this.updateBoard(board);
-             }
+    private void onItemClickBulider(ItemClickEvent event) {
+        try {
+            Optional<BoardItem> changedItem = ItemSelection.show(this,
+                    event.coordinate);
+
+            // It is not a fox
+            if (changedItem.isPresent()) {
+
+                logger.trace("User chose an item to set");
+                // Trying to replace a fox
+                if (board.getItem(event.coordinate) instanceof Fox) {
+                    logger.trace("trying to replace a fox");
+                    this.onItemClickBuilderFox(event.coordinate);
+                }
+
+                logger.trace("setting item");
+
+                // Set the new item
+                this.board = board.setItem(changedItem.get());
+                this.updateBoard(board);
+            }
+            // It is a Fox
+            else {
+                // Selecting head
+                if (!selectedItem.isPresent()) {
+                    // Set the new item when it is as fox
+                    // Ask for a second coordinate
+                    logger.trace("tried to set a fox, asking for second " +
+                            "coordinate");
+
+                    setMessage("Please select the tail of the fox you want " +
+                            "to place");
+
+                    selectedItem = Optional.of(event.coordinate);
+                    destinationItem = Optional.absent();
+                }
+
+
+                // Selecting tail
+                else {
+                    // Second click
+                    // Set fox tail coordinate
+                    logger.trace("got a second click");
+
+                    destinationItem = Optional.of(event.coordinate);
+
+                    // Try to create the fox
+                    Coordinate head = selectedItem.get();
+                    Coordinate tail = destinationItem.get();
+
+                    // Clear items
+                    selectedItem = Optional.absent();
+                    destinationItem = Optional.absent();
+
+                    try {
+                        logger.trace("fox coordinates", head, tail);
+                        Fox fox = new Fox(Pair.pair(head, tail));
+                        logger.trace("trying to set a new fox");
+                        this.board = board.setItem(fox);
+                        this.updateBoard(board);
+                        logger.trace("set a new fox");
+                    } catch (IllegalArgumentException e) {
+                        logger.debug(e);
+                        JOptionPane.showMessageDialog(this, e.getMessage(), "Exception!"
+                                , 0);
+
+                    }
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            logger.debug("failed to set an item");
         }
     }
 
@@ -196,8 +292,6 @@ public class Application extends JFrame implements ItemClickListener {
         }
 
     }
-
-
 
 
     private void setMessage(String msg) {
