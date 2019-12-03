@@ -12,6 +12,7 @@ import project.view.Board;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * GUI Application for JumpIn
@@ -130,6 +131,31 @@ public class Application extends JFrame implements ItemClickListener {
             load();
         }
     };
+
+    /**
+     * Action that solves the current board.
+     */
+    private Action solve = new AbstractAction("Is it Solvable in 60 seconds") {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            solve();
+        }
+    };
+
+    /**
+     * Solves the game.
+     */
+    private void solve() {
+        int howManySeconds = Integer.parseInt(JOptionPane.showInputDialog("How " +
+                "many seconds would you like to run the algorithm for?"));
+        JOptionPane.showInputDialog("Trying to solve game in " + howManySeconds + " seconds.");
+
+        Date currentDate = new Date();
+        long endDate = new Date().getTime();
+
+
+
+    }
 
     /**
      * Creates a new game.
