@@ -11,7 +11,7 @@ public class EmptyTest {
         Coordinate coordinate = new Coordinate(0, 0);
         EmptyBoardItem empty = new EmptyBoardItem(coordinate);
 
-        assertEquals("<Empty><Coordinate row=0 column=0/></Empty>",
+        assertEquals("<Empty><Coordinate row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' + "/></Empty>",
                 empty.toXML(), "The XML representation should be equal");
     }
 }

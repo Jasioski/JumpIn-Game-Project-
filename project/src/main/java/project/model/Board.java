@@ -1,5 +1,6 @@
 package project.model;
 
+import com.google.common.base.Optional;
 import io.atlassian.fugue.Either;
 import io.atlassian.fugue.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,14 @@ import org.pcollections.PMap;
 import java.io.*;
 import java.util.HashSet;
 import java.util.Objects;
+
+
+
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.*;
 
 /**
  * Creates and manages the state of the board by performing operations through
@@ -94,7 +103,7 @@ public class Board {
 	 * Creates a new board using another board.
 	 * @param board The board that should be copied.
 	 */
-	private Board(Board board) {
+	public Board(Board board) {
 		this.currentGameState = GameState.IN_PROGRESS;
 		this.numberOfRows = board.numberOfRows;
 		this.numberOfColumns = board.numberOfColumns;
@@ -566,44 +575,24 @@ public class Board {
 		return xml;
 	}
 
-	/**
-	 *
-	 * @param fileName
-	 * @throws IOException
-	 */
-	public void writeToXMLFile(String fileName) throws IOException {
-		//TODO: decide should this be static or not. Should it throw an
-		// Exception or should exception be handled here?
-		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName +
-				".XML"));
-		writer.write(this.toXML());
-		writer.close();
-	}
-
-	public static String readFromXMLFile(String fileName) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(fileName +
-				".XML"));
-
-		String xmlRepresentation = "";
-		String currentLine = "";
-
-		while((currentLine = reader.readLine()) != null) {
-			xmlRepresentation = xmlRepresentation + currentLine;
-		}
-
-		return xmlRepresentation;
-	}
-
 	@SuppressWarnings("PMD.UseVarargs")
 	public static void main(String[] args) {
 		//TODO: Helpful main used to test out the xml writer. Delete before
 		// merging to master.
-		DefaultBoard defaultBoard = new DefaultBoard();
-		Board board = new Board(defaultBoard.getBoard());
+
+		DefaultBoard def = new DefaultBoard();
+
+		Board defaultBoard = new Board(def.getBoard());
+
+		Board board = new Board(1, 1);
+		Rabbit rabbit = new Rabbit(0, 0);
+		board = board.setItem(rabbit);
 		try {
-			String fileName = "testXML";
-			board.writeToXMLFile(fileName);
-			logger.debug(Board.readFromXMLFile(fileName));
+			XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
+
+			String fileName = "DefaultBoard";
+			XMLParser.boardFromXML(fileName);
+			logger.debug(XMLParser.readFromXMLFile(fileName));
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 		}

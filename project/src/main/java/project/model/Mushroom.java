@@ -80,8 +80,8 @@ public final class Mushroom extends SingleBoardItem implements Containable {
         String xml = "<Mushroom>";
         Coordinate coordinate = this.coordinate.left().get();
 
-        xml = xml + "<Coordinate row=" + coordinate.row +
-                " column=" + coordinate.column + "/>";
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' +
+                " column=" + '"' + coordinate.column + '"' + "/>";
 
         xml = xml + "</Mushroom>";
         return xml;
