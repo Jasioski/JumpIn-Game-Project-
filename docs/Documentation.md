@@ -164,7 +164,7 @@ We chose to re-use the Application GUI because there are a lot of similar patter
 ### Loading and saving
 Loading and saving works by using XML serialization. Our software has been extended so that each of the models know how to serialize their state to XML. And a parser is able to create boards from XML. We chose this design for separation of responbilities. This adheres to good OOP practice.
 
-The GUI for loading and saving uses a text box to prompt the user for a file name for saving and loading the data. We also handle IO exceptions where files fail to write, or fail to be read from.
+The GUI for loading and saving uses a text box to prompt the user for a file name for saving and loading the data. We also handle IO exceptions where files fail to write, or fail to be read from. The user isable to use a button to see if the level created is solvable. The solver runs in default settings and tries to solve it, if it is not solvable the user is informed.
 
 ### Added more tests
 We have strived to add more tests as we found edge cases. This was done to make our software more robust, and to ensure regression testing.
