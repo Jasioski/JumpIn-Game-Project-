@@ -239,8 +239,9 @@ public class BoardTest {
 
         board = board.setItem(mushroom);
 
-        assertEquals("<Board><Mushroom><Coordinate row=0 " +
-                "column=0/></Mushroom></Board>", board.toXML(), "XML " +
+        assertEquals("<Board><Mushroom><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></Mushroom></Board>",
+                board.toXML(), "XML " +
                 "representations should be equal");
     }
 
@@ -251,8 +252,9 @@ public class BoardTest {
 
         board = board.setItem(rabbit);
 
-        assertEquals("<Board><Rabbit><Coordinate row=0 " +
-                "column=0/></Rabbit></Board>", board.toXML(), "XML " +
+        assertEquals("<Board><Rabbit><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></Rabbit></Board>",
+                board.toXML(), "XML " +
                 "representations should be equal");
     }
 
@@ -264,8 +266,10 @@ public class BoardTest {
 
         board = board.setItem(empty);
 
-        assertEquals("<Board><Empty><Coordinate row=0 " +
-                "column=0/></Empty></Board>", board.toXML(), "XML " +
+        assertEquals("<Board><Empty><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0  + '"' + "/></Empty></Board>",
+                board.toXML()
+                , "XML " +
                 "representations should be equal");
     }
 
@@ -282,8 +286,8 @@ public class BoardTest {
 
         board = board.setItem(item);
 
-        assertEquals("<Board><Fox><CoordinatePair headRow=0 " +
-                "headColumn=0 tailRow=0 tailColumn=1/></Fox></Board>",
+        assertEquals("<Board><Fox><CoordinatePair headRow=" + '"' + 0 + '"' +
+                " headColumn=" + '"' + 0 + '"' + " tailRow=" + '"' + 0 + '"' + " tailColumn=" + '"' + 1 + '"' + "/></Fox></Board>",
                 board.toXML(), "XML representations should be equal");
     }
 
@@ -296,9 +300,9 @@ public class BoardTest {
 
         board = board.setItem(elevatedBoardItem);
 
-        assertEquals("<Board><ElevatedBoardItem><Coordinate row=0 " +
-                "column=0/></ElevatedBoardItem></Board>", board.toXML(),
-                "XML representations should be equal");
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                " column=" + '"' + 0 + '"' + "/></ElevatedBoardItem></Board>",
+                board.toXML(), "XML representations should be equal");
     }
 
     @Test
@@ -312,8 +316,10 @@ public class BoardTest {
 
         board = board.setItem(elevatedBoardItem);
 
-        assertEquals("<Board><ElevatedBoardItem><Coordinate row=0 " +
-                        "column=0/><Rabbit><Coordinate row=0 column=0/>" +
+        assertEquals("<Board><ElevatedBoardItem><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/><Rabbit><Coordinate " +
+                        "row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' +
+                        "/>" +
                         "</Rabbit></ElevatedBoardItem></Board>", board.toXML(),
                 "XML representations should be equal");
     }
@@ -326,8 +332,9 @@ public class BoardTest {
 
         board = board.setItem(hole);
 
-        assertEquals("<Board><Hole><Coordinate row=0 " +
-                        "column=0/></Hole></Board>", board.toXML(),
+        assertEquals("<Board><Hole><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/></Hole></Board>",
+                board.toXML(),
                 "XML representations should be equal");
     }
 
@@ -341,55 +348,38 @@ public class BoardTest {
 
         board = board.setItem(hole);
 
-        assertEquals("<Board><Hole><Coordinate row=0 " +
-                        "column=0/><Rabbit><Coordinate row=0 column=0/>" +
-                        "</Rabbit></Hole></Board>", board.toXML(),
+        assertEquals("<Board><Hole><Coordinate row=" + '"' + 0 + '"' +
+                        " column=" + '"' + 0 + '"' + "/><Rabbit><Coordinate " +
+                        "row=" + '"' + 0 + '"' + " column=" + '"' + 0 + '"' +
+                        "/></Rabbit></Hole></Board>", board.toXML(),
                 "XML representations should be equal");
     }
 
     @Test
-    void testXMLWriterWithHoleAndRabbit() {
-        Board board = new Board(1, 1);
-        Coordinate coordinate = new Coordinate(0, 0);
-        Rabbit rabbit = new Rabbit(coordinate);
+    void xmlParsingFromFile() {
+        DefaultBoard def = new DefaultBoard();
 
-        Hole hole = new Hole(coordinate, Optional.of(rabbit));
-
-        board = board.setItem(hole);
-        String fileName = "testXMLWithHoleAndRabbit";
+        Board defaultBoard = new Board(def.getBoard());
 
         try {
-            board.writeToXMLFile(fileName);
-            assertEquals("<Board><Hole><Coordinate row=0 " +
-                            "column=0/><Rabbit><Coordinate row=0 column=0/>" +
-                            "</Rabbit></Hole></Board>",
-                    Board.readFromXMLFile(fileName),
-                    "XML representations should be equal");
+            XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
+
+            String fileName = "DefaultBoard";
+            Board board = XMLParser.boardFromXML(fileName);
+
+            defaultBoard = defaultBoard.setItem(new Rabbit(3, 4));
+
+            logger.debug(board.toString());
+
+            XMLParser.writeToXMLFile(defaultBoard, "DefaultBoard");
+
+            board = XMLParser.boardFromXML(fileName);
+
+            logger.debug(board.toString());
+
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }
     }
-
-    /*
-    TODO: Figure out how to make this test work. Data stored in the hashmap
-     is not always in the same order.
-    @Test
-    void testXMLWriterWithDefaultBoard() {
-        DefaultBoard defaultBoard = new DefaultBoard();
-        Board board = defaultBoard.getBoard();
-
-        String fileName = "testFullBoard";
-
-        try {
-            board.writeToXMLFile(fileName);
-            assertEquals("<Board><Empty><Coordinate row=3 column=0/></Empty><Empty><Coordinate row=3 column=1/></Empty><Hole><Coordinate row=4 column=4/></Hole><ElevatedBoardItem><Coordinate row=2 column=0/><Rabbit><Coordinate row=2 column=0/></Rabbit></ElevatedBoardItem><ElevatedBoardItem><Coordinate row=4 column=2/><Rabbit><Coordinate row=4 column=2/></Rabbit></ElevatedBoardItem><Empty><Coordinate row=2 column=3/></Empty><Empty><Coordinate row=4 column=3/></Empty><Empty><Coordinate row=1 column=2/></Empty><Empty><Coordinate row=0 column=3/></Empty><Hole><Coordinate row=2 column=2/></Hole><Mushroom><Coordinate row=1 column=3/></Mushroom><Empty><Coordinate row=3 column=4/></Empty><Hole><Coordinate row=4 column=0/></Hole><Hole><Coordinate row=0 column=4/><Rabbit><Coordinate row=0 column=4/></Rabbit></Hole><Empty><Coordinate row=2 column=1/></Empty><Empty><Coordinate row=1 column=4/></Empty><Hole><Coordinate row=0 column=0/><Mushroom><Coordinate row=0 column=0/></Mushroom></Hole><ElevatedBoardItem><Coordinate row=0 column=2/></ElevatedBoardItem><ElevatedBoardItem><Coordinate row=2 column=4/></ElevatedBoardItem><Fox><CoordinatePair headRow=3 headColumn=2 tailRow=3 tailColumn=3/></Fox><Empty><Coordinate row=4 column=1/></Empty><Fox><CoordinatePair headRow=1 headColumn=1 tailRow=0 tailColumn=1/></Fox><Empty><Coordinate row=1 column=0/></Empty></Board>",
-                    Board.readFromXMLFile(fileName), "XML " +
-                    "representation " +
-                            "should be the same!");
-        } catch (Exception e) {
-            logger.debug(e.getMessage());
-        }
-    }
-    */
 
 }

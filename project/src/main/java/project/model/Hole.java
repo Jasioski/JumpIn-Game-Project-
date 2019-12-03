@@ -122,8 +122,8 @@ public class Hole extends ContainerItem {
         String xml = "<Hole>";
         Coordinate coordinate = this.coordinate.left().get();
 
-        xml = xml + "<Coordinate row=" + coordinate.row + " column=" +
-                coordinate.column + "/>";
+        xml = xml + "<Coordinate row=" + '"' + coordinate.row + '"' + " column=" + '"' +
+                coordinate.column + '"' + "/>";
 
         if (containingItem.isPresent()) {
             BoardItem item = (BoardItem) containingItem.get();
