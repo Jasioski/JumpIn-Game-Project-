@@ -1,10 +1,7 @@
 # SYSC3110 Group project
 
 
-Third year Software Engineering project at Carleton University. The task was to replicate the childrens board game JumpIN. 
-
-More information on rules and gameplay can be found at JumpIN's official website: 
-https://www.smartgames.eu/uk/one-player-games/jumpin
+**Third year Software Engineering project at Carleton University. The task was to replicate the childrens board game JumpIN. More information on rules and gameplay can be found at JumpIN's** [official website](https://www.smartgames.eu/uk/one-player-games/jumpin)
 
 
 
